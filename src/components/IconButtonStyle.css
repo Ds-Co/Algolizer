@@ -1,0 +1,24 @@
+.png{
+    width: 50%;
+}
+.video{
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  width: 50%;
+}
+
+.git{
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  width: 50%;
+}
+.iconsDiv{
+    position: absolute;
+    top:2%;
+    right: 1%;
+    
+}
