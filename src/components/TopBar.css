@@ -1,93 +1,69 @@
 @inter {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
-  font-weight: <weight>;
+  font-weight: 900;
   font-style: normal;
 }
 
 @lato {
   font-family: "Lato", sans-serif;
-  font-weight: 400;
+  font-weight: 700;
+  font-style: normal;
+}
+.topbar{
+  display: flex;
+  background-color: black;
+  align-items: center;
+  justify-content: space-around;
+  max-height: 72.5px;
+}
+.sortings{
+  align-content: center;
+  display: flex;
+
+}
+.sorttext{
+  color: white;
+  text-decoration: none;
+  font-size: 3.2vw;
+  font-family: "Lato", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  
+}
+.pngdiv{
+  display: flex;
+   flex-direction: row;
+  align-content: center;
+  justify-content: center;
+}
+.sortpng{
+  margin: auto;
+  width: 50%;
+  height: 60%;
+}
+.icons{
+display: flex;
+flex-direction: column;
+}
+.iconbutton{
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+  display:contents;
+  
+}
+.icontext{
+  color: white;
+  text-decoration: none;
+  align-content: center;
+  text-size-adjust:inherit;
+  font-size: 1vw;
+  font-family: "Lato", sans-serif;
+  font-weight: 600;
   font-style: normal;
 }
 
-
-
-.icons{
-  margin-top: 1.75%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.nav {
-  background-color: black;
-  display: flex;
-  justify-content: space-evenly;
-  height: 15vh;
-  width: 100vw;
-}
-
-.dropy {
-  font-family: lato;
-align-content: center; 
- border-radius: 10px;
-  size-adjust:inherit;
-  width:100%;
-}
-
-.dropdown-group {
-  font-weight: 600;
-  font-size-adjust: inherit;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content:space-evenly;
-  width: 15%;
-}
-
-.sortings{
-  margin-left:-5%;
-  margin-right: 1%;
-  justify-content: space-evenly;
-  display: flex;
-}
-
-.sorty {
-  color: white;
-  font-weight: 600;
-  font-size: 50px;
-  margin: 0;
-  font-family: inter;
-  text-decoration: none;
-  margin-bottom: 5%;
-}
-.sortpng {
-  width: 4vw;
-  height: 7vh;
-  margin-top: 7%;
-  margin-right: 7%;
-}
-.infobutton {
-  background-color: transparent;
-  border: 0;
-  cursor: pointer;
-  padding: 0;
-  align-content: center;
-  width: auto;
-  height: auto;
-}
-.icontexts {
-  display: flexbox;
-  font-family: lato;
-  color: white;
-  text-decoration: none;
-  font-size: 1.5vw;
-  width:auto;
-  margin-left: 50%;
- 
-}
-
 .png{
-  width:60%;
+  width: 50%;
 }
