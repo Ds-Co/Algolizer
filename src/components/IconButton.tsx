@@ -1,7 +1,6 @@
-import React from "react";
 import "./IconButtonStyle.css";
-import gitHubIcon from "C:/Users/Mohamed Bakry/OneDrive/Desktop/Algolizer/GS_Visualizer/src/assets/githubIcon.png";
-import videoIcon from "C:/Users/Mohamed Bakry/OneDrive/Desktop/Algolizer/GS_Visualizer/src/assets/videoIcon.png";
+import gitHubIcon from 'F:/Algolizer/GS_Visualizer/src/assets/githubIcon.png';
+import videoIcon from 'F:/Algolizer/GS_Visualizer/src/assets/videoIcon.png';
 function IconButtons() {
   const handleVideoClick = () => {
     console.log("Video button clicked");
