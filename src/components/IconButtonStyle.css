@@ -1,6 +1,9 @@
 .png{
     width: 80%;
 }
+.arrowPng{
+  width: 50%;
+}
 .video{
   background-color: transparent;
   border: 0;
@@ -29,11 +32,22 @@
   align-content: center;
 }
 .iconsDiv{
-  position: absolute;
+position: absolute;
 background-color: black;  
 display: flex; 
 justify-content: center; 
 width: 15vw;
 height: 15vh;
 right: 0px;
+}
+.arrow{
+  background-color: transparent;
+}
+.arrowDiv{
+  position: absolute;
+  background-color: black;  
+  display: flex; 
+  justify-content: center; 
+  top: 50%;
+  right: 0px; 
 }
