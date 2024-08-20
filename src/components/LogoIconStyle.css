@@ -8,7 +8,7 @@
     display: flex ;
     position: absolute;
     top: 50%;
-    left: 28%;
+    left: 25%;
     transform: translate(-50%, -50%);
     width: 50%;
     height: 30%;
@@ -20,7 +20,7 @@
     text-decoration: none;
     font-size: 1000%;
     position: absolute;
-    left: 34%;
+    left: 29%;
     top: 22%;
     font-family: "Lato", sans-serif;
     font-weight: 600;
@@ -29,5 +29,5 @@
 }
 
 .logo{
-    width: 40%;
+    width: 35%;
 }
