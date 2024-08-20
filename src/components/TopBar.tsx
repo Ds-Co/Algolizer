@@ -43,11 +43,11 @@ const TopBar = () => {
       </div>
         <Dropdown sorts={sorts} />
         {icons.map((icon) => (
-          <div className="icons">
-            <button className="iconbutton">{icon.iconimg}</button>
-            <a className="icontext">{icon.icontxt}</a>
-          </div>
-        ))}
+  <div className="icons" key={icon.icontxt}>
+    <button className="iconbutton">{icon.iconimg}</button>
+    <a className="icontext">{icon.icontxt}</a>
+  </div>
+))}
     </div>
   );
 };
