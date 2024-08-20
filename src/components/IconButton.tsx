@@ -1,6 +1,7 @@
 import "./IconButtonStyle.css";
 import gitHubIcon from 'F:/Algolizer/GS_Visualizer/src/assets/githubIcon.png';
 import videoIcon from 'F:/Algolizer/GS_Visualizer/src/assets/videoIcon.png';
+import arrowIcon from 'F:/Algolizer/GS_Visualizer/src/assets/arrowIcon.png'
 function IconButtons() {
   const handleVideoClick = () => {
     console.log("Video button clicked");
@@ -10,18 +11,24 @@ function IconButtons() {
     console.log("GitHub button clicked");
   };
   return (
-    <div className="iconsDiv">
-      <div className="videodiv">
-        <button className="video " onClick={handleVideoClick}>
-          <img className="png" src={videoIcon}></img>{" "}
+    <div className="icons">
+      <div className="iconsDiv">
+        <div className="videodiv">
+          <button className="video " onClick={handleVideoClick}>
+            <img className="png" src={videoIcon}></img>{" "}
+          </button>
+        </div>
+        <div className="gitdiv">
+          <button className="git" onClick={handleGitHubClick}>
+            <img className="png" src={gitHubIcon}></img>
+          </button>
+        </div>
+      </div>
+      <div className= 'arrowDiv'>
+        <button className="arrow">
+        <img className="arrowPng" src={arrowIcon}></img>
         </button>
       </div>
-      <div className="gitdiv">
-        <button className="git" onClick={handleGitHubClick}>
-          <img className="png" src={gitHubIcon}></img>
-        </button>
-      </div>
-      
     </div>
   );
 }
