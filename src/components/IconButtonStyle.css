@@ -1,5 +1,5 @@
 .png{
-    width: 80%;
+    width: 100%;
 }
 .arrowPng{
   width: 50%;
@@ -9,17 +9,17 @@
   border: 0;
   cursor: pointer;
   padding: 0;
-  width: 55%;
+  width: 60%;
 }
 .gitdiv{
   position:absolute;
   top: 5vh;
-  right: -3vw;
-  width: 6vw;
+  right: -2.5vw;
+  width: 5.5vw;
 }
 .videodiv{
   position:absolute;
-  left: 10vw;
+  left: 9vw;
   top: 5vh;
 }
 .git{
@@ -28,7 +28,7 @@
   border: 0;
   cursor: pointer;
   padding: 0;
-  width: 35%;
+  width: 37%;
   align-content: center;
 }
 .iconsDiv{
@@ -50,4 +50,10 @@ right: 0px;
   justify-content: center; 
   top: 50%;
   right: 0px; 
+}
+
+.hovered{
+  opacity: 0.7;
+  transform: scale(1.1); 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

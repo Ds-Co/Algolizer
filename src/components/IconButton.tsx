@@ -1,32 +1,59 @@
+import React , {useState} from "react";
 import "./IconButtonStyle.css";
 import gitHubIcon from 'F:/Algolizer/GS_Visualizer/src/assets/githubIcon.png';
 import videoIcon from 'F:/Algolizer/GS_Visualizer/src/assets/videoIcon.png';
 import arrowIcon from 'F:/Algolizer/GS_Visualizer/src/assets/arrowIcon.png'
 function IconButtons() {
-  const handleVideoClick = () => {
-    console.log("Video button clicked");
+  const [videoHovered , setVideoHovered] = useState(false);
+  const [gitHovered , setGitHovered] = useState(false);
+  const [arrowHovered , setArrowHovered] = useState(false);
+  const videoClick = () => {
   };
 
-  const handleGitHubClick = () => {
-    console.log("GitHub button clicked");
+  const gitHubClick = () => {
   };
+
+  const videoHoverEnter = () => {
+    setVideoHovered(true);
+  };
+
+  const videoHoverLeave = () => {
+    setVideoHovered(false);
+  };
+
+  const gitHoverEnter = () => {
+    setGitHovered(true)
+  };
+
+  const gitHoverLeave = () => {
+    setGitHovered(false);
+  };
+
+  const arrowHoverEnter = () => {
+    setArrowHovered(true)
+  };
+
+  const arrowHoverLeave = () => {
+    setArrowHovered(false);
+  };
+
   return (
-    <div className="icons">
-      <div className="iconsDiv">
-        <div className="videodiv">
-          <button className="video " onClick={handleVideoClick}>
-            <img className="png" src={videoIcon}></img>{" "}
+    <div className = "icons">
+      <div className = "iconsDiv">
+        <div className = "videodiv">
+          <button className = "video"> 
+            <img className = {`png ${videoHovered ? 'hovered' : ''}`} onMouseEnter={videoHoverEnter} onMouseLeave={videoHoverLeave} src = {videoIcon}></img>
           </button>
         </div>
-        <div className="gitdiv">
-          <button className="git" onClick={handleGitHubClick}>
-            <img className="png" src={gitHubIcon}></img>
+        <div className = "gitdiv">
+          <button className = {`git ${gitHovered ? 'hovered' : ''}`} onClick = {gitHubClick}>
+            <img className = {`png ${gitHovered ? 'hovered' : ''}`} onMouseEnter={gitHoverEnter} onMouseLeave={gitHoverLeave} src = {gitHubIcon}></img>
           </button>
         </div>
       </div>
-      <div className= 'arrowDiv'>
-        <button className="arrow">
-        <img className="arrowPng" src={arrowIcon}></img>
+      <div className = "arrowDiv">
+        <button className = "arrow">
+        <img className ={`arrowPng ${arrowHovered ? 'hovered' : ''}`} onMouseEnter={arrowHoverEnter} onMouseLeave={arrowHoverLeave}  src = {arrowIcon}></img>
         </button>
       </div>
     </div>
