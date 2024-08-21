@@ -1,6 +1,6 @@
 import IconButtons from './IconButton';
 import LogoIcon from './LogoIcon';
-import TextLandPage from './textLandPage';
+import TextLandPage from './TextLandPage';
 import './LandPageStyle.css'
 function LandPage() {
   return (
