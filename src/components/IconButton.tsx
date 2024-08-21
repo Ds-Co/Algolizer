@@ -1,4 +1,6 @@
 import  {useState} from "react";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "./IconButtonStyle.css";
 import gitHubIcon from 'F:/Algolizer/GS_Visualizer/src/assets/githubIcon.png';
 import videoIcon from 'F:/Algolizer/GS_Visualizer/src/assets/videoIcon.png';
@@ -13,16 +15,9 @@ interface Icon{
 }
 function IconButton({icon , className , url} : Icon){
   const [Hovered , setHovered] = useState(false);
-  const HoverEnter = () => {
-    setHovered(true);
-  };
-
-  const HoverLeave = () => {
-    setHovered(false);
-  };
-  const Click = () => {
-    window.open(url, '_blank');
-  };
+  const HoverEnter = () => setHovered(true);
+  const HoverLeave = () => setHovered(false);
+  const Click = () => window.open(url, '_blank');
   return (
     <img className = {`${className} ${Hovered ? 'hovered' : ''}`} onMouseEnter={HoverEnter} onMouseLeave={HoverLeave} src = {icon} onClick={Click}></img>
   );
