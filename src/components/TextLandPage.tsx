@@ -5,7 +5,6 @@ function textLandPage() {
         const textArray3 = [ "Visual " ,"learning, ", "better ", "understanding. "];
         return (
           <div className="textContainer">
-            <div className='textHolder'>
             <div>{textArray1.map((text, index) => (
               <a key={index} className={`text ${index === 1 ?  'darkColor' :'lightColor'}`}>
                 {text}
@@ -22,7 +21,6 @@ function textLandPage() {
               </a>
             ))}</div>
             </div>
-          </div>
         );
       }
   export default textLandPage;
