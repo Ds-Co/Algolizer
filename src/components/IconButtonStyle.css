@@ -10,6 +10,23 @@
   cursor: pointer;
   padding: 0;
   width: 60%;
+  align-content: center;
+}
+
+.git{
+  position: absolute;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  width: 37%;
+  align-content: center;
+}
+.arrow{
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+  width: 80%
 }
 .gitdiv{
   position:absolute;
@@ -21,15 +38,7 @@
   position:absolute;
   left: 9vw;
   top: 5vh;
-}
-.git{
-  position: absolute;
-  background-color: transparent;
-  border: 0;
-  cursor: pointer;
-  padding: 0;
-  width: 37%;
-  align-content: center;
+  width: 3.3vw
 }
 .iconsDiv{
 position: absolute;  
@@ -39,17 +48,15 @@ width: 15vw;
 height: 15vh;
 right: 0px;
 }
-.arrow{
-  background-color: transparent;
-  padding: 0;
-  border: 0;
-}
+
 .arrowDiv{
   position: absolute;
   display: flex; 
   justify-content: center; 
   top: 50%;
-  right: 0px; 
+  right: 0px;
+  width: 9vw;
+  height: 9vh; 
 }
 
 .hovered{
