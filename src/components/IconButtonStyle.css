@@ -32,8 +32,7 @@
   align-content: center;
 }
 .iconsDiv{
-position: absolute;
-background-color: black;  
+position: absolute;  
 display: flex; 
 justify-content: center; 
 width: 15vw;
@@ -42,10 +41,11 @@ right: 0px;
 }
 .arrow{
   background-color: transparent;
+  padding: 0;
+  border: 0;
 }
 .arrowDiv{
   position: absolute;
-  background-color: black;  
   display: flex; 
   justify-content: center; 
   top: 50%;

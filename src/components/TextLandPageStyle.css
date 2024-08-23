@@ -5,7 +5,6 @@
     font-style: normal;
   }
 .textContainer {
-    background-color: #000000;
     text-align: left;
     flex-direction: column; 
     justify-content: center;
