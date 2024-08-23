@@ -3,7 +3,7 @@
   background-color: black;
   align-items: center;
   justify-content: space-around;
-  max-height: 72.5px;
+  height: 10vh;
 }
 
 .sortings {
@@ -14,7 +14,7 @@
 .sorttext {
   color: white;
   text-decoration: none;
-  font-size: 3.2vw;
+  font-size: 3vw;
   font-family: "Lato", sans-serif;
   font-weight: 600;
   font-style: normal;
@@ -28,8 +28,8 @@
 }
 
 .sortpng {
-  margin: auto;
-  width: 50%;
+  align-self: center;
+  width: 65%;
   height: 60%;
 }
 

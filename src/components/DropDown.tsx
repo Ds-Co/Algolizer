@@ -1,3 +1,5 @@
+import "./Dropdown.css";
+
 const DropDown = ({sorts} : {sorts:string[]}) => {
   return (
     <>
