@@ -12,8 +12,6 @@
     transform: translate(-50%, -50%);
     width: 50%;
     height: 30%;
-    background-color: #000000;
-    border: 1px solid #ccc;
 }
 .logoText{
     color: white;
