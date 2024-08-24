@@ -2,7 +2,7 @@
     width: 100%;
 }
 .arrowPng{
-  width: 50%;
+  width: 70%;
 }
 .video{
   background-color: transparent;
@@ -57,6 +57,14 @@ right: 0px;
   right: 0px;
   width: 9vw;
   height: 9vh; 
+  transition: all 0.3s ease-in-out;
+}
+
+.arrowDiv:hover{
+  opacity: 0.7;
+  transform: scale(1.1); 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  
 }
 
 .hovered{
