@@ -6,7 +6,6 @@ interface CanvasProps {
   height?: number;
 }
 
-
 const ParticleSystem: React.FC<CanvasProps> = ({
   width = window.innerWidth,
   height = window.innerHeight,
@@ -21,16 +20,17 @@ const ParticleSystem: React.FC<CanvasProps> = ({
       const ctx = canvas.getContext("2d");
 
       const initParticles = () => {
-        const particlesArray: Particle[] = [];
+        setParticles([]);
 
+        const particlesArray: Particle[] = [];
         const numberOfParticles = (canvas.height * canvas.width) / 9000;
 
         for (let i = 0; i < numberOfParticles * 2; i++) {
-          const size = Math.random() * 3 + 1;
+          const size = Math.random() * 2 + 1;
           const x =
-            Math.random() * (innerWidth - size * 2 - size * 2) + size * 2;
+            Math.random() * (canvas.width - size * 2 - size * 2) + size * 2;
           const y =
-            Math.random() * (innerHeight - size * 2 - size * 2) + size * 2;
+            Math.random() * (canvas.height - size * 2 - size * 2) + size * 2;
           const directionX = Math.random() * 1 - 0.5;
           const directionY = Math.random() * 1 - 0.5;
           const color = "rgba(255, 255, 255, 0.5)";
@@ -45,7 +45,7 @@ const ParticleSystem: React.FC<CanvasProps> = ({
 
       const animate = () => {
         requestAnimationFrame(animate);
-        ctx?.clearRect(0, 0, innerWidth, innerHeight);
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < particles.length; i++) {
           particles[i].update();
           if (ctx) {
@@ -55,38 +55,45 @@ const ParticleSystem: React.FC<CanvasProps> = ({
         connect();
       };
 
-        const connect = () => {
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const particle1 = particles[i];
-              const particle2 = particles[j];
-              const distance =
-                Math.pow(particle2.x - particle1.x, 2) +
-                Math.pow(particle2.y - particle1.y, 2);
-              if (distance < 4000 && ctx) {
-                const opacityValue = 1 - distance / 20000;
-                ctx.lineWidth = 0.5;
-                ctx.beginPath();
-                ctx.moveTo(particle1.x, particle1.y);
-                ctx.lineTo(particle2.x, particle2.y);
-                ctx.strokeStyle = `rgba(255, 255, 255, ${opacityValue})`;
-                ctx.stroke();
-              }
+      const connect = () => {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const particle1 = particles[i];
+            const particle2 = particles[j];
+            const distance =
+              Math.pow(particle2.x - particle1.x, 2) +
+              Math.pow(particle2.y - particle1.y, 2);
+            if (distance < 4000 && ctx) {
+              const opacityValue = 1.2 - distance / 20000;
+              ctx.lineWidth = 0.2;
+              ctx.beginPath();
+              ctx.moveTo(particle1.x, particle1.y);
+              ctx.lineTo(particle2.x, particle2.y);
+              ctx.strokeStyle = `rgba(255, 255, 255, ${opacityValue})`;
+              ctx.stroke();
             }
           }
         }
-      
+      };
+
       initParticles();
       animate();
 
-      window.addEventListener("resize", () => {
+      const handleResize = () => {
         setCanvasDimensions({
           width: window.innerWidth,
           height: window.innerHeight,
         });
-      });
+        initParticles(); // Reinitialize particles after resizing
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
     }
-  }, []);
+  }, [particles.length, canvasDimensions]);
 
   return (
     <canvas
