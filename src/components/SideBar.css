@@ -5,101 +5,191 @@
   width: 20%;
   height: 90vh;
   justify-content: space-around;
+  transition: width 0.3s ease;
 }
 
-.uppersidebar {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 2vh;
-}
-.arraytext {
-  color: white;
-  position: relative;
-  text-decoration: none;
-  left: 5%;
-}
-.arrayinput {
-  width: 90%;
-  align-self: center;
-  height: 25vh;
-  border-radius: 2%;
-  border-color: transparent;
+.sidebar.collapsed {
+  width: 5%;
 }
 
-.sidearrowbutton {
-  border: 0;
-  display: flex;
-  background-color: transparent;
-  position: relative;
-  left: 85%;
-  padding: 0;
+/* Content Vanishing when Collapsed */
+.sidebar.collapsed .uppersidebar,
+.sidebar.collapsed .lowersidebar {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
-.middlesidebar {
-  height: 7%;
-  align-content: center;
-  position: relative;
+
+.sidebar.collapsed .middlesidebar {
+  justify-content: center;
+  align-items: center;
 }
-.lowersidebar {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  
-}
+
+
 #sidearrow {
   height: 5vh;
   width: auto;
+  transition: transform 0.3s ease;
 }
 
-.duplicatetext {
-  color: darkgray;
+.sidebar.collapsed #sidearrow {
+  transform: rotate(180deg);
+}
+
+
+.uppersidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  padding: 2vh;
+  transition: opacity 0.3s ease;
+}
+
+.arraytext {
+  color: white;
   text-decoration: none;
+  font-size: 1.2em;
+}
+
+.arrayinput {
+  width: 100%;
+  height: 25vh;
+  border-radius: 4px;
+  border: none;
+  padding: 1vh;
+  font-size: 1em;
+}
+
+.middlesidebar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1vh;
+}
+
+.sidearrowbutton {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+/* Lower Sidebar Styles */
+.lowersidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh; 
+  padding: 1vh 2vh 2vh 2vh;
+  transition: opacity 0.3s ease;
+}
+
+.array-size {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2vh;
+}
+
+.array-size-text {
+  color: white;
+  font-size: 1.2em;
+  margin-bottom: 1vh;
+}
+
+.array-size-input {
+  width: 100%;
+  height: 4vh;
+  border-radius: 4px;
+  border: none;
+  padding: 1vh;
+  font-size: 1em;
 }
 
 .duplicate {
   display: flex;
-  flex-direction: row;
-  width: 40%;
-  justify-content: space-around;
+  align-items: center;
+  gap: 1vh;
 }
 
-#valuerange{
-  position: relative;
-  left: 5%;
+.duplicatetext {
+  color: darkgray;
+  font-size: 1em;
+}
+
+#valuerange {
   color: white;
+  font-size: 1.3em;
+  margin-bottom: 1vh;
 }
 
-.slider-container{
-  background-color: white;
-  width: 10vw;
-  height: 1vh;
-  position: relative;
-  left: 10%;
+.complexity {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
 }
 
-.complexityfield{
-  width: 90%;
-  align-self: center;
-  height:7vh;
-  border-radius: 2%;
-  border-color: transparent;
+.complexityfield {
+  width: 100%;
+  height: 4.5vh;
+  border-radius: 4px;
+  border: none;
   background-color: white;
-  position: relative;
-  left: 4%;
+  padding: 1vh;
+  font-size: 1em;
 }
+
+.sidebarbuttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.complexity-button,
+.back-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  transform: scale(1.2);
+}
+
+.complexity-button:hover {
+  transform: scale(1.2);
+}
+
+.complexitypng,
+.backpng {
+  width: 5vh;
+  height: 5vh;
+}
+
+/* Ensure Buttons Remain Visible When Collapsed */
+.sidebar.collapsed .complexity-button,
+.sidebar.collapsed .back-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .complexity-button {
-  display: contents;
+  position: relative; /* Needed for positioning the tooltip */
 }
-.back-button{
-  display: contents;
+
+.complexity-button:hover::after {
+  content: "Bunny was HERE";
+  position: absolute;
+  top: -120%; /* Position above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
-.complexitypng{
-  width: 20%;
-  position: relative;
-  left: 75%;
-}
-.backpng{
-  width: 20%;
-  position: relative;
-  right: 15%;
+
+.complexity-button::after {
+  opacity: 0; 
+  pointer-events: none;
 }
