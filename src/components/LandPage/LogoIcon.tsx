@@ -8,4 +8,4 @@ function LogoIcon() {
     </div>
   );
 }
-export default LogoIcon;
+export {LogoIcon};

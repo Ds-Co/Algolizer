@@ -1,31 +1,37 @@
+import {Particle} from "./Particle";
 import React, { useRef, useEffect, useState } from "react";
-import Particle from "./Particle";
 
-interface CanvasProps {
+interface CanvasProps 
+{
   width?: number;
   height?: number;
 }
 
-const ParticleSystem: React.FC<CanvasProps> = ({
+const ParticleSystem: React.FC<CanvasProps> = (
+  {
   width = window.innerWidth,
   height = window.innerHeight,
-}) => {
+  }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [canvasDimensions, setCanvasDimensions] = useState({ width, height });
 
-  useEffect(() => {
+  useEffect(() => 
+    {
     const canvas = canvasRef.current;
-    if (canvas) {
+    if (canvas) 
+    {
       const ctx = canvas.getContext("2d");
 
-      const initParticles = () => {
+      const initParticles = () => 
+      {
         setParticles([]);
 
         const particlesArray: Particle[] = [];
         const numberOfParticles = (canvas.height * canvas.width) / 9000;
 
-        for (let i = 0; i < numberOfParticles * 2; i++) {
+        for (let i = 0; i < numberOfParticles * 2; i++) 
+        {
           const size = Math.random() * 2 + 1;
           const x =
             Math.random() * (canvas.width - size * 2 - size * 2) + size * 2;
@@ -43,28 +49,35 @@ const ParticleSystem: React.FC<CanvasProps> = ({
         setParticles(particlesArray);
       };
 
-      const animate = () => {
+      const animate = () => 
+      {
         requestAnimationFrame(animate);
         ctx?.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < particles.length; i++) {
+        for (let i = 0; i < particles.length; i++) 
+        {
           particles[i].update();
-          if (ctx) {
+          if (ctx) 
+          {
             particles[i].draw(ctx);
           }
         }
         connect();
       };
 
-      const connect = () => {
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
+      const connect = () => 
+      {
+        for (let i = 0; i < particles.length; i++) 
+        {
+          for (let j = i + 1; j < particles.length; j++) 
+          {
             const particle1 = particles[i];
             const particle2 = particles[j];
             const distance =
               Math.pow(particle2.x - particle1.x, 2) +
               Math.pow(particle2.y - particle1.y, 2);
-            if (distance < 4000 && ctx) {
-              const opacityValue = 1.2 - distance / 20000;
+            if (distance < 4000 && ctx) 
+            {
+              const opacityValue = 0.8 - distance / 20000;
               ctx.lineWidth = 0.2;
               ctx.beginPath();
               ctx.moveTo(particle1.x, particle1.y);
@@ -79,17 +92,20 @@ const ParticleSystem: React.FC<CanvasProps> = ({
       initParticles();
       animate();
 
-      const handleResize = () => {
-        setCanvasDimensions({
+      const handleResize = () => 
+      {
+        setCanvasDimensions(
+        {
           width: window.innerWidth,
           height: window.innerHeight,
         });
-        initParticles(); // Reinitialize particles after resizing
+        initParticles();
       };
 
       window.addEventListener("resize", handleResize);
 
-      return () => {
+      return () => 
+      {
         window.removeEventListener("resize", handleResize);
       };
     }
@@ -105,4 +121,4 @@ const ParticleSystem: React.FC<CanvasProps> = ({
   );
 };
 
-export default ParticleSystem;
+export {ParticleSystem};

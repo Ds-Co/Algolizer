@@ -1,7 +1,7 @@
-import IconButtons from "./IconButton";
-import LogoIcon from "./LogoIcon";
+import {IconButtons} from "./IconButton";
+import {LogoIcon} from "./LogoIcon";
+import {ParticleSystem} from "./BackGroundAnimation";
 import TextLandPage from "./TextLandPage";
-import ParticleSystem from "./BackGroundAnimation";
 function LandPage() {
   return (
     <div className="container">
@@ -16,4 +16,4 @@ function LandPage() {
     </div>
   );
 }
-export default LandPage;
+export {LandPage};

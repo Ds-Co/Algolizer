@@ -1,5 +1,6 @@
 import "./TextLandPageStyle.css";
-function textLandPage() {
+function textLandPage() 
+{
   const textArray1 = ["See ", "algorithms ", "in ", "action! "];
   const textArray2 = ["Graphs ", "and ", "sorting ", "made ", "easy. "];
   const textArray3 = ["Visual ", "learning, ", "better ", "understanding. "];
