@@ -3,6 +3,7 @@ import "./IconButtonStyle.css";
 import gitHubIcon from "../../assets/githubIcon.png";
 import videoIcon from "../../assets/videoIcon.png";
 import arrowIcon from "../../assets/arrowIcon.png";
+import { Link } from "react-router-dom";
 const videoLink =
   "https://docs.google.com/document/d/1wSe3c5Pk82lZJgtE1njiQ98LDyY3Dlw9zReZuX7tExw/edit?usp=sharing";
 const gitLink = "https://github.com/Ds-Co/GS_Visualizer";
@@ -43,13 +44,11 @@ function IconButtons() {
         </div>
       </div>
       <div className="arrowDiv">
-        <button className="arrow">
-          <IconButton
-            icon={arrowIcon}
-            className="arrowPng"
-            url="https://github.com/Ds-Co/GS_Visualizer"
-          />
-        </button>
+        <Link to="/SplitScreen">
+          <button className="arrow" >
+          <img className="arrowPng" src={arrowIcon}/>
+          </button>
+        </Link>
       </div>
     </div>
   );
