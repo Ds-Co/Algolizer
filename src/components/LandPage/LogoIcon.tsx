@@ -1,14 +1,11 @@
-import Logo from "/src/assets/Algolizer_Logo-removebg.png"
-import './LogoIconStyle.css'
+import Logo from "/src/assets/Algolizer_Logo-removebg.png";
+import "./LogoIconStyle.css";
 function LogoIcon() {
-    
-    return (
-      <div className="projectName" >
-        <img className="logo" src={Logo}></img>
-        <a className="logoText">lgolizer</a>
+  return (
+    <div className="projectName">
+      <img className="logo" src={Logo}></img>
+      <a className="logoText">lgolizer</a>
     </div>
-    
-    );
-  }
-  export default LogoIcon;
-  
+  );
+}
+export default LogoIcon;

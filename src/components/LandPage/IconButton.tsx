@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./IconButtonStyle.css";
-import gitHubIcon from "../assets/githubIcon.png";
-import videoIcon from "../assets/videoIcon.png";
-import arrowIcon from "../assets/arrowIcon.png";
+import gitHubIcon from "../../assets/githubIcon.png";
+import videoIcon from "../../assets/videoIcon.png";
+import arrowIcon from "../../assets/arrowIcon.png";
 const videoLink =
   "https://docs.google.com/document/d/1wSe3c5Pk82lZJgtE1njiQ98LDyY3Dlw9zReZuX7tExw/edit?usp=sharing";
 const gitLink = "https://github.com/Ds-Co/GS_Visualizer";

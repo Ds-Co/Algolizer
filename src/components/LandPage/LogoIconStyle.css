@@ -1,32 +1,31 @@
-
 @lato {
-    font-family: "Lato", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
-.projectName{
-    display: flex ;
-    position: absolute;
-    top: 50%;
-    left: 25%;
-    transform: translate(-50%, -50%);
-    width: 50%;
-    height: 30%;
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 }
-.logoText{
-    color: white;
-    text-decoration: none;
-    font-size: 20vh;
-    position: absolute;
-    left: 28%;
-    top: 18%;
-    font-family: "Lato", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-    
+.projectName {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 30%;
+}
+.logoText {
+  color: white;
+  text-decoration: none;
+  font-size: 20vh;
+  position: absolute;
+  left: 28%;
+  top: 18%;
+  font-family: "Lato", sans-serif;
+  font-weight: 600;
+  font-style: normal;
 }
 
-.logo{
-    width: 17vw;
-    height: 27vh;
+.logo {
+  margin-top: 25px;
+  width: auto;
+  height: 25vh;
 }
