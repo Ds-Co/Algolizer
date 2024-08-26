@@ -1,10 +1,10 @@
-import LeftSide from "./LeftSide";
-import RightSide from "./RightSide";
+import LeftSide from './LeftSide';
+import RightSide from './RightSide';
 import "../../Css/SplitScreen.css";
 import { ParticleSystem } from "../LandPage/BackGroundAnimation";
 import { Link } from "react-router-dom";
 import ArrowIcon from "../../assets/arrowIcon.png";
-function MainPage() {
+function SplitScreen() {
   return (
     <div className="WholePage">
       <div className="PlexusEffectSplitScreen">
@@ -24,4 +24,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export {SplitScreen};

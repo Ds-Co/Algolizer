@@ -1,4 +1,4 @@
-import "./TextLandPageStyle.css";
+import "../../CSS/TextLandPageStyle.css"
 function textLandPage() 
 {
   const textArray1 = ["See ", "algorithms ", "in ", "action! "];
