@@ -1,10 +1,10 @@
-.png{
-    width: 100%;
+.png {
+  width: 100%;
 }
-.arrowPng{
+.arrowPng {
   width: 70%;
 }
-.video{
+.video {
   background-color: transparent;
   border: 0;
   cursor: pointer;
@@ -13,7 +13,7 @@
   align-content: center;
 }
 
-.git{
+.git {
   position: absolute;
   background-color: transparent;
   border: 0;
@@ -22,53 +22,52 @@
   width: 37%;
   align-content: center;
 }
-.arrow{
+.arrow {
   background-color: transparent;
   padding: 0;
   border: 0;
-  width: 80%
+  width: 80%;
 }
-.gitdiv{
-  position:absolute;
+.gitdiv {
+  position: absolute;
   top: 5vh;
   right: -2.5vw;
   width: 5.5vw;
 }
-.videodiv{
-  position:absolute;
+.videodiv {
+  position: absolute;
   left: 9vw;
   top: 5vh;
-  width: 3.3vw
+  width: 3.3vw;
 }
-.iconsDiv{
-position: absolute;  
-display: flex; 
-justify-content: center; 
-width: 15vw;
-height: 15vh;
-right: 0px;
+.iconsDiv {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 15vw;
+  height: 15vh;
+  right: 0px;
 }
 
-.arrowDiv{
+.arrowDiv {
   position: absolute;
-  display: flex; 
-  justify-content: center; 
+  display: flex;
+  justify-content: center;
   top: 50%;
   right: 0px;
-  width: 9vw;
-  height: 9vh; 
+  width: auto;
+  height: 10vh;
   transition: all 0.3s ease-in-out;
 }
 
-.arrowDiv:hover{
+.arrowDiv:hover {
   opacity: 0.7;
-  transform: scale(1.1); 
+  transform: scale(1.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  
 }
 
-.hovered{
+.hovered {
   opacity: 0.7;
-  transform: scale(1.1); 
+  transform: scale(1.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

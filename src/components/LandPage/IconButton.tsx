@@ -8,14 +8,12 @@ const videoLink =
   "https://docs.google.com/document/d/1wSe3c5Pk82lZJgtE1njiQ98LDyY3Dlw9zReZuX7tExw/edit?usp=sharing";
 const gitLink = "https://github.com/Ds-Co/GS_Visualizer";
 
-interface Icon 
-{
+interface Icon {
   icon: string;
   className: string;
   url: string;
 }
-function IconButton({ icon, className, url }: Icon) 
-{
+function IconButton({ icon, className, url }: Icon) {
   const [Hovered, setHovered] = useState(false);
   const HoverEnter = () => setHovered(true);
   const HoverLeave = () => setHovered(false);
@@ -30,8 +28,7 @@ function IconButton({ icon, className, url }: Icon)
     ></img>
   );
 }
-function IconButtons() 
-{
+function IconButtons() {
   return (
     <div className="icons">
       <div className="iconsDiv">
@@ -48,12 +45,12 @@ function IconButtons()
       </div>
       <div className="arrowDiv">
         <Link to="/SplitScreen">
-          <button className="arrow" >
-          <img className="arrowPng" src={arrowIcon}/>
+          <button className="arrow">
+            <img className="arrowPng" src={arrowIcon} />
           </button>
         </Link>
       </div>
     </div>
   );
 }
-export {IconButtons};
+export { IconButtons };

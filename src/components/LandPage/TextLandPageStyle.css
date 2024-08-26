@@ -1,7 +1,6 @@
-@lato {
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+@font-face {
+  font-family: Lato;
+  src: url(/src/Assets/Fonts/Lato/Lato-Black.ttf);
 }
 .textContainer {
   text-align: left;
@@ -18,7 +17,7 @@
 
 .text {
   font-size: 5vh;
-  font-family: "Lato", sans-serif;
+  font-family: Lato;
   font-style: italic;
   text-decoration: none;
   font-weight: 100;
