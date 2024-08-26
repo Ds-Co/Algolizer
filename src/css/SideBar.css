@@ -8,188 +8,197 @@
   transition: width 0.3s ease;
 }
 
-.sidebar.collapsed {
+.sidebar--collapsed {
   width: 5%;
 }
 
 /* Content Vanishing when Collapsed */
-.sidebar.collapsed .uppersidebar,
-.sidebar.collapsed .lowersidebar {
+.sidebar--collapsed .sidebar__upper,
+.sidebar--collapsed .sidebar__lower {
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
-.sidebar.collapsed .middlesidebar {
+.sidebar--collapsed .sidebar__middle {
   justify-content: center;
   align-items: center;
 }
 
-
-#sidearrow {
+.sidebar__arrow {
   height: 5vh;
   width: auto;
   transition: transform 0.3s ease;
 }
 
-.sidebar.collapsed #sidearrow {
+.sidebar__arrow--rotated {
   transform: rotate(180deg);
 }
 
-
-.uppersidebar {
+.sidebar__upper {
   display: flex;
   flex-direction: column;
-  gap: 2vh;
-  padding: 2vh;
+  padding: 0;
   transition: opacity 0.3s ease;
+  width: 90%;
+  height: 40%;
+  position: relative;
+  left: 5%;
+  top: 5%;
 }
 
-.arraytext {
+.sidebar__array-text {
+  position: relative;
+  bottom: 5%;
   color: white;
   text-decoration: none;
-  font-size: 1.2em;
+  font-size: 1.3em;
+  margin: 0;
 }
 
-.arrayinput {
+.sidebar__array-input {
   width: 100%;
   height: 25vh;
-  border-radius: 4px;
+  border-radius: 0.1rem;
   border: none;
-  padding: 1vh;
+  padding: 0;
   font-size: 1em;
 }
 
-.middlesidebar {
+.sidebar__middle {
   display: flex;
   justify-content: flex-end;
-  padding: 1vh;
+  position: relative;
+  right: 4%;
 }
 
-.sidearrowbutton {
+.sidebar__toggle-button {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  padding: 0%;
 }
 
 /* Lower Sidebar Styles */
-.lowersidebar {
+.sidebar__lower {
   display: flex;
   flex-direction: column;
-  gap: 1vh; 
-  padding: 1vh 2vh 2vh 2vh;
+  justify-content: space-between;
+  margin: 0;
   transition: opacity 0.3s ease;
+  height: 40%;
+  width: 90%;
+  position: relative;
+  left: 5%;
 }
 
-.array-size {
+.sidebar__array-size {
   display: flex;
   flex-direction: column;
-  margin-bottom: 2vh;
 }
 
-.array-size-text {
-  color: white;
-  font-size: 1.2em;
-  margin-bottom: 1vh;
-}
-
-.array-size-input {
-  width: 100%;
-  height: 4vh;
-  border-radius: 4px;
-  border: none;
-  padding: 1vh;
-  font-size: 1em;
-}
-
-.duplicate {
-  display: flex;
-  align-items: center;
-  gap: 1vh;
-}
-
-.duplicatetext {
-  color: darkgray;
-  font-size: 1em;
-}
-
-#valuerange {
+.sidebar__array-size-text {
+  position: relative;
+  bottom: 10%;
   color: white;
   font-size: 1.3em;
-  margin-bottom: 1vh;
+  margin: 0;
 }
 
-.complexity {
+.sidebar__array-size-input {
+  width: 100%;
+  height: 4vh;
+  border-radius: 0.1rem;
+  border: none;
+  font-size: 1em;
+}
+
+.sidebar__duplicate {
   display: flex;
-  flex-direction: column;
-  gap: 1vh;
+  align-items: center;
+  justify-content: space-between;
+  width: 42%;
 }
 
-.complexityfield {
+.sidebar__duplicate-text {
+  color: darkgray;
+  font-size: 1rem;
+  text-decoration: none;
+}
+.sidebar__duplicate-checkbox {
+  position: relative;
+  top: 10%;
+}
+
+.sidebar__complexity-text {
+  position: relative;
+  bottom: 10%;
+  color: white;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.sidebar__complexity-field {
   width: 100%;
   height: 4.5vh;
-  border-radius: 4px;
+  border-radius: 0.1rem;
   border: none;
   background-color: white;
   padding: 1vh;
   font-size: 1em;
 }
 
-.sidebarbuttons {
+.sidebar__buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: auto;
+  
 }
 
-.complexity-button,
-.back-button {
+.sidebar__complexity-button,
+.sidebar__back-button {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  padding: 0%;
 }
 
-.back-button:hover {
+.sidebar__back-button:hover {
   transform: scale(1.2);
 }
 
-.complexity-button:hover {
+.sidebar__complexity-button:hover {
   transform: scale(1.2);
 }
 
-.complexitypng,
-.backpng {
+.sidebar__complexity-icon,
+.sidebar__back-icon {
   width: 5vh;
   height: 5vh;
 }
 
 /* Ensure Buttons Remain Visible When Collapsed */
-.sidebar.collapsed .complexity-button,
-.sidebar.collapsed .back-button {
+.sidebar--collapsed .sidebar__complexity-button,
+.sidebar--collapsed .sidebar__back-button {
   opacity: 0;
   pointer-events: none;
 }
 
-.complexity-button {
+.sidebar__complexity-button {
   position: relative; /* Needed for positioning the tooltip */
 }
 
-.complexity-button:hover::after {
+.sidebar__complexity-button:hover::after {
   content: "Bunny was HERE";
   position: absolute;
-  top: -120%; /* Position above the button */
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   background-color: black;
   color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
   white-space: nowrap;
   z-index: 100;
   opacity: 1;
   transition: opacity 0.3s ease;
-}
-
-.complexity-button::after {
-  opacity: 0; 
-  pointer-events: none;
 }
