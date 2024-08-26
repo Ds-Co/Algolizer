@@ -1,4 +1,4 @@
-import {IconButtons} from "./IconButton";
+import {IconButtons} from "./IconButton
 import {LogoIcon} from "./LogoIcon";
 import {ParticleSystem} from "./BackGroundAnimation";
 import TextLandPage from "./TextLandPage";
