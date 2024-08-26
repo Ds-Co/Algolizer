@@ -1,6 +1,6 @@
 import { Particle } from "./Particle";
 import React, { useRef, useEffect, useState } from "react";
-./Particle
+import "../../css/BackGroundStyle.css"
 interface CanvasProps {
   width?: number;
   height?: number;
