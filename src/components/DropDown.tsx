@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "/src/css/Dropdown.css";
 
 const DropDown = ({ sorts }: { sorts: string[] }) => {

@@ -6,13 +6,12 @@ import { SplitScreen } from './Components/SplitScreen/SplitScreen';
 import {App} from "./App.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
-{/* 
     <Router>
       <Routes>
         <Route path="/" element={<LandPage />}></Route>
         <Route path="/SplitScreen" element={<SplitScreen />}></Route>
+        <Route path="/App" element={<App />}></Route>
       </Routes>
-    </Router> */}
+    </Router>
   </StrictMode>
 );

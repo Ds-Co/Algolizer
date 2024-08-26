@@ -3,6 +3,7 @@ import arrow from "/assets/side_arrow.png";
 import complexitybutton from "/assets/Complexity_logo.png";
 import backbutton from "/assets/back_button.png";
 import "/src/css/SideBar.css";
+import { Link } from "react-router-dom";
 
 const UpperSidebar: React.FC = () => (
   <div className="sidebar__upper">
@@ -42,9 +43,11 @@ const LowerSidebar: React.FC<{
       <div className="sidebar__complexity-field"></div>
     </div>
     <div className="sidebar__buttons">
+    <Link to = "/SplitScreen">
       <button className="sidebar__back-button">
         <img className="sidebar__back-icon" src={backbutton} alt="Back" />
       </button>
+    </Link>
       <button className="sidebar__complexity-button">
         <img
           className="sidebar__complexity-icon"

@@ -17,7 +17,11 @@ function SplitScreen() {
           </button>
         </Link>
       </div>
-      <LeftSide></LeftSide>
+      <Link to = "/App">
+        <button>
+          <LeftSide></LeftSide>
+        </button>
+      </Link>
       <div className="MiddleBar"></div>
       <RightSide></RightSide>
     </div>
