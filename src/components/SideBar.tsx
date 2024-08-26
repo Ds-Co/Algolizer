@@ -7,7 +7,11 @@ import "/src/css/SideBar.css";
 const UpperSidebar: React.FC = () => (
   <div className="sidebar__upper">
     <h4 className="sidebar__array-text">Array Data:</h4>
-    <input className="sidebar__array-input" type="text" placeholder="Enter Your Array" />
+    <input
+      className="sidebar__array-input"
+      type="text"
+      placeholder="Enter Your Array"
+    />
   </div>
 );
 
@@ -18,7 +22,9 @@ const MiddleSidebar: React.FC<{
   <div className="sidebar__middle">
     <button className="sidebar__toggle-button" onClick={toggleSidebar}>
       <img
-        className={`sidebar__arrow ${isCollapsed ? "sidebar__arrow--rotated" : ""}`}
+        className={`sidebar__arrow ${
+          isCollapsed ? "sidebar__arrow--rotated" : ""
+        }`}
         src={arrow}
         alt="Toggle Sidebar"
       />
@@ -26,20 +32,11 @@ const MiddleSidebar: React.FC<{
   </div>
 );
 
-const LowerSidebar: React.FC = () => (
+const LowerSidebar: React.FC<{
+  ArrayGenerator: React.FC;
+}> = ({ ArrayGenerator }) => (
   <div className="sidebar__lower">
-    <div className="sidebar__array-size">
-      <h4 className="sidebar__array-size-text">Array Size:</h4>
-      <input
-        className="sidebar__array-size-input"
-        type="number"
-        placeholder="Enter Size"
-      />
-    </div>
-    <div className="sidebar__duplicate">
-      <a className="sidebar__duplicate-text">Duplicates</a>
-      <input className="sidebar__duplicate-checkbox" type="checkbox" />
-    </div>
+    <ArrayGenerator />
     <div className="sidebar__complexity">
       <h4 className="sidebar__complexity-text">Complexity:</h4>
       <div className="sidebar__complexity-field"></div>
@@ -59,20 +56,19 @@ const LowerSidebar: React.FC = () => (
   </div>
 );
 
-const SideBar: React.FC = () => {
+const SideBar: React.FC<{
+  ArrayGenerator: React.FC;
+}> = ({ ArrayGenerator }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
-
   return (
     <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
       {!isCollapsed && <UpperSidebar />}
       <MiddleSidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
-      {!isCollapsed && <LowerSidebar />}
+      {!isCollapsed && <LowerSidebar ArrayGenerator={ArrayGenerator} />}
     </div>
   );
 };
-
 export { SideBar };

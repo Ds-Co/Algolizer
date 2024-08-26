@@ -108,7 +108,7 @@
 .sidebar__array-size-input {
   width: 100%;
   height: 4vh;
-  border-radius: 0.1rem;
+  border-radius: 0.4rem;
   border: none;
   font-size: 1em;
 }
@@ -141,7 +141,7 @@
 .sidebar__complexity-field {
   width: 100%;
   height: 4.5vh;
-  border-radius: 0.1rem;
+  border-radius: 0.4rem;
   border: none;
   background-color: white;
   padding: 1vh;
