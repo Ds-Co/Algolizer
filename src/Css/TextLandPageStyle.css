@@ -1,0 +1,32 @@
+@font-face {
+  font-family: Lato;
+  src: url(/src/Assets/Fonts/Lato/Lato-Black.ttf);
+}
+.textContainer {
+  text-align: left;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  position: absolute;
+  top: 55%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+}
+
+.text {
+  font-size: 5vh;
+  font-family: Lato;
+  font-style: italic;
+  text-decoration: none;
+  font-weight: 100;
+}
+
+.lightColor {
+  color: #f3f3f3;
+}
+
+.darkColor {
+  color: #848484;
+}
