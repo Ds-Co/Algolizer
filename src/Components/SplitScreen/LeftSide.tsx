@@ -1,5 +1,5 @@
-import SortingIcon from "D:/Work/Algolizer project/Repo/GS_Visualizer/src/Assets/Sorting Icon.png";
-import "D:/Work/Algolizer project/Repo/GS_Visualizer/src/Css/LeftSide.css";
+import SortingIcon from '../../assets/Sorting Icon.png'
+import '../../Css/LeftSide.css'
 function LeftSide() {
   return (
     <div className="LeftItem">
