@@ -1,6 +1,5 @@
 import { Particle } from "../../Components/LandPage/Particle"
 import React, { useRef, useEffect, useState } from "react";
-import "../../css/BackGroundStyle.css"
 interface CanvasProps {
   width?: number;
   height?: number;
