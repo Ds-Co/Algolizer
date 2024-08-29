@@ -1,54 +1,68 @@
-import React, { ReactNode, useState } from "react";
-import "./TopBar.css";
-import sortIcon from "/assets/sort_icon.png";
+import "/src/css/TopBar.css";
 import info from "/assets/info.png";
 import reset from "/assets/reset.png";
 import speedUp from "/assets/speed_up.png";
 import visualize from "/assets/visualize.png";
 import pause from "/assets/pause.png";
 import "bootstrap/dist/css/bootstrap.css";
-import Dropdown from "./DropDown";
-interface g_icons {
-  iconimg: ReactNode;
-  icontxt: string;
+import { DropDown } from "./DropDown";
+
+interface SortingsProps {
+  text: string;
+  icon: string;
 }
-const TopBar = () => {
-  const sorts: string[] = [
-    "Bubble Sort",
-    "Bogo Sort",
-    "Quick Sort",
-    "Insertion Sort",
-    "Selection Sort",
-    "Sleep Sort",
-    "Merge Sort",
-    "Heap Sort",
-  ];
 
-  const icons: g_icons[] = [
-    { iconimg: <img className="png" src={info} />, icontxt: "Info" },
-    { iconimg: <img className="png" src={reset} />, icontxt: "Reset" },
-    { iconimg: <img className="png" src={pause} />, icontxt: "Pause" },
-    { iconimg: <img className="png" src={speedUp} />, icontxt: "SpeedUp" },
-    { iconimg: <img className="png" src={visualize} />, icontxt: "Visualize" },
-  ];
+interface TopBarProps {
+  dropdownmenu: string[];
+  sortingsProps: SortingsProps;
+}
 
+const Sortings = ({ text, icon }: SortingsProps) => {
   return (
-    <div className="topbar">
-      <div className="sortings">
-        <div className="pngdiv">
-        <img src={sortIcon} className="sortpng" />
-        </div>
-        
-        <a className="sorttext">Sorting</a>
+    <div className="topbar__sortings">
+      <div className="topbar__pngdiv">
+        <img src={icon} className="topbar__sortpng" />
       </div>
-        <Dropdown sorts={sorts} />
-        {icons.map((icon) => (
-  <div className="icons" key={icon.icontxt}>
-    <button className="iconbutton">{icon.iconimg}</button>
-    <a className="icontext">{icon.icontxt}</a>
-  </div>
-))}
+      <a className="topbar__sorttext">{text}</a>
     </div>
   );
 };
-export default TopBar;
+
+const IconButton = ({ iconimg, icontxt }: { iconimg: string; icontxt: string }) => (
+  <div className="topbar__icons">
+    <button className="topbar__iconbutton">
+      <img className="topbar__png" src={iconimg} />
+    </button>
+    <a className="topbar__icontext">{icontxt}</a>
+  </div>
+);
+
+const IconList = () => {
+  const icons = [
+    { iconimg: info, icontxt: "Info" },
+    { iconimg: reset, icontxt: "Reset" },
+    { iconimg: pause, icontxt: "Pause" },
+    { iconimg: speedUp, icontxt: "SpeedUp" },
+    { iconimg: visualize, icontxt: "Visualize" },
+  ];
+
+  return (
+    <>
+      {icons.map(({ iconimg, icontxt }) => (
+        <IconButton key={icontxt} iconimg={iconimg} icontxt={icontxt} />
+      ))}
+    </>
+  );
+};
+
+const TopBar = ({ dropdownmenu, sortingsProps }: TopBarProps) => {
+  return (
+    <div className="topbar">
+      <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
+      <DropDown sorts={dropdownmenu} />
+      <IconList />
+    </div>
+  );
+};
+
+export { TopBar };

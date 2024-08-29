@@ -1,0 +1,59 @@
+@font-face {
+  font-family: Lato;
+  src: url(/src/Assets/Fonts/Lato/Lato-Black.ttf);
+}
+@font-face {
+  font-family: Inter;
+  src: url(/src/Assets/Fonts/Inter/static/Inter_18pt-ExtraLight.ttf);
+}
+.WholePage {
+  color-scheme: light dark;
+  height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0px;
+  padding: 0px;
+  font-size: 50px;
+  font-family: Lato;
+}
+
+.MiddleBar {
+  position: absolute;
+  width: 5px;
+  height: 110vh;
+  background-color: white;
+  margin: 0px;
+  padding: 0px;
+}
+
+.PlexusEffectSplitScreen {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  width: 100vw;
+  background: radial-gradient(rgb(32, 31, 31), black);
+}
+.SortingSlogan {
+  font-family: Inter;
+}
+
+.GraphSlogan {
+  font-family: Inter;
+}
+.SplitScreenBackButton {
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  transform: scale(-1);
+  width: auto;
+  height: 10vh;
+  transition: all 0.3s ease-in-out;
+  justify-content: center;
+  align-content: center;
+}
+.SplitScreenBackButton:hover {
+  transform: scale(-1.1);
+}
