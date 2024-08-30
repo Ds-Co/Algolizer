@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import "/src/css/TopBar.css";
 import axios from "axios";
 import info from "/assets/info.png";
@@ -38,7 +39,6 @@ const IconButton = ({ iconimg, icontxt, onClick }: { iconimg: string; icontxt: s
   </div>
 );
 
-
 const IconList = ({ onVisualizeClick }: { onVisualizeClick: () => void }) => {
   const icons = [
     { iconimg: info, icontxt: "Info" },
@@ -57,18 +57,21 @@ const IconList = ({ onVisualizeClick }: { onVisualizeClick: () => void }) => {
 };
 
 const TopBar = ({ dropdownmenu, sortingsProps }: TopBarProps) => {
+  const [selectedSortType, setSelectedSortType] = useState<string>(dropdownmenu[0]); // Initialize with the first option or a default value
+
+  const handleSelectChange = (sortType: string) => {
+    setSelectedSortType(sortType); // Update the selected sort type
+  };
+
   const handleVisualizeClick = async () => {
     const constantArray = [5, 3, 8, 4, 2]; // Example constant array
-    const sortType = "Bubble Sort"; // Constant sort type
-
-    console.log("HELLO")
-    
+    console.log(selectedSortType);
     try {
       const response = await axios.post("http://localhost:5000/api/sort", {
         array: constantArray,
-        sortType: sortType,
+        sortType: selectedSortType, // Use the selected sort type
       });
-      
+      console.log(selectedSortType);
       console.log(response.data.sortedArray); // Log the sorted array
     } catch (error) {
       console.error("Error during sorting:", error);
@@ -78,7 +81,7 @@ const TopBar = ({ dropdownmenu, sortingsProps }: TopBarProps) => {
   return (
     <div className="topbar">
       <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
-      <DropDown sorts={dropdownmenu} />
+      <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} />
       <IconList onVisualizeClick={handleVisualizeClick} />
     </div>
   );
