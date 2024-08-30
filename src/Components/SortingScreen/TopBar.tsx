@@ -1,4 +1,5 @@
 import "/src/css/TopBar.css";
+import axios from "axios";
 import info from "/assets/info.png";
 import reset from "/assets/reset.png";
 import speedUp from "/assets/speed_up.png";
@@ -28,39 +29,57 @@ const Sortings = ({ text, icon }: SortingsProps) => {
   );
 };
 
-const IconButton = ({ iconimg, icontxt }: { iconimg: string; icontxt: string }) => (
+const IconButton = ({ iconimg, icontxt, onClick }: { iconimg: string; icontxt: string; onClick?: () => void }) => (
   <div className="topbar__icons">
-    <button className="topbar__iconbutton">
+    <button className="topbar__iconbutton" onClick={onClick}>
       <img className="topbar__png" src={iconimg} />
     </button>
     <a className="topbar__icontext">{icontxt}</a>
   </div>
 );
 
-const IconList = () => {
+
+const IconList = ({ onVisualizeClick }: { onVisualizeClick: () => void }) => {
   const icons = [
     { iconimg: info, icontxt: "Info" },
     { iconimg: reset, icontxt: "Reset" },
     { iconimg: pause, icontxt: "Pause" },
     { iconimg: speedUp, icontxt: "SpeedUp" },
-    { iconimg: visualize, icontxt: "Visualize" },
+    { iconimg: visualize, icontxt: "Visualize", onClick: onVisualizeClick },
   ];
-
   return (
     <>
-      {icons.map(({ iconimg, icontxt }) => (
-        <IconButton key={icontxt} iconimg={iconimg} icontxt={icontxt} />
+      {icons.map(({ iconimg, icontxt, onClick }) => (
+        <IconButton key={icontxt} iconimg={iconimg} icontxt={icontxt} onClick={onClick} />
       ))}
     </>
   );
 };
 
 const TopBar = ({ dropdownmenu, sortingsProps }: TopBarProps) => {
+  const handleVisualizeClick = async () => {
+    const constantArray = [5, 3, 8, 4, 2]; // Example constant array
+    const sortType = "Bubble Sort"; // Constant sort type
+
+    console.log("HELLO")
+    
+    try {
+      const response = await axios.post("http://localhost:5000/api/sort", {
+        array: constantArray,
+        sortType: sortType,
+      });
+      
+      console.log(response.data.sortedArray); // Log the sorted array
+    } catch (error) {
+      console.error("Error during sorting:", error);
+    }
+  };
+
   return (
     <div className="topbar">
       <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
       <DropDown sorts={dropdownmenu} />
-      <IconList />
+      <IconList onVisualizeClick={handleVisualizeClick} />
     </div>
   );
 };

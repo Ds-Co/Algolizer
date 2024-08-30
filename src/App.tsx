@@ -1,6 +1,6 @@
 import sortIcon from "/assets/sort_icon.png";
-import { TopBar } from "./Components/TopBar";
-import { SideBar } from "./Components/SideBar";
+import { TopBar } from "./Components/SortingScreen/TopBar";
+import { SideBar } from "./Components/SortingScreen/SideBar";
 import "bootstrap/dist/css/bootstrap.css";
 const ArrayGenerator: React.FC = () => (
   <>
