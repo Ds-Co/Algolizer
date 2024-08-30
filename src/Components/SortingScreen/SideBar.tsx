@@ -5,16 +5,31 @@ import backbutton from "/assets/back_button.png";
 import "/src/css/SideBar.css";
 import { Link } from "react-router-dom";
 
-const UpperSidebar: React.FC = () => (
-  <div className="sidebar__upper">
-    <h4 className="sidebar__array-text">Array Data:</h4>
-    <input
-      className="sidebar__array-input"
-      type="text"
-      placeholder="Enter Your Array"
-    />
-  </div>
-);
+const UpperSidebar: React.FC = () => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
+
+    // Convert the input value to an array of numbers
+    const array = value.split(',').map(item => parseInt(item.trim(), 10)).filter(item => !isNaN(item));
+    localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
+  };
+
+  return (
+    <div className="sidebar__upper">
+      <h4 className="sidebar__array-text">Array Data:</h4>
+      <input
+        className="sidebar__array-input"
+        type="text"
+        placeholder="Enter Your Array"
+        value={inputValue}
+        onChange={handleInputChange}
+      />
+    </div>
+  );
+};
 
 const MiddleSidebar: React.FC<{
   isCollapsed: boolean;
@@ -59,13 +74,13 @@ const LowerSidebar: React.FC<{
   </div>
 );
 
-const SideBar: React.FC<{
-  ArrayGenerator: React.FC;
-}> = ({ ArrayGenerator }) => {
+const SideBar: React.FC<{ ArrayGenerator: React.FC }> = ({ ArrayGenerator }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+
   return (
     <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
       {!isCollapsed && <UpperSidebar />}
@@ -74,4 +89,5 @@ const SideBar: React.FC<{
     </div>
   );
 };
+
 export { SideBar };

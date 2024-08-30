@@ -64,14 +64,17 @@ const TopBar = ({ dropdownmenu, sortingsProps }: TopBarProps) => {
   };
 
   const handleVisualizeClick = async () => {
-    const constantArray = [5, 3, 8, 4, 2]; // Example constant array
-    console.log(selectedSortType);
+    const storedArray = localStorage.getItem("arrayInput");
+    const array = storedArray ? JSON.parse(storedArray) : []; // Retrieve and parse the array from localStorage
+
+    console.log("Selected Sort Type:", selectedSortType);
+    console.log("Array to be sorted:", array);
+
     try {
       const response = await axios.post("http://localhost:5000/api/sort", {
-        array: constantArray,
+        array: array, // Use the retrieved array
         sortType: selectedSortType, // Use the selected sort type
       });
-      console.log(selectedSortType);
       console.log(response.data.sortedArray); // Log the sorted array
     } catch (error) {
       console.error("Error during sorting:", error);
