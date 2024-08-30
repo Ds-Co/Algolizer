@@ -75,7 +75,8 @@ const TopBar = ({ dropdownmenu, sortingsProps }: TopBarProps) => {
         array: array, // Use the retrieved array
         sortType: selectedSortType, // Use the selected sort type
       });
-      console.log(response.data.sortedArray); // Log the sorted array
+      console.log("Sorted Array:", response.data.sortedArray);
+      console.log("Snapshots:", response.data.snapshots);
     } catch (error) {
       console.error("Error during sorting:", error);
     }
