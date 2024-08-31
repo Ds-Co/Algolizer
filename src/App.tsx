@@ -1,7 +1,9 @@
+import React, { useState } from "react";
 import sortIcon from "/assets/sort_icon.png";
 import { TopBar } from "./Components/SortingScreen/TopBar";
 import { SideBar } from "./Components/SortingScreen/SideBar";
 import "bootstrap/dist/css/bootstrap.css";
+
 const ArrayGenerator: React.FC = () => (
   <>
     <div className="sidebar__array-size">
@@ -20,6 +22,8 @@ const ArrayGenerator: React.FC = () => (
 );
 
 const App = () => {
+  const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
+
   const sorts: string[] = [
     "Bubble Sort",
     "Bogo Sort",
@@ -36,10 +40,21 @@ const App = () => {
     icon: sortIcon,
   };
 
+  const handleSelectChange = (sortType: string) => {
+    setSelectedSortType(sortType);
+  };
+
   return (
     <div>
-      <TopBar dropdownmenu={sorts} sortingsProps={sortingsProps}></TopBar>
-      <SideBar ArrayGenerator={ArrayGenerator}></SideBar>
+      <TopBar 
+        dropdownmenu={sorts} 
+        sortingsProps={sortingsProps} 
+        onSelectChange={handleSelectChange} // Pass handler to TopBar
+      />
+      <SideBar 
+        ArrayGenerator={ArrayGenerator} 
+        selectedSortType={selectedSortType} // Pass selected sort type to SideBar
+      />
     </div>
   );
 };

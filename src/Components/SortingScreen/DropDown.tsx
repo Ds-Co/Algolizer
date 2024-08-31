@@ -3,7 +3,7 @@ import "/src/css/Dropdown.css";
 
 interface DropDownProps {
   sorts: string[];
-  onSelectChange: (selectedSortType: string) => void; // New prop
+  onSelectChange: (selectedSortType: string) => void;
 }
 
 const DropDown: React.FC<DropDownProps> = ({ sorts, onSelectChange }) => {
@@ -12,12 +12,12 @@ const DropDown: React.FC<DropDownProps> = ({ sorts, onSelectChange }) => {
     onSelectChange(selectedValue); // Notify parent of the selected value
     event.target.blur();  // Remove focus after selection
   };
-  
+
 
   return (
     <>
-      <select 
-        className="sort__dropdown" 
+      <select
+        className="sort__dropdown"
         onChange={handleSelectChange}
       >
         {sorts.map((sortOption, index) => (

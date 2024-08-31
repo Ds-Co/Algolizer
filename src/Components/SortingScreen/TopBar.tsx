@@ -17,6 +17,7 @@ interface SortingsProps {
 interface TopBarProps {
   dropdownmenu: string[];
   sortingsProps: SortingsProps;
+  onSelectChange: (sortType: string) => void;
 }
 
 const Sortings = ({ text, icon }: SortingsProps) => {
@@ -56,24 +57,24 @@ const IconList = ({ onVisualizeClick }: { onVisualizeClick: () => void }) => {
   );
 };
 
-const TopBar = ({ dropdownmenu, sortingsProps }: TopBarProps) => {
-  const [selectedSortType, setSelectedSortType] = useState<string>(dropdownmenu[0]); // Initialize with the first option or a default value
+const TopBar: React.FC<TopBarProps> = ({ dropdownmenu, sortingsProps, onSelectChange }) => {
+  const [selectedSortType, setSelectedSortType] = useState<string>(dropdownmenu[0]);
 
   const handleSelectChange = (sortType: string) => {
-    setSelectedSortType(sortType); // Update the selected sort type
+    setSelectedSortType(sortType);
+    onSelectChange(sortType); // Notify parent of the selected sort type
   };
 
   const handleVisualizeClick = async () => {
     const storedArray = localStorage.getItem("arrayInput");
-    const array = storedArray ? JSON.parse(storedArray) : []; // Retrieve and parse the array from localStorage
-
-    console.log("Selected Sort Type:", selectedSortType);
-    console.log("Array to be sorted:", array);
+    const array = storedArray ? JSON.parse(storedArray) : [];
+    console.log("selectedSortType:", selectedSortType);
+    console.log("Array to be Sorted:", array);
 
     try {
       const response = await axios.post("http://localhost:5000/api/sort", {
-        array: array, // Use the retrieved array
-        sortType: selectedSortType, // Use the selected sort type
+        array: array,
+        sortType: selectedSortType,
       });
       console.log("Sorted Array:", response.data.sortedArray);
       console.log("Snapshots:", response.data.snapshots);

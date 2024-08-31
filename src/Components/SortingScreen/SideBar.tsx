@@ -12,7 +12,7 @@ const UpperSidebar: React.FC = () => {
     const value = event.target.value;
     setInputValue(value);
 
-    // Convert the input value to an array of numbers
+    // Is there better?
     const array = value.split(',').map(item => parseInt(item.trim(), 10)).filter(item => !isNaN(item));
     localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
   };
@@ -38,9 +38,8 @@ const MiddleSidebar: React.FC<{
   <div className="sidebar__middle">
     <button className="sidebar__toggle-button" onClick={toggleSidebar}>
       <img
-        className={`sidebar__arrow ${
-          isCollapsed ? "sidebar__arrow--rotated" : ""
-        }`}
+        className={`sidebar__arrow ${isCollapsed ? "sidebar__arrow--rotated" : ""
+          }`}
         src={arrow}
         alt="Toggle Sidebar"
       />
@@ -50,31 +49,59 @@ const MiddleSidebar: React.FC<{
 
 const LowerSidebar: React.FC<{
   ArrayGenerator: React.FC;
-}> = ({ ArrayGenerator }) => (
-  <div className="sidebar__lower">
-    <ArrayGenerator />
-    <div className="sidebar__complexity">
-      <h4 className="sidebar__complexity-text">Complexity:</h4>
-      <div className="sidebar__complexity-field"></div>
-    </div>
-    <div className="sidebar__buttons">
-    <Link to = "/SplitScreen">
-      <button className="sidebar__back-button">
-        <img className="sidebar__back-icon" src={backbutton} alt="Back" />
-      </button>
-    </Link>
-      <button className="sidebar__complexity-button">
-        <img
-          className="sidebar__complexity-icon"
-          src={complexitybutton}
-          alt="Complexity"
-        />
-      </button>
-    </div>
-  </div>
-);
+  selectedSortType: string;
+}> = ({ ArrayGenerator, selectedSortType }) => {
 
-const SideBar: React.FC<{ ArrayGenerator: React.FC }> = ({ ArrayGenerator }) => {
+  const getComplexity = (sortType: string): string => {
+    switch (sortType) {
+      case "Bubble Sort":
+        return "O(n^2)";
+      case "Quick Sort":
+        return "O(n^2)";
+      case "Merge Sort":
+        return "O(n log n)";
+      case "Insertion Sort":
+        return "O(n^2)";
+      case "Selection Sort":
+        return "O(n^2)";
+      case "Bogo Sort":
+        return "O((n!)^2)";
+      case "Sleep Sort":
+        return "Not well-defined";
+      case "Heap Sort":
+        return "O(n log n)";
+      default:
+        return "Unknown Complexity";
+    }
+  };
+
+
+  return (
+    <div className="sidebar__lower">
+      <ArrayGenerator />
+      <div className="sidebar__complexity">
+        <h4 className="sidebar__complexity-text">Complexity:</h4>
+        <div className="sidebar__complexity-field">{getComplexity(selectedSortType)}</div>
+      </div>
+      <div className="sidebar__buttons">
+        <Link to="/SplitScreen">
+          <button className="sidebar__back-button">
+            <img className="sidebar__back-icon" src={backbutton} alt="Back" />
+          </button>
+        </Link>
+        <button className="sidebar__complexity-button">
+          <img
+            className="sidebar__complexity-icon"
+            src={complexitybutton}
+            alt="Complexity"
+          />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const SideBar: React.FC<{ ArrayGenerator: React.FC; selectedSortType: string }> = ({ ArrayGenerator, selectedSortType }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => {
@@ -85,7 +112,7 @@ const SideBar: React.FC<{ ArrayGenerator: React.FC }> = ({ ArrayGenerator }) => 
     <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
       {!isCollapsed && <UpperSidebar />}
       <MiddleSidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
-      {!isCollapsed && <LowerSidebar ArrayGenerator={ArrayGenerator} />}
+      {!isCollapsed && <LowerSidebar ArrayGenerator={ArrayGenerator} selectedSortType={selectedSortType} />}
     </div>
   );
 };

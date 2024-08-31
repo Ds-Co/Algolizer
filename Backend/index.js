@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { bubbleSort, quickSort } = require('./algorithms'); // Import the algorithms
+const { bubbleSort, quickSort } = require('./sortingAlgorithms');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,6 +17,9 @@ app.get('/', (req, res) => {
 
 // Sorting route
 app.post('/api/sort', (req, res) => {
+
+   // console.log("hello");
+
     const { array, sortType } = req.body;
 
     if (!Array.isArray(array) || typeof sortType !== 'string') {
@@ -25,7 +28,8 @@ app.post('/api/sort', (req, res) => {
 
     let result;
 
-    switch (sortType) {
+    switch (sortType) 
+    {
         case "Bubble Sort":
             result = bubbleSort([...array]);
             break;
