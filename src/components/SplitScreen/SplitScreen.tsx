@@ -17,13 +17,17 @@ function SplitScreen() {
           </button>
         </Link>
       </div>
-      <Link to = "/App">
+      <Link to = "/SortingScreen">
         <button>
           <LeftSide></LeftSide>
         </button>
       </Link>
       <div className="MiddleBar"></div>
-      <RightSide></RightSide>
+      <Link to = "/GraphScreen">
+        <button>
+        <RightSide></RightSide>
+        </button>
+      </Link>
     </div>
   );
 }

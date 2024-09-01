@@ -3,6 +3,10 @@ const cors = require('cors');
 require('dotenv').config();
 const { bubbleSort, quickSort } = require('./sortingAlgorithms');
 
+//
+const { DepthFirstSearch, BreadthFirstSearch } = require('./GraphAlgorithms');
+//
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -42,6 +46,39 @@ app.post('/api/sort', (req, res) => {
 
     res.json(result);
 });
+
+
+// Graph route
+app.post('/api/graph', (req, res) => {
+    const { array, GraphAlgo } = req.body;
+    if (typeof array !== 'object' || typeof GraphAlgo !== 'string') {
+        return res.status(400).json({ error: 'Invalid input format' });
+    }
+    let result;
+
+    try {
+
+        switch (GraphAlgo) {
+            case "DFS":
+                result = DepthFirstSearch(array, 1);
+                break;
+            case "BFS":
+                result = BreadthFirstSearch(array, 1);
+                break;
+            default:
+                return res.status(400).json({ error: 'Invalid graph type' });
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error processing graph algorithm:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+});
+
+  
+
 
 // Start the server
 app.listen(PORT, () => {

@@ -5,27 +5,37 @@ import backbutton from "/assets/back_button.png";
 import "/src/css/SideBar.css";
 import { Link } from "react-router-dom";
 
-const UpperSidebar: React.FC = () => {
+interface LowerSidebarProps {
+  ArrayGenerator: React.FC;
+  selectedSortType: string;
+  getComplexity: (sortType: string) => string; // New prop for the complexity logic
+}
+
+interface SideBarProps {
+  ArrayGenerator: React.FC;
+  selectedSortType: string;
+  getComplexity: (sortType: string) => string; // Pass the prop to SideBar
+  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void; // New prop for handleInputChange
+}
+
+interface UpperSidebarProps {
+  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
+
+const UpperSidebar: React.FC<UpperSidebarProps> = ({ handleInputChange }) => {
   const [inputValue, setInputValue] = useState("");
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputValue(value);
-
-    // Is there better?
-    const array = value.split(',').map(item => parseInt(item.trim(), 10)).filter(item => !isNaN(item));
-    localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
-  };
 
   return (
     <div className="sidebar__upper">
       <h4 className="sidebar__array-text">Array Data:</h4>
-      <input
+      <textarea
         className="sidebar__array-input"
-        type="text"
         placeholder="Enter Your Array"
         value={inputValue}
-        onChange={handleInputChange}
+        onChange={(event) => {
+          setInputValue(event.target.value);
+          handleInputChange(event); // Use the passed prop
+        }}
       />
     </div>
   );
@@ -38,8 +48,9 @@ const MiddleSidebar: React.FC<{
   <div className="sidebar__middle">
     <button className="sidebar__toggle-button" onClick={toggleSidebar}>
       <img
-        className={`sidebar__arrow ${isCollapsed ? "sidebar__arrow--rotated" : ""
-          }`}
+        className={`sidebar__arrow ${
+          isCollapsed ? "sidebar__arrow--rotated" : ""
+        }`}
         src={arrow}
         alt="Toggle Sidebar"
       />
@@ -47,41 +58,19 @@ const MiddleSidebar: React.FC<{
   </div>
 );
 
-const LowerSidebar: React.FC<{
-  ArrayGenerator: React.FC;
-  selectedSortType: string;
-}> = ({ ArrayGenerator, selectedSortType }) => {
-
-  const getComplexity = (sortType: string): string => {
-    switch (sortType) {
-      case "Bubble Sort":
-        return "O(n^2)";
-      case "Quick Sort":
-        return "O(n^2)";
-      case "Merge Sort":
-        return "O(n log n)";
-      case "Insertion Sort":
-        return "O(n^2)";
-      case "Selection Sort":
-        return "O(n^2)";
-      case "Bogo Sort":
-        return "O((n!)^2)";
-      case "Sleep Sort":
-        return "Not well-defined";
-      case "Heap Sort":
-        return "O(n log n)";
-      default:
-        return "Unknown Complexity";
-    }
-  };
-
-
+const LowerSidebar: React.FC<LowerSidebarProps> = ({
+  ArrayGenerator,
+  selectedSortType,
+  getComplexity, // Receive the new prop
+}) => {
   return (
     <div className="sidebar__lower">
       <ArrayGenerator />
       <div className="sidebar__complexity">
         <h4 className="sidebar__complexity-text">Complexity:</h4>
-        <div className="sidebar__complexity-field">{getComplexity(selectedSortType)}</div>
+        <div className="sidebar__complexity-field">
+          {getComplexity(selectedSortType)}
+        </div>
       </div>
       <div className="sidebar__buttons">
         <Link to="/SplitScreen">
@@ -101,7 +90,12 @@ const LowerSidebar: React.FC<{
   );
 };
 
-const SideBar: React.FC<{ ArrayGenerator: React.FC; selectedSortType: string }> = ({ ArrayGenerator, selectedSortType }) => {
+const SideBar: React.FC<SideBarProps> = ({
+  ArrayGenerator,
+  selectedSortType,
+  getComplexity,
+  handleInputChange // Receive the new prop
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => {
@@ -110,9 +104,15 @@ const SideBar: React.FC<{ ArrayGenerator: React.FC; selectedSortType: string }> 
 
   return (
     <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
-      {!isCollapsed && <UpperSidebar />}
+      {!isCollapsed && <UpperSidebar handleInputChange={handleInputChange} />} {/* Pass the prop */}
       <MiddleSidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
-      {!isCollapsed && <LowerSidebar ArrayGenerator={ArrayGenerator} selectedSortType={selectedSortType} />}
+      {!isCollapsed && (
+        <LowerSidebar
+          ArrayGenerator={ArrayGenerator}
+          selectedSortType={selectedSortType}
+          getComplexity={getComplexity} // Pass the prop to LowerSidebar
+        />
+      )}
     </div>
   );
 };
