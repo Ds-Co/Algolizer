@@ -60,10 +60,10 @@ app.post('/api/graph', (req, res) => {
 
         switch (GraphAlgo) {
             case "DFS":
-                result = DepthFirstSearch(array, 1);
+                result = DepthFirstSearch(array, '1');
                 break;
             case "BFS":
-                result = BreadthFirstSearch(array, 1);
+                result = BreadthFirstSearch(array, '1');
                 break;
             default:
                 return res.status(400).json({ error: 'Invalid graph type' });
