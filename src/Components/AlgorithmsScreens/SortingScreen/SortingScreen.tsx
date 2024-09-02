@@ -66,7 +66,8 @@ const SortingScreen = () => {
       .map(line => line.split(",").map(item => parseInt(item.trim(), 10)))
       .flat()
       .filter(item => !isNaN(item));
-    localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
+
+      localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
   };
 
   const sortingsProps = {
@@ -79,13 +80,15 @@ const SortingScreen = () => {
   };
 
   const handleVisualizeClick = async () => {
+
     const storedArray = localStorage.getItem("arrayInput");
     const array = storedArray ? JSON.parse(storedArray) : [];
+
     console.log("selectedSortType:", selectedSortType);
     console.log("Array to be Sorted:", array);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/sort", {
+        const response = await axios.post("http://localhost:5000/api/sort", {
         array: array,
         sortType: selectedSortType,
       });

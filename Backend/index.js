@@ -2,10 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { bubbleSort, quickSort } = require('./sortingAlgorithms');
-
-//
-const { DepthFirstSearch, BreadthFirstSearch } = require('./GraphAlgorithms');
-//
+const { DepthFirstSearch, BreadthFirstSearch } = require('./graphAlgorithms');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,8 +18,6 @@ app.get('/', (req, res) => {
 
 // Sorting route
 app.post('/api/sort', (req, res) => {
-
-   // console.log("hello");
 
     const { array, sortType } = req.body;
 
@@ -50,6 +45,7 @@ app.post('/api/sort', (req, res) => {
 
 // Graph route
 app.post('/api/graph', (req, res) => {
+
     const { array, GraphAlgo } = req.body;
     if (typeof array !== 'object' || typeof GraphAlgo !== 'string') {
         return res.status(400).json({ error: 'Invalid input format' });
@@ -78,8 +74,6 @@ app.post('/api/graph', (req, res) => {
 });
 
   
-
-
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
