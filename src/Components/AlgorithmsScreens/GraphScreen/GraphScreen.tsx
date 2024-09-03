@@ -4,6 +4,7 @@ import { TopBar } from "../TopBar";
 import { SideBar } from "../SideBar";
 import axios from "axios";
 import { GraphVisualization } from "./GraphVisualization"; 
+import "../../../Css/GraphScreenStyle.css"
 const graphfuncionality: React.FC = () => {
   return <></>;
 };
@@ -91,14 +92,16 @@ const GraphScreen = () => {
         handleVisualizeClick={handleVisualizeClick}
         onSelectChange={handleSelectChange}
       ></TopBar>
+      
       <SideBar
         ArrayGenerator={graphfuncionality}
         selectedSortType={selectedGraphType}
         getComplexity={getComplexity}
         handleInputChange={handleGraphInputChange}
       ></SideBar>
+      <div className="visualization">
       <GraphVisualization/>
-     
+     </div>
     </>
   );
 };

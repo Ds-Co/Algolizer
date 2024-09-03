@@ -5,13 +5,11 @@ import {edges, nodes} from './Data'
 export default function GraphVisualization() {
 
     var options = {
-        width: "800",
-        height: "900",
         nodes: {
             shape: 'dot',
-            size: 10, 
+            size: 15, 
             color: {
-              background: '#89CFF0', 
+              background: '#000000', 
               border: '#FFFFFF',
               highlight: {
                 border: 'orange',
@@ -57,12 +55,10 @@ export default function GraphVisualization() {
       var data = {nodes: nodes, edges: edges}
       
     return (
-      <div className='container'>
           <Graph
               graph = {data}
               options={options}
           />
-      </div>
     )
   }
 

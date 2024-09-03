@@ -1,3 +1,34 @@
+
+
+//     // Process the input value
+//     const edges = value
+//       .split("\n") // Split the input by new lines to get each edge
+//       .map((line) => {
+//         const [node1, node2] = line.split(",").map((item) => item.trim());
+//         return { node1, node2 }; // Create an edge object with node1 and node2
+//       })
+//       .filter((edge) => edge.node1 && edge.node2); // Filter out any invalid edges
+
+//     // Optionally, convert edges to an adjacency list or other graph representation if needed
+//     const adjacencyList: Record<string, string[]> = {};
+
+//     edges.forEach((edge) => {
+//       if (!adjacencyList[edge.node1]) {
+//         adjacencyList[edge.node1] = [];
+//       }
+//       if (!adjacencyList[edge.node2]) {
+//         adjacencyList[edge.node2] = [];
+//       }
+//       adjacencyList[edge.node1].push(edge.node2);
+//       adjacencyList[edge.node2].push(edge.node1); // Assuming an undirected graph
+//     });
+
+//     localStorage.setItem("graphInput", JSON.stringify(adjacencyList)); // Store the graph representation in localStorage
+ 
+// const storedAdjacencyList = localStorage.getItem("graphInput");
+// const adjacencyList = storedAdjacencyList? JSON.parse(storedAdjacencyList)  : [];
+// console.log("Adjacency List:", adjacencyList);
+
 export var nodes = [
   {
     id: 1,
@@ -51,7 +82,7 @@ export var nodes = [
   },
   {
     id: 11,
-    label: "Node 10",
+    label: "Node 11",
     
   }
 ];
