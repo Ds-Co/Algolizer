@@ -5,6 +5,8 @@ import { SideBar } from "../SideBar";
 import axios from "axios";
 import { GraphVisualization } from "./GraphVisualization"; 
 import "../../../Css/GraphScreenStyle.css"
+
+
 const graphfuncionality: React.FC = () => {
   return <></>;
 };
