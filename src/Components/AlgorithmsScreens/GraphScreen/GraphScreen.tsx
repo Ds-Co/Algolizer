@@ -3,7 +3,7 @@ import graphicon from "/assets/sort_icon.png";
 import { TopBar } from "../TopBar";
 import { SideBar } from "../SideBar";
 import axios from "axios";
-// import GraphVisualization from "./GraphVisualization"; 
+import { GraphVisualization } from "./GraphVisualization"; 
 const graphfuncionality: React.FC = () => {
   return <></>;
 };

@@ -5,7 +5,6 @@
     { "path": "./tsconfig.node.json" }
   ],
     "compilerOptions": {
-      "jsx": "react",
       "esModuleInterop": true,
       "strict": true,
       "moduleResolution": "node",
