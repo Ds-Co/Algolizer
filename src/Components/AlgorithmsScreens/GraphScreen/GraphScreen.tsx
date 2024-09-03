@@ -38,28 +38,28 @@ const GraphScreen = () => {
   ) => {
     const value = event.target.value;
 
-    // Process the input value
     const edges = value
-      .split("\n") // Split the input by new lines to get each edge
-      .map((line) => {
-        const [node1, node2] = line.split(",").map((item) => item.trim());
-        return { node1, node2 }; // Create an edge object with node1 and node2
-      })
-      .filter((edge) => edge.node1 && edge.node2); // Filter out any invalid edges
+    .split("\n") // Split the input by new lines to get each edge
+    .map((line) => {
+      const [node1, node2] = line.split(",").map((item) => item.trim());
+      return { node1, node2 }; // Create an edge object with node1 and node2
+    })
+    .filter((edge) => edge.node1 && edge.node2); // Filter out any invalid edges
+  // Initialize an empty adjacency list
+  const adjacencyList: Record<string, string[]> = {};
 
-    // Optionally, convert edges to an adjacency list or other graph representation if needed
-    const adjacencyList: Record<string, string[]> = {};
+  edges.forEach((edge) => {
+    if (!adjacencyList[edge.node1]) {
+      adjacencyList[edge.node1] = [];
+    }
+    if (!adjacencyList[edge.node2]) {
+      adjacencyList[edge.node2] = [];
+    }
+    adjacencyList[edge.node1].push(edge.node2);
+   // adjacencyList[edge.node2].push(edge.node1); // Assuming an undirected graph
+  });
 
-    edges.forEach((edge) => {
-      if (!adjacencyList[edge.node1]) {
-        adjacencyList[edge.node1] = [];
-      }
-      if (!adjacencyList[edge.node2]) {
-        adjacencyList[edge.node2] = [];
-      }
-      adjacencyList[edge.node1].push(edge.node2);
-      adjacencyList[edge.node2].push(edge.node1); // Assuming an undirected graph
-    });
+    console.log("graphscreen :",adjacencyList);
 
     localStorage.setItem("graphInput", JSON.stringify(adjacencyList)); // Store the graph representation in localStorage
   };
