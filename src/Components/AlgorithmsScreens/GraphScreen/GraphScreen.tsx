@@ -85,8 +85,9 @@ const GraphScreen = () => {
 
   return (
     <>
-      {/* <GraphVisualization/> */}
-      <TopBar
+      <GraphVisualization/>
+      
+      {/* <TopBar
         dropdownmenu={graphs}
         sortingsProps={graphsProps}
         handleVisualizeClick={handleVisualizeClick}
@@ -98,6 +99,7 @@ const GraphScreen = () => {
         getComplexity={getComplexity}
         handleInputChange={handleGraphInputChange}
       ></SideBar>
+      */}
     </>
   );
 };

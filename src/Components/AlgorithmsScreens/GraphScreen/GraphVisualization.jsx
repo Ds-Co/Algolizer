@@ -1,6 +1,6 @@
 import React from 'react'
 import Graph from 'react-vis-network-graph'
-import {edges, nodes} from './data'
+import {edges, nodes} from './Data'
 
 export default function GraphVisualization() {
 

@@ -10,14 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@types/react-router-dom": "^5.3.3",
     "algp": "file:",
+    "assert": "^2.1.0",
     "axios": "^1.7.5",
     "bootstrap": "^5.3.3",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "react-vis-network-graph": "^3.0.1",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5",
     "vis-network": "^9.1.9"
   },
   "devDependencies": {
@@ -32,6 +38,7 @@
     "globals": "^15.9.0",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vite-plugin-node-polyfills": "^0.22.0"
   }
 }
