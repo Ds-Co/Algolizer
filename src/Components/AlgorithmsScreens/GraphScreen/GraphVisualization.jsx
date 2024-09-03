@@ -1,54 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Graph from 'react-vis-network-graph';
 import _ from 'lodash'; // Ensure lodash is installed
-import { edges, nodes } from './data';
+import { GraphData } from './GraphData';
 
-export default function GraphVisualization() {
-  // State to hold nodes and edges
-  // const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
-
-
-  // // Function to generate nodes and edges from localStorage
-  // const generateGraphData = () => {
-  //   const storedAdjacencyList = localStorage.getItem("graphInput");
-  //   const adjacencyList = storedAdjacencyList ? JSON.parse(storedAdjacencyList) : {};
-
-
-  //   console.log(" data:", adjacencyList);
-
-  //   // Generate nodes and edges
-  //   const nodes = Object.keys(adjacencyList).map(id => ({
-  //     id: Number(id),
-  //     label: `Node ${id}`
-  //   }));
-
-  //   const edges = Object.entries(adjacencyList).flatMap(([node1, neighbors]) =>
-  //     neighbors.map(neighbor => ({
-  //       from: Number(node1),
-  //       to: Number(neighbor)
-  //     }))
-  //   );
-
-  //   console.log("Generated graph data:", { nodes, edges });
-
-  //   return { nodes, edges };
-  // };
-
-  // useEffect(() => {
-  //   const updateGraphData = () => {
-  //     const data = generateGraphData();
-  //     console.log("Processed graph data:", data); // Check here
-  //     setGraphData(data); // Update with new data
-  //   };
-  
-  //   updateGraphData(); // Initial data load
-  
-  //   window.addEventListener('storage', updateGraphData);
-  
-  //   return () => {
-  //     window.removeEventListener('storage', updateGraphData);
-  //   };
-  // }, []);
+export default function GraphVisualization({nodes,edges}) {
 
   const options = {
     nodes: {
