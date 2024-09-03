@@ -5,22 +5,13 @@ import {edges, nodes} from './Data'
 export default function GraphVisualization() {
 
     var options = {
-        // General appearance
-        width: window.innerWidth,
-        height: window.innerHeight,
-        backgroundColor: '#F5F5F5', // Light gray background
-        font: {
-          size: 14,
-          face: 'Arial',
-          color: '#333'
-        },
-      
-        // Nodes
+        width: "800",
+        height: "900",
         nodes: {
             shape: 'dot',
-            size: 10, // Set a fixed size for all nodes
+            size: 10, 
             color: {
-              background: '#89CFF0', // Set a fixed color for all nodes
+              background: '#89CFF0', 
               border: '#FFFFFF',
               highlight: {
                 border: 'orange',
@@ -28,11 +19,9 @@ export default function GraphVisualization() {
               }
             },
             font: {
-              color: '#FFFFFF'
+              color: '#000000'
             }
           },
-                
-        // Edges
         edges: {
             width: 2,
             color: {
@@ -45,11 +34,10 @@ export default function GraphVisualization() {
             arrows: {
               to: {
                 enabled: true,
-                scale: 0.5
+                scaleFactor: 0.5
               }
             }
           },
-          // Interaction
           physics: {
             enabled: true,
             solver: 'barnesHut',
@@ -61,25 +49,9 @@ export default function GraphVisualization() {
           interaction: {
             navigationButtons: true,
             dragNodes: true,
-            dragVertices: true,
+            dragView: true,
             zoomView: true,
-            navigation: true,
-          //   tooltip: {
-          //     enabled: true,
-          //     delay: 200,
-          //     template: (node) => {
-          //       return `<div><strong>${node.id}</strong><br>${node.label}</div>`;
-          //     }
-          //   }
           },
-        
-          // Legend
-          legend: {
-            enabled: true,
-            position: 'bottom',
-            orientation: 'horizontal',
-            nodeShape: 'circle'
-          }
         };
   
       var data = {nodes: nodes, edges: edges}
