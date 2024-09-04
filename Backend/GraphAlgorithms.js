@@ -6,21 +6,19 @@ function BreadthFirstSearch(adjList , StartNody)
     let queueLike = [StartNody];
 
     visited.add(StartNody);
+    snapshots.push(StartNody);
 
     while(queueLike.length > 0){
         let nody=queueLike.shift();
-        let temp=new Set();
         for(let child of adjList[nody] || []){
             if(!visited.has(child)){
                 visited.add(child);
-                temp.add(child);
+                snapshots.push(child);
                 queueLike.push(child);
             }
         }
-       
-        snapshots.push([temp]);
     }
-    return {VisitedNodes : [...visited] ,snapshots};
+    return {snapshots};
 }
 
 function DepthFirstSearch(adjList , StartNody)
@@ -31,7 +29,7 @@ function DepthFirstSearch(adjList , StartNody)
     function DFS(nody)
     {
         visited.add(nody);
-        snapshots.push([nody]);
+        snapshots.push(nody);
 
         for(let child of adjList[nody] || [])
         {
@@ -42,7 +40,7 @@ function DepthFirstSearch(adjList , StartNody)
 
     DFS(StartNody);
 
-    return {VisitedNodes: [...visited] , snapshots};
+    return {snapshots};
 }
 
 module.exports={DepthFirstSearch,BreadthFirstSearch};

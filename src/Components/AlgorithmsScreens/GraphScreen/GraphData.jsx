@@ -7,7 +7,7 @@ const adjacencyList = storedAdjacencyList ? JSON.parse(storedAdjacencyList) : {}
 // Generate nodes and edges
 var nodes = Object.keys(adjacencyList).map(id => ({
   id: Number(id),
-  label: `Node ${id}`
+  label: `Node ${id}`,
 }));
 
 var edges = Object.entries(adjacencyList).flatMap(([node1, neighbors]) =>

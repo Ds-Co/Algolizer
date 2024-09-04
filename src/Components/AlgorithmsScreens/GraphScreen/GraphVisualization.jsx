@@ -1,60 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Graph from 'react-vis-network-graph';
-import _ from 'lodash'; // Ensure lodash is installed
 
-export default function GraphVisualization({nodes,edges}) {
-  // State to hold nodes and edges
-  // const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
+export default function GraphVisualization({ nodes, edges, nodeColors, physicsEnabled }) {
 
-
-  // // Function to generate nodes and edges from localStorage
-  // const generateGraphData = () => {
-  //   const storedAdjacencyList = localStorage.getItem("graphInput");
-  //   const adjacencyList = storedAdjacencyList ? JSON.parse(storedAdjacencyList) : {};
-
-
-  //   console.log(" data:", adjacencyList);
-
-  //   // Generate nodes and edges
-  //   const nodes = Object.keys(adjacencyList).map(id => ({
-  //     id: Number(id),
-  //     label: `Node ${id}`
-  //   }));
-
-  //   const edges = Object.entries(adjacencyList).flatMap(([node1, neighbors]) =>
-  //     neighbors.map(neighbor => ({
-  //       from: Number(node1),
-  //       to: Number(neighbor)
-  //     }))
-  //   );
-
-  //   console.log("Generated graph data:", { nodes, edges });
-
-  //   return { nodes, edges };
-  // };
-
-  // useEffect(() => {
-  //   const updateGraphData = () => {
-  //     const data = generateGraphData();
-  //     console.log("Processed graph data:", data); // Check here
-  //     setGraphData(data); // Update with new data
-  //   };
-  
-  //   updateGraphData(); // Initial data load
-  
-  //   window.addEventListener('storage', updateGraphData);
-  
-  //   return () => {
-  //     window.removeEventListener('storage', updateGraphData);
-  //   };
-  // }, []);
+  // Apply colors from nodeColors to the nodes array
+  const coloredNodes = nodes.map(node => ({
+    ...node,
+    color: nodeColors[node.id] || '#000000', // Default to black if no color is provided
+    fixed: { x: true, y: true }
+  }));
 
   const options = {
     nodes: {
       shape: 'dot',
-      size: 15,
+      size: 25,
       color: {
-        background: '#000000',
         border: '#FFFFFF',
         highlight: {
           border: 'orange',
@@ -82,7 +42,7 @@ export default function GraphVisualization({nodes,edges}) {
       },
     },
     physics: {
-      enabled: true,
+      enabled: physicsEnabled,
       solver: 'barnesHut',
       stabilization: {
         enabled: true,
@@ -95,9 +55,13 @@ export default function GraphVisualization({nodes,edges}) {
       dragView: true,
       zoomView: true,
     },
+    layout: {
+      improvedLayout: false // Disable layout adjustments
+    }
+    
   };
 
-  var data={nodes:nodes,edges:edges}
+  const data = { nodes: coloredNodes, edges: edges };
 
   return (
     <Graph

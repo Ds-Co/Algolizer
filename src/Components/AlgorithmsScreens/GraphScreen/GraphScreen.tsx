@@ -14,6 +14,8 @@ const graphfuncionality: React.FC = () => {
 const GraphScreen = () => {
   let [newNodes, setNewNodes] = useState<any[]>([]); // Assuming newNodes is an array of nodes
   let [newEdges, setNewEdges] = useState<any[]>([]); // Assuming newEdges is an array of edges
+  let [nodeColors, setNodeColors] = useState<{ [key: number]: string }>({}); // State for node colors
+  let [physicsEnabled, setPhysicsEnabled] = useState<boolean>(true);
 
   const [selectedGraphType, setSelectedGraphType] = useState<string>("BFS");
   const graphs: string[] = ["BFS", "DFS", "Dijkstra"];
@@ -84,17 +86,44 @@ const GraphScreen = () => {
     console.log("selectedGraphType:", selectedGraphType);
     console.log("Adjacency List:", adjacencyList);
 
+    // Temporarily disable physics
+    setPhysicsEnabled(false);
+
     try {
       const response = await axios.post("http://localhost:5000/api/graph", {
         array: adjacencyList,
         GraphAlgo: selectedGraphType, // Ensure this matches server-side expectation
       });
+
       console.log("Visited Array:", response.data.VisitedNodes);
       console.log("Snapshots:", response.data.snapshots);
+
+      const snapshots = response.data.snapshots;
+
+      // Loop over snapshots to update node colors
+      snapshots.forEach((snapshot: number, index: number) => {
+        setTimeout(() => {
+          setNodeColors((prevColors: { [key: number]: string }) => ({
+            ...prevColors,
+            [snapshot]: `#FF5733`, // Use a fixed color (e.g., orange-red)
+          }));
+        }, index * 1000); // Increase the delay to slow down the animation (1000ms = 1 second)
+      });      
+
+      // Reset colors after the animation
+      setTimeout(() => {
+        setNodeColors({});
+        // Re-enable physics
+        setPhysicsEnabled(true);
+      }, (snapshots.length + 1) * 1000); // Adjust delay based on animation duration
+
     } catch (error) {
       console.error("Error during path finding:", error);
+      // Re-enable physics in case of error
+      setPhysicsEnabled(true);
     }
   };
+
 
   return (
     <>
@@ -113,7 +142,7 @@ const GraphScreen = () => {
       ></SideBar>
       
       <div className="visualization">
-        <MemoizedGraph nodes={newNodes} edges={newEdges} />
+        <MemoizedGraph nodes={newNodes} edges={newEdges} nodeColors={nodeColors} physicsEnabled={physicsEnabled} />
       </div>
     </>
   );
