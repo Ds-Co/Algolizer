@@ -1,13 +1,12 @@
 import React from 'react';
 import Graph from 'react-vis-network-graph';
 
-export default function GraphVisualization({ nodes, edges, nodeColors }) {
+export default function GraphVisualization({ nodes, edges, nodeColors, disablePhysics }) {
 
   // Apply colors from nodeColors to the nodes array
   const coloredNodes = nodes.map(node => ({
     ...node,
     color: nodeColors[node.id] || '#000000', // Default to black if no color is provided
-  
   }));
 
   const options = {
@@ -42,23 +41,18 @@ export default function GraphVisualization({ nodes, edges, nodeColors }) {
       },
     },
     physics: {
-      enabled: true,
-      solver: 'barnesHut',
-      stabilization: {
-        enabled: true,
-        iterations: 100,
-      },
+      enabled: !disablePhysics, // Toggle physics based on disablePhysics prop
     },
     interaction: {
       navigationButtons: true,
-      dragNodes: true,
+      dragNodes: true, // Disable dragging nodes
       dragView: true,
       zoomView: true,
     },
     layout: {
-      improvedLayout: false // Disable layout adjustments
+      improvedLayout: true, // Enable improved layout for better spacing
+      randomSeed: 15, // Optional: Use a fixed seed for reproducibility
     }
-    
   };
 
   const data = { nodes: coloredNodes, edges: edges };
