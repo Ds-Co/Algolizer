@@ -15,7 +15,6 @@ const GraphScreen = () => {
   let [newNodes, setNewNodes] = useState<any[]>([]); // Assuming newNodes is an array of nodes
   let [newEdges, setNewEdges] = useState<any[]>([]); // Assuming newEdges is an array of edges
   let [nodeColors, setNodeColors] = useState<{ [key: number]: string }>({}); // State for node colors
-  let [physicsEnabled, setPhysicsEnabled] = useState<boolean>(true);
 
   const [selectedGraphType, setSelectedGraphType] = useState<string>("BFS");
   const graphs: string[] = ["BFS", "DFS", "Dijkstra"];
@@ -87,7 +86,6 @@ const GraphScreen = () => {
     console.log("Adjacency List:", adjacencyList);
 
     // Temporarily disable physics
-    setPhysicsEnabled(false);
 
     try {
       const response = await axios.post("http://localhost:5000/api/graph", {
@@ -114,13 +112,11 @@ const GraphScreen = () => {
       setTimeout(() => {
         setNodeColors({});
         // Re-enable physics
-        setPhysicsEnabled(true);
       }, (snapshots.length + 1) * 1000); // Adjust delay based on animation duration
 
     } catch (error) {
       console.error("Error during path finding:", error);
       // Re-enable physics in case of error
-      setPhysicsEnabled(true);
     }
   };
 
@@ -142,7 +138,7 @@ const GraphScreen = () => {
       ></SideBar>
       
       <div className="visualization">
-        <MemoizedGraph nodes={newNodes} edges={newEdges} nodeColors={nodeColors} physicsEnabled={physicsEnabled} />
+        <MemoizedGraph nodes={newNodes} edges={newEdges} nodeColors={nodeColors}/>
       </div>
     </>
   );

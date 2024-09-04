@@ -1,13 +1,13 @@
 import React from 'react';
 import Graph from 'react-vis-network-graph';
 
-export default function GraphVisualization({ nodes, edges, nodeColors, physicsEnabled }) {
+export default function GraphVisualization({ nodes, edges, nodeColors }) {
 
   // Apply colors from nodeColors to the nodes array
   const coloredNodes = nodes.map(node => ({
     ...node,
     color: nodeColors[node.id] || '#000000', // Default to black if no color is provided
-    fixed: { x: true, y: true }
+  
   }));
 
   const options = {
@@ -42,7 +42,7 @@ export default function GraphVisualization({ nodes, edges, nodeColors, physicsEn
       },
     },
     physics: {
-      enabled: physicsEnabled,
+      enabled: true,
       solver: 'barnesHut',
       stabilization: {
         enabled: true,
