@@ -12,7 +12,6 @@
   width: 5%;
 }
 
-/* Content Vanishing when Collapsed */
 .sidebar--collapsed .sidebar__upper,
 .sidebar--collapsed .sidebar__lower {
   opacity: 0;
@@ -79,7 +78,6 @@
   padding: 0%;
 }
 
-/* Lower Sidebar Styles */
 .sidebar__lower {
   display: flex;
   flex-direction: column;
@@ -182,7 +180,7 @@
   height: 5vh;
 }
 
-/* Ensure Buttons Remain Visible When Collapsed */
+
 .sidebar--collapsed .sidebar__complexity-button,
 .sidebar--collapsed .sidebar__back-button {
   opacity: 0;

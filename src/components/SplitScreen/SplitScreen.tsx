@@ -1,9 +1,9 @@
-import LeftSide from "./LeftSide";
-import RightSide from "./RightSide";
 import "../../Css/SplitScreen.css";
-import { ParticleSystem } from "../LandPage/BackGroundAnimation";
 import { Link } from "react-router-dom";
 import ArrowIcon from "../../assets/arrowIcon.png";
+import RightSide from "./RightSide";
+import LeftSide from "./LeftSide";
+import { ParticleSystem } from "../LandPage/BackGroundAnimation";
 
 function SplitScreen() {
   return (
@@ -18,15 +18,15 @@ function SplitScreen() {
           </button>
         </Link>
       </div>
-      <Link to = "/SortingScreen">
+      <Link to="/SortingScreen">
         <button>
           <LeftSide></LeftSide>
         </button>
       </Link>
       <div className="MiddleBar"></div>
-      <Link to = "/GraphScreen">
+      <Link to="/GraphScreen">
         <button>
-        <RightSide></RightSide>
+          <RightSide></RightSide>
         </button>
       </Link>
     </div>

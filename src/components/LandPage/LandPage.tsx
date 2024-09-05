@@ -1,8 +1,8 @@
+import "../../css/BackGroundStyle.css";
+import { ParticleSystem } from "./BackGroundAnimation";
 import { IconButtons } from "./IconButton";
 import { LogoIcon } from "./LogoIcon";
-import { ParticleSystem } from "./BackGroundAnimation";
 import TextLandPage from "./TextLandPage";
-import "../../Css/BackGroundStyle.css";
 function LandPage() {
   return (
     <div>

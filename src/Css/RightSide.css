@@ -8,15 +8,18 @@
   filter: grayscale(100%) brightness(50%);
   margin-top: 50px;
 }
+
 .RightItem:hover {
   transform: scale(1.2);
   color: white;
   filter: none;
 }
+
 .GraphImg {
   max-width: 100%;
   height: auto;
 }
+
 .GraphSlogan {
   margin-top: 100px;
 }

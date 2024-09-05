@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import arrow from "/assets/side_arrow.png";
-import complexitybutton from "/assets/Complexity_logo.png";
-import backbutton from "/assets/back_button.png";
+import arrow from "/src/assets/side_arrow.png";
+import complexitybutton from "/src/assets/Complexity_logo.png";
+import backbutton from "/src/assets/back_button.png";
 import "/src/css/SideBar.css";
 import { Link } from "react-router-dom";
 
@@ -48,9 +48,8 @@ const MiddleSidebar: React.FC<{
   <div className="sidebar__middle">
     <button className="sidebar__toggle-button" onClick={toggleSidebar}>
       <img
-        className={`sidebar__arrow ${
-          isCollapsed ? "sidebar__arrow--rotated" : ""
-        }`}
+        className={`sidebar__arrow ${isCollapsed ? "sidebar__arrow--rotated" : ""
+          }`}
         src={arrow}
         alt="Toggle Sidebar"
       />

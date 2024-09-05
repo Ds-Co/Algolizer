@@ -5,7 +5,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import * as d3 from "d3";
-import "../../Css/SortingVisualization.css";
+import "../../../css/SortingVisualization.css";
 
 // Define the props interface
 interface SortingsProps {

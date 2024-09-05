@@ -1,9 +1,11 @@
 .png {
   width: 100%;
 }
+
 .arrowPng {
   width: 70%;
 }
+
 .video {
   background-color: transparent;
   border: 0;
@@ -22,24 +24,28 @@
   width: 37%;
   align-content: center;
 }
+
 .arrow {
   background-color: transparent;
   padding: 0;
   border: 0;
   width: 80%;
 }
+
 .gitdiv {
   position: absolute;
   top: 5vh;
   right: -2.5vw;
   width: 5.5vw;
 }
+
 .videodiv {
   position: absolute;
   left: 9vw;
   top: 5vh;
   width: 3.3vw;
 }
+
 .iconsDiv {
   position: absolute;
   display: flex;

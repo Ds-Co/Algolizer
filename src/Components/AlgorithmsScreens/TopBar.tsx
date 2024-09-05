@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "/src/css/TopBar.css";
-import info from "/assets/info.png";
-import reset from "/assets/reset.png";
-import speedUp from "/assets/speed_up.png";
-import visualize from "/assets/visualize.png";
-import pause from "/assets/pause.png";
+import info from "/src/assets/info.png";
+import reset from "/src/assets/reset.png";
+import speedUp from "/src/assets/speed_up.png";
+import visualize from "/src/assets/visualize.png";
+import pause from "/src/assets/pause.png";
 import "bootstrap/dist/css/bootstrap.css";
 import { DropDown } from "./DropDown";
+
 
 interface SortingsProps {
   text: string;
@@ -74,7 +75,7 @@ const TopBar: React.FC<TopBarProps> = ({
   dropdownmenu,
   sortingsProps,
   onSelectChange,
-  handleVisualizeClick, // Receive the new prop
+  handleVisualizeClick,
 }) => {
   const [selectedSortType, setSelectedSortType] = useState<string>(
     dropdownmenu[0]
@@ -82,7 +83,7 @@ const TopBar: React.FC<TopBarProps> = ({
 
   const handleSelectChange = (sortType: string) => {
     setSelectedSortType(selectedSortType);
-    onSelectChange(sortType); // Notify parent of the selected sort type
+    onSelectChange(sortType);
   };
 
   return (

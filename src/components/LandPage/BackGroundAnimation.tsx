@@ -1,5 +1,6 @@
-import { Particle } from "./Particle";
+
 import React, { useRef, useEffect, useState } from "react";
+import { Particle } from "./Particle";
 interface CanvasProps {
   width?: number;
   height?: number;

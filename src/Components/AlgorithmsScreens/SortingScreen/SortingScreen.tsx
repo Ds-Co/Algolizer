@@ -1,10 +1,14 @@
 import React, { useRef, useState } from "react";
-import sortIcon from "/assets/sort_icon.png";
+import sortIcon from "/src/assets/sort_icon.png";
 import { TopBar } from "../TopBar";
 import { SideBar } from "../SideBar";
 import "bootstrap/dist/css/bootstrap.css";
 import axios from "axios";
-import { SortingVisualization } from "../SortingVisualization";
+import { SortingVisualization } from "./SortingVisualization";
+interface SortResponse {
+  sortedArray: number[];
+  snapshots: any[];
+}
 
 const ArrayGenerator: React.FC = () => (
   <>
@@ -69,7 +73,7 @@ const SortingScreen = () => {
       .flat()
       .filter(item => !isNaN(item));
 
-      localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
+    localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
   };
 
   const sortingsProps = {
@@ -90,12 +94,12 @@ const SortingScreen = () => {
     console.log("Array to be Sorted:", array);
 
     try {
-        const response = await axios.post("http://localhost:5000/api/sort", {
+      const response = await axios.post<SortResponse>("http://localhost:5000/api/sort", {
         array: array,
         sortType: selectedSortType,
       });
-      // console.log("Sorted Array:", response.data.sortedArray);
-      // console.log("Snapshots:", response.data.snapshots);
+      console.log("Sorted Array:", response.data.sortedArray);
+      console.log("Snapshots:", response.data.snapshots);
     } catch (error) {
       console.error("Error during sorting:", error);
     }
