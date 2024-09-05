@@ -2,14 +2,14 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { bubbleSort, quickSort } = require('./sortingAlgorithms');
-const { DepthFirstSearch, BreadthFirstSearch } = require('./GraphAlgorithms');
+const { DepthFirstSearch, BreadthFirstSearch } = require('./graphAlgorithms');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 
 // Sample route
 app.get('/', (req, res) => {
@@ -27,8 +27,7 @@ app.post('/api/sort', (req, res) => {
 
     let result;
 
-    switch (sortType) 
-    {
+    switch (sortType) {
         case "Bubble Sort":
             result = bubbleSort([...array]);
             break;
@@ -73,7 +72,7 @@ app.post('/api/graph', (req, res) => {
 
 });
 
-  
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

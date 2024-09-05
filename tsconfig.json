@@ -4,14 +4,13 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-    "compilerOptions": {
-      "esModuleInterop": true,
-      "strict": true,
-      "moduleResolution": "node",
-      "skipLibCheck": true,
-      "target": "es6",
-      "module": "commonjs",
-      "resolveJsonModule": true
-    }
-  
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "target": "es6",
+    "module": "commonjs",
+    "resolveJsonModule": true
+  }
 }

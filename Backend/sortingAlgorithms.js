@@ -4,7 +4,6 @@ function bubbleSort(arr) {
     for (let i = 0; i < len; i++) {
         for (let j = 0; j < len - 1 - i; j++) {
             if (arr[j] > arr[j + 1]) {
-                // Capture snapshot of the elements being swapped
                 snapshots.push({ element1: arr[j], element2: arr[j + 1] });
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
             }
@@ -25,8 +24,6 @@ function quickSort(arr) {
             if (array[i] < pivot) left.push(array[i]);
             else right.push(array[i]);
         }
-
-        // Capture snapshot of the partitioning process
         snapshots.push({
             pivot,
             left,

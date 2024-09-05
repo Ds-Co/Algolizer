@@ -5,9 +5,9 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "allowJs": true,         // Allows JavaScript files to be compiled
-    "checkJs": false,        // Disable type checking for JavaScript files
-    "jsx": "react-jsx",      // Enables JSX support for React
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -15,7 +15,6 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
