@@ -8,11 +8,6 @@ import pause from "/assets/pause.png";
 import "bootstrap/dist/css/bootstrap.css";
 import { DropDown } from "./DropDown";
 
-interface SortResponse {
-  sortedArray: number[];
-  snapshots: any[];
-}
-
 interface SortingsProps {
   text: string;
   icon: string;
@@ -36,15 +31,6 @@ const Sortings = ({ text, icon }: SortingsProps) => {
   );
 };
 
-const IconButton = ({
-  iconimg,
-  icontxt,
-  onClick,
-}: {
-  iconimg: string;
-  icontxt: string;
-  onClick?: () => void;
-}) => (
 const IconButton = ({
   iconimg,
   icontxt,
@@ -97,24 +83,6 @@ const TopBar: React.FC<TopBarProps> = ({
   const handleSelectChange = (sortType: string) => {
     setSelectedSortType(selectedSortType);
     onSelectChange(sortType); // Notify parent of the selected sort type
-  };
-
-  const handleVisualizeClick = async () => {
-    const storedArray = localStorage.getItem("arrayInput");
-    const array = storedArray ? JSON.parse(storedArray) : [];
-    console.log("selectedSortType:", selectedSortType);
-    console.log("Array to be Sorted:", array);
-
-    try {
-      const response = await axios.post("http://localhost:5000/api/sort", {
-        array: array,
-        sortType: selectedSortType,
-      });
-      console.log("Sorted Array:", response.data.sortedArray);
-      console.log("Snapshots:", response.data.snapshots);
-    } catch (error) {
-      console.error("Error during sorting:", error);
-    }
   };
 
   return (

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import sortIcon from "/assets/sort_icon.png";
 import { TopBar } from "../TopBar";
 import { SideBar } from "../SideBar";
 import "bootstrap/dist/css/bootstrap.css";
 import axios from "axios";
+import { SortingVisualization } from "../SortingVisualization";
 
 const ArrayGenerator: React.FC = () => (
   <>
@@ -24,7 +25,8 @@ const ArrayGenerator: React.FC = () => (
 
 const SortingScreen = () => {
   const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
-
+  const chartRef = useRef<{ renderChart: () => void } | null>(null);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const sorts: string[] = [
     "Bubble Sort",
     "Bogo Sort",
@@ -92,10 +94,15 @@ const SortingScreen = () => {
         array: array,
         sortType: selectedSortType,
       });
-      console.log("Sorted Array:", response.data.sortedArray);
-      console.log("Snapshots:", response.data.snapshots);
+      // console.log("Sorted Array:", response.data.sortedArray);
+      // console.log("Snapshots:", response.data.snapshots);
     } catch (error) {
       console.error("Error during sorting:", error);
+    }
+
+    setIsEnabled(true);
+    if (chartRef.current) {
+      chartRef.current.renderChart();
     }
   };
 
@@ -113,6 +120,7 @@ const SortingScreen = () => {
         getComplexity={getComplexity} // Pass selected sort type to SideBar
         handleInputChange={handleInputChange} // Pass handleInputChange to SideBar
       />
+      <SortingVisualization ref={chartRef} isEnabled={isEnabled} />
     </div>
   );
 };

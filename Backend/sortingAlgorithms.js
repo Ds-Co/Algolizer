@@ -1,5 +1,3 @@
-// algorithms.js
-
 function bubbleSort(arr) {
     let len = arr.length;
     let snapshots = [];
