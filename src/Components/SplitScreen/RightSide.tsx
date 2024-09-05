@@ -1,5 +1,5 @@
-import GraphIcon from '../../assets/Graph Icon.png'
-import '../../Css/RightSide.css'
+import GraphIcon from "../../assets/Graph Icon.png";
+import "../../Css/RightSide.css";
 function RightSide() {
   return (
     <div className="RightItem">

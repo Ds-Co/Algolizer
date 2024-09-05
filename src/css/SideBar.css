@@ -12,7 +12,6 @@
   width: 5%;
 }
 
-/* Content Vanishing when Collapsed */
 .sidebar--collapsed .sidebar__upper,
 .sidebar--collapsed .sidebar__lower {
   opacity: 0;
@@ -79,7 +78,6 @@
   padding: 0%;
 }
 
-/* Lower Sidebar Styles */
 .sidebar__lower {
   display: flex;
   flex-direction: column;
@@ -124,11 +122,14 @@
   color: darkgray;
   font-size: 1rem;
   text-decoration: none;
+  margin-right: 0.5rem;
 }
+
 .sidebar__duplicate-checkbox {
   position: relative;
   top: 10%;
 }
+
 
 .sidebar__complexity-text {
   position: relative;
@@ -146,12 +147,15 @@
   background-color: white;
   padding: 1vh;
   font-size: 1em;
+  display: flex;
+  align-items: center;
+  text-align: left;
 }
 
 .sidebar__buttons {
   display: flex;
   justify-content: space-between;
-  
+
 }
 
 .sidebar__complexity-button,
@@ -176,7 +180,7 @@
   height: 5vh;
 }
 
-/* Ensure Buttons Remain Visible When Collapsed */
+
 .sidebar--collapsed .sidebar__complexity-button,
 .sidebar--collapsed .sidebar__back-button {
   opacity: 0;
@@ -184,7 +188,7 @@
 }
 
 .sidebar__complexity-button {
-  position: relative; /* Needed for positioning the tooltip */
+  position: relative;
 }
 
 .sidebar__complexity-button:hover::after {

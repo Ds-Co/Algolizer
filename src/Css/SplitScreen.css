@@ -2,10 +2,12 @@
   font-family: Lato;
   src: url(/src/Assets/Fonts/Lato/Lato-Black.ttf);
 }
+
 @font-face {
   font-family: Inter;
   src: url(/src/Assets/Fonts/Inter/static/Inter_18pt-ExtraLight.ttf);
 }
+
 .WholePage {
   color-scheme: light dark;
   height: 100vh;
@@ -36,6 +38,7 @@
   width: 100vw;
   background: radial-gradient(rgb(32, 31, 31), black);
 }
+
 .SortingSlogan {
   font-family: Inter;
 }
@@ -43,6 +46,7 @@
 .GraphSlogan {
   font-family: Inter;
 }
+
 .SplitScreenBackButton {
   position: absolute;
   left: 0px;
@@ -54,6 +58,7 @@
   justify-content: center;
   align-content: center;
 }
+
 .SplitScreenBackButton:hover {
   transform: scale(-1.1);
 }
