@@ -22,13 +22,15 @@ const SortingVisualization = forwardRef((props: SortingsProps, ref) => {
     // Get the array from localStorage
     const storedArray = localStorage.getItem("arrayInput");
     const array: number[] = storedArray ? JSON.parse(storedArray) : [];
+    // console.log(storedArray);
 
     // Get the sorted array from localStorage
     const sortedArray = JSON.parse(localStorage.getItem("SortedArray") || "[]");
+    // console.log(sortedArray);
 
     // Use sortedArray if isEnabled is true, otherwise use array
     const dataArray: number[] = isEnabled ? sortedArray : array;
-    console.log("HELP ME: " + dataArray);
+    //  console.log("HELP ME: " + dataArray);
     if (dataArray.length === 0 || !chartRef.current) return;
 
     // Set up the dimensions of the chart
