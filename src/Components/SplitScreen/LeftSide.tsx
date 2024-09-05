@@ -1,5 +1,5 @@
-import SortingIcon from '../../assets/Sorting Icon.png'
-import '../../Css/LeftSide.css'
+import SortingIcon from "../../assets/Sorting Icon.png";
+import "../../Css/LeftSide.css";
 function LeftSide() {
   return (
     <div className="LeftItem">

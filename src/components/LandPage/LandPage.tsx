@@ -1,12 +1,14 @@
-import {IconButtons} from "./IconButton"
-import {LogoIcon} from "./LogoIcon";
-import {ParticleSystem} from "./BackGroundAnimation";
+import { IconButtons } from "./IconButton";
+import { LogoIcon } from "./LogoIcon";
+import { ParticleSystem } from "./BackGroundAnimation";
 import TextLandPage from "./TextLandPage";
-import '../../Css/BackGroundStyle.css'
+import "../../Css/BackGroundStyle.css";
 function LandPage() {
   return (
-    <div ><div className="PlexusEffect">
-      <ParticleSystem/></div>
+    <div>
+      <div className="PlexusEffect">
+        <ParticleSystem />
+      </div>
       <div>
         <IconButtons />
       </div>
@@ -17,4 +19,4 @@ function LandPage() {
     </div>
   );
 }
-export {LandPage};
+export { LandPage };

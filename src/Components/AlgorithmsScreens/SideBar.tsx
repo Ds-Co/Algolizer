@@ -25,6 +25,15 @@ interface UpperSidebarProps {
 const UpperSidebar: React.FC<UpperSidebarProps> = ({ handleInputChange }) => {
   const [inputValue, setInputValue] = useState("");
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
+
+    // Is there better?
+    const array = value.split(',').map(item => parseInt(item.trim(), 10)).filter(item => !isNaN(item));
+    localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
+  };
+
   return (
     <div className="sidebar__upper">
       <h4 className="sidebar__array-text">Array Data:</h4>

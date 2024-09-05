@@ -8,7 +8,7 @@
     "allowJs": true,         // Allows JavaScript files to be compiled
     "checkJs": false,        // Disable type checking for JavaScript files
     "jsx": "react-jsx",      // Enables JSX support for React
-
+    "forceConsistentCasingInFileNames": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

@@ -1,4 +1,4 @@
-import { Particle } from "./Particle"
+import { Particle } from "./Particle";
 import React, { useRef, useEffect, useState } from "react";
 interface CanvasProps {
   width?: number;

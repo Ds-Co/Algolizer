@@ -1,9 +1,10 @@
-import LeftSide from './LeftSide';
-import RightSide from './RightSide';
+import LeftSide from "./LeftSide";
+import RightSide from "./RightSide";
 import "../../Css/SplitScreen.css";
 import { ParticleSystem } from "../LandPage/BackGroundAnimation";
 import { Link } from "react-router-dom";
 import ArrowIcon from "../../assets/arrowIcon.png";
+
 function SplitScreen() {
   return (
     <div className="WholePage">
@@ -32,4 +33,4 @@ function SplitScreen() {
   );
 }
 
-export {SplitScreen};
+export { SplitScreen };
