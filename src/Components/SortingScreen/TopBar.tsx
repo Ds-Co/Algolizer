@@ -9,6 +9,11 @@ import pause from "/assets/pause.png";
 import "bootstrap/dist/css/bootstrap.css";
 import { DropDown } from "./DropDown";
 
+interface SortResponse {
+  sortedArray: number[];
+  snapshots: any[];
+}
+
 interface SortingsProps {
   text: string;
   icon: string;
@@ -18,6 +23,7 @@ interface TopBarProps {
   dropdownmenu: string[];
   sortingsProps: SortingsProps;
   onSelectChange: (sortType: string) => void;
+  enableVisualizer: () => void;
 }
 
 const Sortings = ({ text, icon }: SortingsProps) => {
@@ -31,7 +37,15 @@ const Sortings = ({ text, icon }: SortingsProps) => {
   );
 };
 
-const IconButton = ({ iconimg, icontxt, onClick }: { iconimg: string; icontxt: string; onClick?: () => void }) => (
+const IconButton = ({
+  iconimg,
+  icontxt,
+  onClick,
+}: {
+  iconimg: string;
+  icontxt: string;
+  onClick?: () => void;
+}) => (
   <div className="topbar__icons">
     <button className="topbar__iconbutton" onClick={onClick}>
       <img className="topbar__png" src={iconimg} />
@@ -51,18 +65,30 @@ const IconList = ({ onVisualizeClick }: { onVisualizeClick: () => void }) => {
   return (
     <>
       {icons.map(({ iconimg, icontxt, onClick }) => (
-        <IconButton key={icontxt} iconimg={iconimg} icontxt={icontxt} onClick={onClick} />
+        <IconButton
+          key={icontxt}
+          iconimg={iconimg}
+          icontxt={icontxt}
+          onClick={onClick}
+        />
       ))}
     </>
   );
 };
 
-const TopBar: React.FC<TopBarProps> = ({ dropdownmenu, sortingsProps, onSelectChange }) => {
-  const [selectedSortType, setSelectedSortType] = useState<string>(dropdownmenu[0]);
+const TopBar: React.FC<TopBarProps> = ({
+  dropdownmenu,
+  sortingsProps,
+  onSelectChange,
+  enableVisualizer,
+}) => {
+  const [selectedSortType, setSelectedSortType] = useState<string>(
+    dropdownmenu[0]
+  );
 
   const handleSelectChange = (sortType: string) => {
     setSelectedSortType(sortType);
-    onSelectChange(sortType); // Notify parent of the selected sort type
+    onSelectChange(sortType);
   };
 
   const handleVisualizeClick = async () => {
@@ -70,14 +96,27 @@ const TopBar: React.FC<TopBarProps> = ({ dropdownmenu, sortingsProps, onSelectCh
     const array = storedArray ? JSON.parse(storedArray) : [];
     console.log("selectedSortType:", selectedSortType);
     console.log("Array to be Sorted:", array);
+    enableVisualizer();
 
     try {
-      const response = await axios.post("http://localhost:5000/api/sort", {
-        array: array,
-        sortType: selectedSortType,
-      });
+      const response = await axios.post<SortResponse>(
+        "http://localhost:5000/api/sort",
+        {
+          array: array,
+          sortType: selectedSortType,
+        }
+      );
+
       console.log("Sorted Array:", response.data.sortedArray);
       console.log("Snapshots:", response.data.snapshots);
+      localStorage.setItem(
+        "SortedArray",
+        JSON.stringify(response.data.sortedArray)
+      );
+      localStorage.setItem(
+        "Snapshots",
+        JSON.stringify(response.data.snapshots)
+      );
     } catch (error) {
       console.error("Error during sorting:", error);
     }

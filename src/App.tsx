@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import sortIcon from "/assets/sort_icon.png";
 import { TopBar } from "./Components/SortingScreen/TopBar";
 import { SideBar } from "./Components/SortingScreen/SideBar";
+import { SortingVisualization } from "./Components/SortingScreen/SortingVisualization";
 import "bootstrap/dist/css/bootstrap.css";
 
+// Component to generate array inputs
 const ArrayGenerator: React.FC = () => (
   <>
     <div className="sidebar__array-size">
@@ -22,7 +24,11 @@ const ArrayGenerator: React.FC = () => (
 );
 
 const App = () => {
-  const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
+  const [selectedSortType, setSelectedSortType] =
+    useState<string>("Bubble Sort");
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+
+  const chartRef = useRef<{ renderChart: () => void } | null>(null);
 
   const sorts: string[] = [
     "Bubble Sort",
@@ -35,6 +41,14 @@ const App = () => {
     "Heap Sort",
   ];
 
+  // Function to enable the visualization and trigger chart rendering
+  const enableVisualizer = () => {
+    setIsEnabled(true);
+    if (chartRef.current) {
+      chartRef.current.renderChart();
+    }
+  };
+
   const sortingsProps = {
     text: "Sorting",
     icon: sortIcon,
@@ -46,15 +60,17 @@ const App = () => {
 
   return (
     <div>
-      <TopBar 
-        dropdownmenu={sorts} 
-        sortingsProps={sortingsProps} 
-        onSelectChange={handleSelectChange} // Pass handler to TopBar
+      <TopBar
+        dropdownmenu={sorts}
+        sortingsProps={sortingsProps}
+        onSelectChange={handleSelectChange}
+        enableVisualizer={enableVisualizer} // Pass handler to TopBar
       />
-      <SideBar 
-        ArrayGenerator={ArrayGenerator} 
-        selectedSortType={selectedSortType} // Pass selected sort type to SideBar
+      <SideBar
+        ArrayGenerator={ArrayGenerator}
+        selectedSortType={selectedSortType}
       />
+      <SortingVisualization ref={chartRef} isEnabled={isEnabled} />
     </div>
   );
 };

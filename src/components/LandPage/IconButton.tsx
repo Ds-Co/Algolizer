@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../CSS/IconButtonStyle.css"
+import "../../CSS/IconButtonStyle.css";
 import gitHubIcon from "../../assets/githubIcon.png";
 import videoIcon from "../../assets/videoIcon.png";
 import arrowIcon from "../../assets/arrowIcon.png";

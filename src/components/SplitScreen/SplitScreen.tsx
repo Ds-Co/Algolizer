@@ -1,5 +1,5 @@
-import LeftSide from './LeftSide';
-import RightSide from './RightSide';
+import LeftSide from "./LeftSide";
+import RightSide from "./RightSide";
 import "../../Css/SplitScreen.css";
 import { ParticleSystem } from "../LandPage/BackGroundAnimation";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ function SplitScreen() {
           </button>
         </Link>
       </div>
-      <Link to = "/App">
+      <Link to="/App">
         <button>
           <LeftSide></LeftSide>
         </button>
@@ -28,4 +28,4 @@ function SplitScreen() {
   );
 }
 
-export {SplitScreen};
+export { SplitScreen };
