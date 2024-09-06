@@ -1,0 +1,25 @@
+.LeftItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  height: auto;
+  filter: grayscale(100%) brightness(50%);
+  transition: all 0.3s ease-in-out;
+  margin-top: 100px;
+}
+
+.LeftItem:hover {
+  transform: scale(1.2);
+  color: white;
+  filter: none;
+}
+
+.SortingImg {
+  max-width: 100%;
+  height: auto;
+}
+
+.SortingSlogan {
+  margin-top: 90px;
+}

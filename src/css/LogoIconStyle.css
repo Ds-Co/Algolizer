@@ -1,0 +1,18 @@
+.projectName {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 30%;
+  justify-content: center;
+}
+
+.logo {
+  width: auto;
+  height: 20vh;
+  position: absolute;
+  bottom: 0px;
+  right: 40px;
+}
