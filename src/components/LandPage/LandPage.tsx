@@ -3,6 +3,7 @@ import { ParticleSystem } from "./BackGroundAnimation";
 import { IconButtons } from "./IconButton";
 import { LogoIcon } from "./LogoIcon";
 import TextLandPage from "./TextLandPage";
+
 function LandPage() {
   return (
     <div>

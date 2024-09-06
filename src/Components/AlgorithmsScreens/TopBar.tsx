@@ -8,7 +8,6 @@ import pause from "/src/assets/pause.png";
 import "bootstrap/dist/css/bootstrap.css";
 import { DropDown } from "./DropDown";
 
-
 interface SortingsProps {
   text: string;
   icon: string;

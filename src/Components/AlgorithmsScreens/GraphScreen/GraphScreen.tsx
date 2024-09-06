@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import graphicon from "/src/assets/sort_icon.png";
-import { TopBar } from "../TopBar";
-import { SideBar } from "../SideBar";
 import axios from "axios";
-import { GraphVisualization } from "./GraphVisualization";
 import "../../../css/GraphScreenStyle.css";
+import { SideBar } from "../SideBar";
+import { TopBar } from "../TopBar";
 import { GraphData } from "./GraphData";
+import GraphVisualization from "./GraphVisualization";
 
 interface GraphResponse {
   VisitedNodes: number[];
   snapshots: number[];
 }
-
 
 const graphfuncionality: React.FC = () => {
   return <></>;
@@ -61,7 +60,6 @@ const GraphScreen = () => {
       })
       .filter((edge) => edge.node1 && edge.node2);
 
-
     const adjacencyList: Record<string, string[]> = {};
 
     edge.forEach((edge) => {
@@ -92,20 +90,21 @@ const GraphScreen = () => {
     console.log("selectedGraphType:", selectedGraphType);
     console.log("Adjacency List:", adjacencyList);
 
-
     setDisablePhysics(true);
 
     try {
-      const response = await axios.post<GraphResponse>("http://localhost:5000/api/graph", {
-        array: adjacencyList,
-        GraphAlgo: selectedGraphType,
-      });
+      const response = await axios.post<GraphResponse>(
+        "http://localhost:5000/api/graph",
+        {
+          array: adjacencyList,
+          GraphAlgo: selectedGraphType,
+        }
+      );
 
       console.log("Visited Array:", response.data.VisitedNodes);
       console.log("Snapshots:", response.data.snapshots);
 
       const snapshots = response.data.snapshots;
-
 
       snapshots.forEach((snapshot: number, index: number) => {
         setTimeout(() => {
@@ -121,13 +120,11 @@ const GraphScreen = () => {
         setNodeColors({});
         setDisablePhysics(false);
       }, (snapshots.length + 1) * 1000); // Adjust delay based on animation duration
-
     } catch (error) {
       console.error("Error during path finding:", error);
       setDisablePhysics(false);
     }
   };
-
 
   return (
     <>
@@ -146,7 +143,12 @@ const GraphScreen = () => {
       ></SideBar>
 
       <div className="visualization">
-        <MemoizedGraph nodes={newNodes} edges={newEdges} nodeColors={nodeColors} disablePhysics={disablePhysics} />
+        <MemoizedGraph
+          nodes={newNodes}
+          edges={newEdges}
+          nodeColors={nodeColors}
+          disablePhysics={disablePhysics}
+        />
       </div>
     </>
   );

@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
 import sortIcon from "/src/assets/sort_icon.png";
-import { TopBar } from "../TopBar";
-import { SideBar } from "../SideBar";
+
 import "bootstrap/dist/css/bootstrap.css";
 import axios from "axios";
+import { SideBar } from "../SideBar";
+import { TopBar } from "../TopBar";
 import { SortingVisualization } from "./SortingVisualization";
 
 interface SortResponse {
@@ -29,7 +30,8 @@ const ArrayGenerator: React.FC = () => (
 );
 
 const SortingScreen = () => {
-  const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
+  const [selectedSortType, setSelectedSortType] =
+    useState<string>("Bubble Sort");
   const chartRef = useRef<{ renderChart: () => void } | null>(null);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const sorts: string[] = [
@@ -70,13 +72,12 @@ const SortingScreen = () => {
     const value = event.target.value;
     const array = value
       .split("\n")
-      .map(line => line.split(",").map(item => parseInt(item.trim(), 10)))
+      .map((line) => line.split(",").map((item) => parseInt(item.trim(), 10)))
       .flat()
-      .filter(item => !isNaN(item));
+      .filter((item) => !isNaN(item));
 
     localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
     console.log(array);
-
   };
 
   const sortingsProps = {
@@ -89,7 +90,6 @@ const SortingScreen = () => {
   };
 
   const handleVisualizeClick = async () => {
-
     const storedArray = localStorage.getItem("arrayInput");
     const array = storedArray ? JSON.parse(storedArray) : [];
 
@@ -97,19 +97,22 @@ const SortingScreen = () => {
     console.log("Array to be Sorted:", array);
 
     try {
-      const response = await axios.post<SortResponse>("http://localhost:5000/api/sort", {
-        array: array,
-        sortType: selectedSortType,
-      });
+      const response = await axios.post<SortResponse>(
+        "http://localhost:5000/api/sort",
+        {
+          array: array,
+          sortType: selectedSortType,
+        }
+      );
       console.log("Sorted Array:", response.data.sortedArray);
       console.log("Snapshots:", response.data.snapshots);
-      localStorage.setItem("SortedArray", JSON.stringify(response.data.sortedArray)); // Store the array in localStorage
-
+      localStorage.setItem(
+        "SortedArray",
+        JSON.stringify(response.data.sortedArray)
+      ); // Store the array in localStorage
     } catch (error) {
       console.error("Error during sorting:", error);
     }
-
-
 
     setIsEnabled(true);
     if (chartRef.current) {
