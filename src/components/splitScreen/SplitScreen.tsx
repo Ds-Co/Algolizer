@@ -1,9 +1,9 @@
 import "../../Css/SplitScreen.css";
 import { Link } from "react-router-dom";
 import ArrowIcon from "../../assets/arrowIcon.png";
-import RightSide from "./RightSide";
-import LeftSide from "./LeftSide";
 import { ParticleSystem } from "../landPage/BackGroundAnimation";
+import LeftSide from "./LeftSide";
+import RightSide from "./RightSide";
 
 function SplitScreen() {
   return (

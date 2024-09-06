@@ -2,9 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LandPage } from "./components/landPage/LandPage.tsx";
-import { SplitScreen } from "./components/SplitScreen/SplitScreen.tsx";
-import { SortingScreen } from "./components/AlgorithmsScreens/SortingScreen/SortingScreen.tsx";
-import { GraphScreen } from "./components/AlgorithmsScreens/GraphScreen/GraphScreen.tsx";
+import { GraphScreen } from "./components/algorithmsScreens/graphScreen/GraphScreen.tsx";
+import { SortingScreen } from "./components/algorithmsScreens/sortingScreen/SortingScreen.tsx";
+import { SplitScreen } from "./components/splitScreen/SplitScreen.tsx";
 
 
 createRoot(document.getElementById("root")!).render(
