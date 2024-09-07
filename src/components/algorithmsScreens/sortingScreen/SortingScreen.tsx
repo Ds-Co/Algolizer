@@ -11,22 +11,71 @@ interface SortResponse {
   snapshots: any[];
 }
 
-const ArrayGenerator: React.FC = () => (
-  <>
-    <div className="sidebar__array-size">
-      <h4 className="sidebar__array-size-text">Array Size:</h4>
-      <input
-        className="sidebar__array-size-input"
-        type="number"
-        placeholder="Enter Size"
-      />
-    </div>
-    <div className="sidebar__duplicate">
-      <a className="sidebar__duplicate-text">Duplicates</a>
-      <input className="sidebar__duplicate-checkbox" type="checkbox" />
-    </div>
-  </>
-);
+const ArrayGenerator: React.FC = () => {
+  const [arraySize, setArraySize] = useState<number>(0);
+  const [allowDuplicates, setAllowDuplicates] = useState<boolean>(false);
+
+  const handleArraySizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const size = parseInt(event.target.value, 10); //decimal system 10
+    setArraySize(size);
+    generateArray(size, allowDuplicates);
+  };
+
+  const handleDuplicateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+    setAllowDuplicates(isChecked);
+    generateArray(arraySize, isChecked);
+  };
+
+  const generateArray = (size: number, allowDuplicates: boolean) => {
+    let array: number[] = [];
+
+    if (allowDuplicates) {
+      // When duplicates are allowed, reduce the range of numbers to increase the chances of duplicates
+      const range = Math.max(10, Math.floor(size / 2));
+      for (let i = 0; i < size; i++) {
+        array.push(Math.floor(Math.random() * range + 1));
+      }
+    } else {
+      // If no duplicates are allowed, we keep the same logic
+      const availableNumbers = Array.from({ length: 100 }, (_, i) => i + 1);
+      for (let i = 0; i < size; i++) {
+        const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+        array.push(availableNumbers.splice(randomIndex, 1)[0]);
+      }
+    }
+
+    localStorage.setItem("arrayInput", JSON.stringify(array));
+    console.log("Generated Array:", array);
+  };
+
+  return (
+    <>
+      <div className="sidebar__array-size">
+        <h4 className="sidebar__array-size-text">Array Size:</h4>
+        <input
+          className="sidebar__array-size-input"
+          type="number"
+          placeholder="Enter Size"
+          value={arraySize}
+          onChange={handleArraySizeChange}
+          min="1"
+        />
+      </div>
+      <div className="sidebar__duplicate">
+        <a className="sidebar__duplicate-text">Duplicates</a>
+        <input
+          className="sidebar__duplicate-checkbox"
+          type="checkbox"
+          checked={allowDuplicates}
+          onChange={handleDuplicateChange}
+        />
+      </div>
+    </>
+  );
+};
+
+export { ArrayGenerator };
 
 const SortingScreen = () => {
   const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
