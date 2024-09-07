@@ -11,7 +11,7 @@ interface SortResponse {
   snapshots: any[];
 }
 interface ArrayGeneratorProps {
-  clearInput: () => void; // Add this prop
+  clearInput: () => void;
 }
 
 const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
@@ -22,7 +22,7 @@ const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
     const size = parseInt(event.target.value, 10); // decimal system 10
     setArraySize(size);
     generateArray(size, allowDuplicates);
-    clearInput(); // Call clearInput to clear the array input
+    clearInput();
   };
 
   const handleDuplicateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,12 +79,11 @@ const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
 
 export { ArrayGenerator };
 
-
 const SortingScreen = () => {
   const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
   const chartRef = useRef<{ renderChart: () => void } | null>(null);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>(""); // State to manage input value
+  const [inputValue, setInputValue] = useState<string>("");
 
   const sorts: string[] = [
     "Bubble Sort",
@@ -128,8 +127,8 @@ const SortingScreen = () => {
       .flat()
       .filter(item => !isNaN(item));
 
-    localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
-    setInputValue(value); // Update local state with the new value
+    localStorage.setItem("arrayInput", JSON.stringify(array));
+    setInputValue(value);
   };
 
   const handleSelectChange = (sortType: string) => {
@@ -150,7 +149,7 @@ const SortingScreen = () => {
       });
       console.log("Sorted Array:", response.data.sortedArray);
       console.log("Snapshots:", response.data.snapshots);
-      localStorage.setItem("SortedArray", JSON.stringify(response.data.sortedArray)); // Store the array in localStorage
+      localStorage.setItem("SortedArray", JSON.stringify(response.data.sortedArray));
     } catch (error) {
       console.error("Error during sorting:", error);
     }
@@ -162,7 +161,7 @@ const SortingScreen = () => {
   };
 
   const clearInputValue = () => {
-    setInputValue(""); // Clear the input value state
+    setInputValue("");
   };
 
   return (
@@ -178,6 +177,7 @@ const SortingScreen = () => {
         selectedSortType={selectedSortType}
         getComplexity={getComplexity}
         handleInputChange={handleInputChange}
+        inputValue={inputValue}
       />
       <SortingVisualization ref={chartRef} isEnabled={isEnabled} />
     </div>
