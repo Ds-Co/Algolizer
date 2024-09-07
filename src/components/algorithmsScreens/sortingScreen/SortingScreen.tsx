@@ -10,15 +10,19 @@ interface SortResponse {
   sortedArray: number[];
   snapshots: any[];
 }
+interface ArrayGeneratorProps {
+  clearInput: () => void; // Add this prop
+}
 
-const ArrayGenerator: React.FC = () => {
+const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
   const [arraySize, setArraySize] = useState<number>(0);
   const [allowDuplicates, setAllowDuplicates] = useState<boolean>(false);
 
   const handleArraySizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const size = parseInt(event.target.value, 10); //decimal system 10
+    const size = parseInt(event.target.value, 10); // decimal system 10
     setArraySize(size);
     generateArray(size, allowDuplicates);
+    clearInput(); // Call clearInput to clear the array input
   };
 
   const handleDuplicateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,13 +35,11 @@ const ArrayGenerator: React.FC = () => {
     let array: number[] = [];
 
     if (allowDuplicates) {
-      // When duplicates are allowed, reduce the range of numbers to increase the chances of duplicates
       const range = Math.max(10, Math.floor(size / 2));
       for (let i = 0; i < size; i++) {
         array.push(Math.floor(Math.random() * range + 1));
       }
     } else {
-      // If no duplicates are allowed, we keep the same logic
       const availableNumbers = Array.from({ length: 100 }, (_, i) => i + 1);
       for (let i = 0; i < size; i++) {
         const randomIndex = Math.floor(Math.random() * availableNumbers.length);
@@ -77,10 +79,13 @@ const ArrayGenerator: React.FC = () => {
 
 export { ArrayGenerator };
 
+
 const SortingScreen = () => {
   const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
   const chartRef = useRef<{ renderChart: () => void } | null>(null);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>(""); // State to manage input value
+
   const sorts: string[] = [
     "Bubble Sort",
     "Bogo Sort",
@@ -124,13 +129,7 @@ const SortingScreen = () => {
       .filter(item => !isNaN(item));
 
     localStorage.setItem("arrayInput", JSON.stringify(array)); // Store the array in localStorage
-    console.log(array);
-
-  };
-
-  const sortingsProps = {
-    text: "Sorting",
-    icon: sortIcon,
+    setInputValue(value); // Update local state with the new value
   };
 
   const handleSelectChange = (sortType: string) => {
@@ -138,7 +137,6 @@ const SortingScreen = () => {
   };
 
   const handleVisualizeClick = async () => {
-
     const storedArray = localStorage.getItem("arrayInput");
     const array = storedArray ? JSON.parse(storedArray) : [];
 
@@ -153,12 +151,9 @@ const SortingScreen = () => {
       console.log("Sorted Array:", response.data.sortedArray);
       console.log("Snapshots:", response.data.snapshots);
       localStorage.setItem("SortedArray", JSON.stringify(response.data.sortedArray)); // Store the array in localStorage
-
     } catch (error) {
       console.error("Error during sorting:", error);
     }
-
-
 
     setIsEnabled(true);
     if (chartRef.current) {
@@ -166,19 +161,23 @@ const SortingScreen = () => {
     }
   };
 
+  const clearInputValue = () => {
+    setInputValue(""); // Clear the input value state
+  };
+
   return (
     <div>
       <TopBar
         dropdownmenu={sorts}
-        sortingsProps={sortingsProps}
-        onSelectChange={handleSelectChange} // Pass handler to TopBar
-        handleVisualizeClick={handleVisualizeClick} // Pass visualize logic as a prop
+        sortingsProps={{ text: "Sorting", icon: sortIcon }}
+        onSelectChange={handleSelectChange}
+        handleVisualizeClick={handleVisualizeClick}
       />
       <SideBar
-        ArrayGenerator={ArrayGenerator}
+        ArrayGenerator={(props) => <ArrayGenerator {...props} clearInput={clearInputValue} />}
         selectedSortType={selectedSortType}
-        getComplexity={getComplexity} // Pass selected sort type to SideBar
-        handleInputChange={handleInputChange} // Pass handleInputChange to SideBar
+        getComplexity={getComplexity}
+        handleInputChange={handleInputChange}
       />
       <SortingVisualization ref={chartRef} isEnabled={isEnabled} />
     </div>
