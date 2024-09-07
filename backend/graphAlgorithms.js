@@ -1,11 +1,10 @@
-function BreadthFirstSearch(adjList, StartNody) {
-    //console.log(adjList);
+function BreadthFirstSearch(adjList, startNody ,endNode) {
     let snapshots = [];
     let visited = new Set();
-    let queueLike = [StartNody];
+    let queueLike = [startNody];
 
-    visited.add(StartNody);
-    snapshots.push(StartNody);
+    visited.add(startNody);
+    snapshots.push(startNody);
 
     while (queueLike.length > 0) {
         let nody = queueLike.shift();
@@ -14,19 +13,31 @@ function BreadthFirstSearch(adjList, StartNody) {
                 visited.add(child);
                 snapshots.push(child);
                 queueLike.push(child);
+                
+                if(endNode==child){
+                    return {snapshots};
+                }
             }
         }
     }
     return { snapshots };
 }
 
-function DepthFirstSearch(adjList, StartNody) {
+function DepthFirstSearch(adjList, startNody ,endNode) {
     let snapshots = [];
     let visited = new Set();
-
+    let found=false;
     function DFS(nody) {
+        if(found)
+            return;
+
         visited.add(nody);
         snapshots.push(nody);
+        
+        if(nody === endNode){
+            found=true;
+            return;
+        }
 
         for (let child of adjList[nody] || []) {
             if (!visited.has(child))
@@ -34,8 +45,8 @@ function DepthFirstSearch(adjList, StartNody) {
         }
     }
 
-    DFS(StartNody);
-
+    DFS(startNody);
+   
     return { snapshots };
 }
 

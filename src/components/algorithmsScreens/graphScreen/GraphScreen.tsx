@@ -6,13 +6,64 @@ import { SideBar } from "../SideBar";
 import { TopBar } from "../TopBar";
 import { GraphData } from "./GraphData";
 import { GraphVisualization } from "./GraphVisualization";
+import { DropDown } from "../DropDown";
 
 interface GraphResponse {
   VisitedNodes: number[];
   snapshots: number[];
 }
 
-const graphfuncionality: React.FC = () => <></>;
+interface GraphFunctionalityProps {
+  startNodes: string[];
+  onStartChange: (selectedNode: string) => void;
+}
+
+interface GraphEndNodeFunctionalityProps {
+  endNodes: string[];
+  onEndChange: (selectedNode: string) => void;
+}
+
+const GraphEndNodeFunctionality: React.FC<GraphEndNodeFunctionalityProps> = ({
+  endNodes,
+  onEndChange,
+}) => {
+  const handleNodeChange = (selectedNode: string) => {
+    if (selectedNode !== "Choose Node") {
+      onEndChange(selectedNode);
+    }
+  };
+
+  return (
+    <div>
+      <div>Select End Node</div>
+      <DropDown
+        sorts={["Choose Node", ...endNodes]}
+        onSelectChange={handleNodeChange}
+      />
+    </div>
+  );
+};
+
+const GraphFuncionality: React.FC<GraphFunctionalityProps> = ({
+  startNodes,
+  onStartChange,
+}) => {
+  const handleNodeChange = (selectedNode: string) => {
+    if (selectedNode !== "Choose Node") {
+      onStartChange(selectedNode);
+    }
+  };
+
+  return (
+    <div>
+      <div>Select Start Node</div>
+      <DropDown
+        sorts={["Choose Node", ...startNodes]}
+        onSelectChange={handleNodeChange}
+      />
+    </div>
+  );
+};
 
 const GraphScreen: React.FC = () => {
   const [newNodes, setNewNodes] = useState<any[]>([]);
@@ -20,10 +71,16 @@ const GraphScreen: React.FC = () => {
   const [nodeColors, setNodeColors] = useState<{ [key: number]: string }>({});
   const [disablePhysics, setDisablePhysics] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const [isPaused, setIsPaused] = useState<boolean>(false); 
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [speed, setSpeed] = useState<number>(1);
   const [selectedGraphType, setSelectedGraphType] = useState<string>("BFS");
   const [snapshots, setSnapshots] = useState<number[]>([]);
+
+  const [selectedGraphNode, setSelectedGraphNode] =
+    useState<string>("Choose Node"); // Default "Choose Node"
+  const [selectedEndNode, setSelectedEndNode] = useState<string>("Choose Node");
+  const [startNodes, setStartNodes] = useState<string[]>([]); // Array to hold valid start nodes
+
   const snapshotIndexRef = useRef<number>(0);
   const intervalRef = useRef<number | null>(null);
 
@@ -37,6 +94,14 @@ const GraphScreen: React.FC = () => {
 
   const handleSelectChange = useCallback((sortType: string) => {
     setSelectedGraphType(sortType);
+  }, []);
+
+  const handleStartChange = useCallback((startNode: string) => {
+    setSelectedGraphNode(startNode); // Update selected start node
+  }, []);
+
+  const handleEndChange = useCallback((endNode: string) => {
+    setSelectedEndNode(endNode); // Update selected end node
   }, []);
 
   const getComplexity = useCallback((sortType: string): string => {
@@ -74,6 +139,9 @@ const GraphScreen: React.FC = () => {
         adjacencyList[edge.node1].push(edge.node2);
       });
 
+      const uniqueStartNodes = Object.keys(adjacencyList);
+      setStartNodes(uniqueStartNodes);
+
       localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
 
       const { nodes, edges: graphEdges } = GraphData();
@@ -84,18 +152,29 @@ const GraphScreen: React.FC = () => {
   );
 
   const handleVisualizeClick = useCallback(async () => {
-
-    if(isAnimating)return;
+    if (isAnimating) return;
     const storedAdjacencyList = localStorage.getItem("graphInput");
-    const adjacencyList = storedAdjacencyList ? JSON.parse(storedAdjacencyList) : [];
-    // console.log("selectedGraphType:", selectedGraphType);
-    // console.log("Adjacency List:", adjacencyList);
+    const adjacencyList = storedAdjacencyList
+      ? JSON.parse(storedAdjacencyList)
+      : [];
 
     try {
-      const response = await axios.post<GraphResponse>("http://localhost:5000/api/graph", {
-        array: adjacencyList,
-        GraphAlgo: selectedGraphType,
-      });
+      const response = await axios.post<GraphResponse>(
+        "http://localhost:5000/api/graph",
+        {
+          array: adjacencyList,
+          GraphAlgo: selectedGraphType,
+          startNody:
+            selectedGraphNode === "Choose Node" && startNodes.length > 0
+              ? startNodes[0]
+              : selectedGraphNode,
+
+          endNode:
+            selectedEndNode === "Choose Node" && startNodes.length > 0
+              ? -1
+              : selectedEndNode,
+        }
+      );
       setDisablePhysics(true);
       setIsAnimating(true);
       setIsPaused(false);
@@ -106,39 +185,48 @@ const GraphScreen: React.FC = () => {
       setDisablePhysics(false);
       setIsAnimating(false);
     }
-  }, [selectedGraphType]);
+  }, [selectedGraphType, selectedGraphNode, selectedEndNode, startNodes]);
 
   const animateSnapshots = useCallback(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current); 
+    console.log(snapshots);
 
-   
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
     setNodeColors((prevColors) => {
       const initialColors = { ...prevColors };
       if (snapshots.length > 0) {
-        initialColors[snapshots[0]] = "#818188"; 
+        initialColors[snapshots[0]] = "#818188";
       }
       return initialColors;
     });
 
     intervalRef.current = window.setInterval(() => {
       if (snapshotIndexRef.current < snapshots.length) {
-        if (!isPaused) { 
+        const currentNode = snapshots[snapshotIndexRef.current];
+
+        // Check if the current snapshot is the end node
+
+        if (!isPaused) {
           setNodeColors((prevColors) => ({
             ...prevColors,
-            [snapshots[snapshotIndexRef.current]]: "#818188",
+            [currentNode]:
+              currentNode.toString() === selectedEndNode
+                ? "#6f4685"
+                : "#818188",
           }));
           snapshotIndexRef.current += 1;
         }
       } else {
+        // Reset all colors after finishing
         clearInterval(intervalRef.current as number);
         intervalRef.current = null;
         setDisablePhysics(false);
         setIsAnimating(false);
-        setNodeColors({});
-        setSnapshots([]);
+        setNodeColors({}); // Clear all colors
+        setSnapshots([]); // Clear snapshots to prevent reanimation
       }
-    }, 1000 / speed); 
-  }, [snapshots, speed, isPaused]);
+    }, 1000 / speed);
+  }, [snapshots, speed, isPaused, selectedEndNode]);
 
   useEffect(() => {
     if (isAnimating) {
@@ -157,7 +245,6 @@ const GraphScreen: React.FC = () => {
 
   const handleResetClick = useCallback(() => {
     if (isAnimating) {
-      // console.log("Reset button clicked during animation");
       setIsAnimating(false);
       setNodeColors({});
       setSnapshots([]);
@@ -172,13 +259,11 @@ const GraphScreen: React.FC = () => {
     if (isAnimating) {
       setIsPaused((prev) => !prev);
       if (!isPaused) {
-        // console.log("Pause button clicked during animation");
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
         }
       } else {
-        // console.log("Resume button clicked during animation");
         animateSnapshots();
       }
     }
@@ -187,7 +272,6 @@ const GraphScreen: React.FC = () => {
   const handleSpeedUpClick = useCallback(() => {
     if (isAnimating) {
       setSpeed((prevSpeed) => (prevSpeed % 3) + 1);
-      // console.log("Speed increased to:", (speed % 3) + 1);
     }
   }, [isAnimating, speed]);
 
@@ -204,7 +288,18 @@ const GraphScreen: React.FC = () => {
       />
 
       <SideBar
-        ArrayGenerator={graphfuncionality}
+        ArrayGenerator={() => (
+          <>
+            <GraphFuncionality
+              startNodes={startNodes}
+              onStartChange={handleStartChange}
+            />
+            <GraphEndNodeFunctionality
+              endNodes={startNodes}
+              onEndChange={handleEndChange}
+            />
+          </>
+        )}
         selectedSortType={selectedGraphType}
         getComplexity={getComplexity}
         handleInputChange={handleGraphInputChange}

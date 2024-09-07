@@ -45,7 +45,7 @@ app.post('/api/sort', (req, res) => {
 // Graph route
 app.post('/api/graph', (req, res) => {
 
-    const { array, GraphAlgo } = req.body;
+    const { array, GraphAlgo , startNody ,endNode} = req.body;
     if (typeof array !== 'object' || typeof GraphAlgo !== 'string') {
         return res.status(400).json({ error: 'Invalid input format' });
     }
@@ -55,10 +55,10 @@ app.post('/api/graph', (req, res) => {
 
         switch (GraphAlgo) {
             case "DFS":
-                result = DepthFirstSearch(array, '1');
+                result = DepthFirstSearch(array, startNody,endNode);
                 break;
             case "BFS":
-                result = BreadthFirstSearch(array, '1');
+                result = BreadthFirstSearch(array, startNody,endNode);
                 break;
             default:
                 return res.status(400).json({ error: 'Invalid graph type' });
