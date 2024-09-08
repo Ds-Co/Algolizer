@@ -142,8 +142,7 @@ const GraphScreen = () => {
         ArrayGenerator={graphfuncionality}
         selectedSortType={selectedGraphType}
         getComplexity={getComplexity}
-        handleInputChange={handleGraphInputChange}
-      ></SideBar>
+        handleInputChange={handleGraphInputChange} inputValue={""}      ></SideBar>
 
       <div className="visualization">
         <MemoizedGraph nodes={newNodes} edges={newEdges} nodeColors={nodeColors} disablePhysics={disablePhysics} />

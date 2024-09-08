@@ -150,6 +150,7 @@ const SortingScreen = () => {
       console.log("Sorted Array:", response.data.sortedArray);
       console.log("Snapshots:", response.data.snapshots);
       localStorage.setItem("SortedArray", JSON.stringify(response.data.sortedArray));
+      localStorage.setItem("Snapshots", JSON.stringify(response.data.snapshots));
     } catch (error) {
       console.error("Error during sorting:", error);
     }
@@ -179,7 +180,7 @@ const SortingScreen = () => {
         handleInputChange={handleInputChange}
         inputValue={inputValue}
       />
-      <SortingVisualization ref={chartRef} isEnabled={isEnabled} />
+      <SortingVisualization width={400} height={250} />
     </div>
   );
 };

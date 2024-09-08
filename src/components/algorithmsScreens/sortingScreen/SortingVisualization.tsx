@@ -1,109 +1,170 @@
-import React, {
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import "../../../css/SortingVisualization.css";
+import "../../../css/SortingVisualization.css"; // Importing CSS
 
-// Define the props interface
-interface SortingsProps {
-  isEnabled: boolean;
+interface SortingVisualizationProps {
+  width: number;
+  height: number;
 }
 
-// Use forwardRef to allow the parent to pass a ref
-const SortingVisualization = forwardRef((props: SortingsProps, ref) => {
-  const { isEnabled } = props;
-  const chartRef = useRef<SVGSVGElement | null>(null);
+type Snapshot = {
+  index1: number;
+  index2: number;
+};
 
-  // Function to render the chart
-  const renderChart = () => {
-    // Get the array from localStorage
-    const storedArray = localStorage.getItem("arrayInput");
-    const array: number[] = storedArray ? JSON.parse(storedArray) : [];
-    // console.log(storedArray);
+export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
+  width,
+  height,
+}) => {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [data, setData] = useState<number[]>([]);
+  const [isSorting, setIsSorting] = useState<boolean>(false);
+  const [highlightedIndices, setHighlightedIndices] = useState<number[]>([]);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // Get the sorted array from localStorage
-    const sortedArray = JSON.parse(localStorage.getItem("SortedArray") || "[]");
-    // console.log(sortedArray);
+  const fetchData = () => {
+    const storedData = localStorage.getItem("arrayInput");
+    if (storedData) {
+      const parsedData: number[] = JSON.parse(storedData);
+      if (parsedData.length !== data.length && isSorting) {
+        setIsSorting(false);
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(fetchData, 300);
+      } else if (!isSorting) {
+        setData(parsedData);
+      }
+    }
+  };
 
-    // Use sortedArray if isEnabled is true, otherwise use array
-    const dataArray: number[] = isEnabled ? sortedArray : array;
-    //  console.log("HELP ME: " + dataArray);
-    if (dataArray.length === 0 || !chartRef.current) return;
+  useEffect(() => {
+    fetchData();
+    intervalRef.current = setInterval(fetchData, 300);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isSorting]);
 
-    // Set up the dimensions of the chart
-    const width = 500;
-    const height = 300;
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+  useEffect(() => {
+    if (!svgRef.current || data.length === 0) return;
 
-    const svg = d3
-      .select(chartRef.current)
-      .attr("width", width)
-      .attr("height", height);
+    const svg = d3.select(svgRef.current);
+    const margin = { top: 50, right: 20, bottom: 30, left: 40 };
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
 
-    // Clear previous content (in case of re-render)
-    svg.selectAll("*").remove();
-
-    // Create a scale for the x and y axes
     const xScale = d3
-      .scaleBand<number>()
-      .domain(dataArray.map((_, i) => i))
-      .range([margin.left, width - margin.right])
+      .scaleBand()
+      .domain(data.map((_, i) => i.toString()))
+      .range([0, innerWidth])
       .padding(0.1);
 
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(dataArray) || 0])
+      .domain([0, d3.max(data) || 0])
       .nice()
-      .range([height - margin.bottom, margin.top]);
+      .range([innerHeight, 0]);
 
-    // Create the bars
-    svg
-      .selectAll("rect")
-      .data(dataArray)
-      .join("rect")
-      .attr("x", (_, i) => xScale(i)!)
-      .attr("y", (d) => yScale(d))
+    // Handle bars
+    const bars = svg
+      .selectAll<SVGRectElement, number>("rect")
+      .data(data, (_, i) => i.toString());
+
+    // Enter phase
+    bars
+      .enter()
+      .append("rect")
+      .attr("x", (_, i) => xScale(i.toString()) ?? 0)
       .attr("width", xScale.bandwidth())
-      .attr("height", (d) => height - margin.bottom - yScale(d))
-      .attr("fill", "steelblue");
+      .attr("y", innerHeight) // Start at the bottom
+      .attr("height", 0) // Start with height 0
+      .attr("fill", "steelblue") // Static color
+      .merge(bars) // Merge enter and update selections
+      .transition()
+      .duration(500) // Apply size transition duration
+      .ease(d3.easeCubicInOut)
+      .attr("x", (_, i) => xScale(i.toString()) ?? 0)
+      .attr("width", xScale.bandwidth())
+      .attr("y", (d) => yScale(d) ?? 0)
+      .attr("height", (d) => innerHeight - (yScale(d) ?? 0));
 
-    // Add text labels on top of each bar
-    svg
-      .selectAll("text")
-      .data(dataArray)
-      .join("text")
-      .attr("x", (_, i) => xScale(i)! + xScale.bandwidth() / 2)
-      .attr("y", (d) => yScale(d) - 5) // Position slightly above the bar
+    // Exit phase
+    bars
+      .exit()
+      .transition()
+      .duration(300)
+      .attr("height", 0)
+      .attr("y", innerHeight)
+      .remove();
+
+    // Handle texts
+    const texts = svg
+      .selectAll<SVGTextElement, number>("text")
+      .data(data, (_, i) => i.toString());
+
+    // Enter phase for text
+    texts
+      .enter()
+      .append("text")
+      .attr(
+        "x",
+        (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
+      )
+      .attr("y", (d) => yScale(d) - 5)
       .attr("text-anchor", "middle")
+      .attr("fill", "black")
+      .style("font-weight", "bold")
+      .style("font-size", "12px")
+      .merge(texts)
       .text((d) => d.toString())
-      .attr("fill", "black");
+      .attr(
+        "x",
+        (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
+      )
+      .attr("y", (d) => yScale(d) - 5);
+
+    // Exit phase for text
+    texts.exit().remove();
+  }, [data, width, height, highlightedIndices]);
+
+  const applySnapshots = (snapshots: Snapshot[], delay: number) => {
+    snapshots.forEach((snapshot, index) => {
+      const preSwapDelay = delay / 2;
+
+      setTimeout(() => {
+        setHighlightedIndices([snapshot.index1, snapshot.index2]);
+      }, index * delay);
+
+      setTimeout(() => {
+        setData((prevData) => {
+          const newData = [...prevData];
+          [newData[snapshot.index1], newData[snapshot.index2]] = [
+            newData[snapshot.index2],
+            newData[snapshot.index1],
+          ];
+          return newData;
+        });
+
+        setTimeout(() => setHighlightedIndices([]), delay);
+      }, index * delay + preSwapDelay);
+    });
   };
 
-  // Expose the renderChart method to the parent component
-  useImperativeHandle(ref, () => ({
-    renderChart,
-  }));
+  const startSorting = () => {
+    const storedSnapshots = localStorage.getItem("Snapshots");
+    if (storedSnapshots) {
+      const snapshots: Snapshot[] = JSON.parse(storedSnapshots);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setIsSorting(true);
+      applySnapshots(snapshots, 1000);
+    }
+  };
 
-  // Always call the renderChart function
-  useEffect(() => {
-    const animate = () => {
-      renderChart();
-      requestAnimationFrame(animate);
-    };
-
-    requestAnimationFrame(animate);
-
-    // Cleanup function
-    return () => {
-      // No specific cleanup is needed since requestAnimationFrame does not need canceling here
-    };
-  }, [isEnabled]); // Include isEnabled in the dependency array
-
-  // Always render the SVG element
-  return <svg className="TryingMyBest" ref={chartRef} />;
-});
-
-export { SortingVisualization };
+  return (
+    <div className="TryingMyBest">
+      <button onClick={startSorting} disabled={isSorting}>
+        {isSorting ? "Sorting..." : "Start Sorting"}
+      </button>
+      <svg ref={svgRef} width={width} height={height} />
+    </div>
+  );
+};
