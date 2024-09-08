@@ -78,7 +78,9 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
       .attr("width", xScale.bandwidth())
       .attr("y", innerHeight) // Start at the bottom
       .attr("height", 0) // Start with height 0
-      .attr("fill", "steelblue") // Default color
+      .attr("fill", "black") // Set bar color to black
+      .attr("rx", 5) // Set rounded corner radius
+      .attr("ry", 5) // Set rounded corner radius
       .merge(bars) // Merge enter and update selections
       .transition()
       .duration(600) // Apply size transition duration
@@ -88,15 +90,15 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
       .attr("y", (d) => yScale(d) ?? 0)
       .attr("height", (d) => innerHeight - (yScale(d) ?? 0))
       .attr("fill", (_, i) =>
-        highlightedIndices.includes(i) ? "orange" : sortingCompleted ? "green" : "steelblue"
+        highlightedIndices.includes(i) ? "#FFD700" : sortingCompleted ? "green" : "black"
       ) // Update color during transition
       .on("end", function () {
         if (sortingCompleted) {
           d3.select(this).attr("fill", "green");
         } else if (highlightedIndices.length > 0) {
-          d3.select(this).attr("fill", "orange");
+          d3.select(this).attr("fill", "#FFD700");
         } else {
-          d3.select(this).attr("fill", "steelblue");
+          d3.select(this).attr("fill", "black");
         }
       });
 
@@ -104,7 +106,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
     bars
       .exit()
       .transition()
-      .duration(300)
+      .duration(400)
       .attr("height", 0)
       .attr("y", innerHeight)
       .remove();
@@ -124,7 +126,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
       )
       .attr("y", (d) => yScale(d) - 5)
       .attr("text-anchor", "middle")
-      .attr("fill", "black")
+      .attr("fill", "black") // Set text color to black
       .style("font-weight", "bold")
       .style("font-size", "12px")
       .merge(texts)
