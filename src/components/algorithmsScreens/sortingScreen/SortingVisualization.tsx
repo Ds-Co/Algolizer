@@ -49,7 +49,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
     if (!svgRef.current || data.length === 0) return;
 
     const svg = d3.select(svgRef.current);
-    const margin = { top: 50, right: 20, bottom: 30, left: 40 };
+    const margin = { top: 50, right: 20, bottom: 30, left: 40 }; // Increased top margin
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -106,7 +106,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
     bars
       .exit()
       .transition()
-      .duration(400)
+      .duration(200)
       .attr("height", 0)
       .attr("y", innerHeight)
       .remove();
@@ -124,18 +124,19 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
         "x",
         (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
       )
-      .attr("y", (d) => yScale(d) - 5)
+      .attr("y", innerHeight) // Start at the bottom
       .attr("text-anchor", "middle")
       .attr("fill", "black") // Set text color to black
       .style("font-weight", "bold")
       .style("font-size", "12px")
       .merge(texts)
-      .text((d) => d.toString())
+      .transition() // Add transition for smooth appearance
+      .duration(600)
       .attr(
         "x",
         (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
       )
-      .attr("y", (d) => yScale(d) - 5);
+      .attr("y", (d) => yScale(d) - 5); // Ensure text is above bars
 
     // Exit phase for text
     texts.exit().remove();

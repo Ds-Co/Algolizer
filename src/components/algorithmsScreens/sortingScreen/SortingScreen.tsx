@@ -180,7 +180,7 @@ const SortingScreen = () => {
         handleInputChange={handleInputChange}
         inputValue={inputValue}
       />
-      <SortingVisualization width={400} height={250} />
+      <SortingVisualization width={400} height={300} />
     </div>
   );
 };
