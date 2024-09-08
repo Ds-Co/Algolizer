@@ -20,6 +20,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
   const [data, setData] = useState<number[]>([]);
   const [isSorting, setIsSorting] = useState<boolean>(false);
   const [highlightedIndices, setHighlightedIndices] = useState<number[]>([]);
+  const [sortingCompleted, setSortingCompleted] = useState<boolean>(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchData = () => {
@@ -77,15 +78,27 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
       .attr("width", xScale.bandwidth())
       .attr("y", innerHeight) // Start at the bottom
       .attr("height", 0) // Start with height 0
-      .attr("fill", "steelblue") // Static color
+      .attr("fill", "steelblue") // Default color
       .merge(bars) // Merge enter and update selections
       .transition()
-      .duration(500) // Apply size transition duration
+      .duration(600) // Apply size transition duration
       .ease(d3.easeCubicInOut)
       .attr("x", (_, i) => xScale(i.toString()) ?? 0)
       .attr("width", xScale.bandwidth())
       .attr("y", (d) => yScale(d) ?? 0)
-      .attr("height", (d) => innerHeight - (yScale(d) ?? 0));
+      .attr("height", (d) => innerHeight - (yScale(d) ?? 0))
+      .attr("fill", (_, i) =>
+        highlightedIndices.includes(i) ? "orange" : sortingCompleted ? "green" : "steelblue"
+      ) // Update color during transition
+      .on("end", function () {
+        if (sortingCompleted) {
+          d3.select(this).attr("fill", "green");
+        } else if (highlightedIndices.length > 0) {
+          d3.select(this).attr("fill", "orange");
+        } else {
+          d3.select(this).attr("fill", "steelblue");
+        }
+      });
 
     // Exit phase
     bars
@@ -124,7 +137,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
 
     // Exit phase for text
     texts.exit().remove();
-  }, [data, width, height, highlightedIndices]);
+  }, [data, width, height, highlightedIndices, sortingCompleted]);
 
   const applySnapshots = (snapshots: Snapshot[], delay: number) => {
     snapshots.forEach((snapshot, index) => {
@@ -147,6 +160,16 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
         setTimeout(() => setHighlightedIndices([]), delay);
       }, index * delay + preSwapDelay);
     });
+
+    // After all snapshots are applied, mark sorting as completed
+    setTimeout(() => {
+      setSortingCompleted(true);
+      setData((prevData) => [...prevData]); // Trigger a re-render
+      setTimeout(() => {
+        setSortingCompleted(false);
+        setData((prevData) => [...prevData]); // Trigger a re-render to revert color
+      }, 1000); // Revert color after 1 second
+    }, snapshots.length * delay + delay / 2);
   };
 
   const startSorting = () => {
@@ -155,6 +178,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
       const snapshots: Snapshot[] = JSON.parse(storedSnapshots);
       if (intervalRef.current) clearInterval(intervalRef.current);
       setIsSorting(true);
+      setSortingCompleted(false);
       applySnapshots(snapshots, 1000);
     }
   };
