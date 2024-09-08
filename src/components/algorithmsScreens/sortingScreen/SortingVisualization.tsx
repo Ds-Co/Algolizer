@@ -53,6 +53,7 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
+    // Update the scales based on the new data
     const xScale = d3
       .scaleBand()
       .domain(data.map((_, i) => i.toString()))
@@ -130,13 +131,14 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
       .style("font-weight", "bold")
       .style("font-size", "12px")
       .merge(texts)
-      .transition() // Add transition for smooth appearance
+      .text((d) => d.toString())
+      .transition()
       .duration(600)
       .attr(
         "x",
         (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
       )
-      .attr("y", (d) => yScale(d) - 5); // Ensure text is above bars
+      .attr("y", (d) => Math.max(yScale(d) - 5, margin.top)); // Ensure text is above bars
 
     // Exit phase for text
     texts.exit().remove();

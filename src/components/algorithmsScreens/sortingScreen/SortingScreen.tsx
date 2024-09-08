@@ -91,8 +91,6 @@ const SortingScreen = () => {
     "Quick Sort",
     "Insertion Sort",
     "Selection Sort",
-    "Sleep Sort",
-    "Merge Sort",
     "Heap Sort",
   ];
 
@@ -102,16 +100,12 @@ const SortingScreen = () => {
         return "O(n^2)";
       case "Quick Sort":
         return "O(n^2)";
-      case "Merge Sort":
-        return "O(n log n)";
       case "Insertion Sort":
         return "O(n^2)";
       case "Selection Sort":
         return "O(n^2)";
       case "Bogo Sort":
         return "O((n!)^2)";
-      case "Sleep Sort":
-        return "Not well-defined";
       case "Heap Sort":
         return "O(n log n)";
       default:
