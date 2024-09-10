@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import graphicon from "/src/assets/sort_icon.png";
+import graphicon from "/src/assets/graph_logo.png";
 import axios from "axios";
 import "../../../css/GraphScreenStyle.css";
 import { SideBar } from "../SideBar";
 import { TopBar } from "../TopBar";
-import { GraphData } from "./GraphData";
-import { GraphVisualization } from "./GraphVisualization";
 import { DropDown } from "../DropDown";
+import { GraphData } from "./GraphData";
+import { GraphTypeSwitch } from "./GraphTypeSwitch";
+import GraphVisualization from "./GraphVisualization";
 
 interface GraphResponse {
   VisitedNodes: number[];
   snapshots: number[];
+
+  distance?: { [key: string]: number };
 }
 
 interface GraphFunctionalityProps {
@@ -35,7 +38,7 @@ const GraphEndNodeFunctionality: React.FC<GraphEndNodeFunctionalityProps> = ({
 
   return (
     <div>
-      <div>Select End Node</div>
+      <div style={{ color: "#ffffff" }}>Select End Node</div>
       <DropDown
         sorts={["Choose Node", ...endNodes]}
         onSelectChange={handleNodeChange}
@@ -56,7 +59,7 @@ const GraphFuncionality: React.FC<GraphFunctionalityProps> = ({
 
   return (
     <div>
-      <div>Select Start Node</div>
+      <div style={{ color: "#ffffff" }}>Select Start Node</div>
       <DropDown
         sorts={["Choose Node", ...startNodes]}
         onSelectChange={handleNodeChange}
@@ -80,17 +83,24 @@ const GraphScreen: React.FC = () => {
     useState<string>("Choose Node"); // Default "Choose Node"
   const [selectedEndNode, setSelectedEndNode] = useState<string>("Choose Node");
   const [startNodes, setStartNodes] = useState<string[]>([]); // Array to hold valid start nodes
-
+  const [isDirected, setIsDirected] = useState(true);
   const snapshotIndexRef = useRef<number>(0);
   const intervalRef = useRef<number | null>(null);
-
   const graphs: string[] = ["BFS", "DFS", "Dijkstra"];
+
+  const [nodeDistances, setNodeDistances] = useState({});
+
   const graphsProps = {
     text: "Graph",
     icon: graphicon,
   };
 
   const MemoizedGraph = React.memo(GraphVisualization);
+  // State to keep track of graph type
+
+  const handleGraphTypeChange = (isDirected: boolean) => {
+    setIsDirected(isDirected);
+  };
 
   const handleSelectChange = useCallback((sortType: string) => {
     setSelectedGraphType(sortType);
@@ -122,12 +132,19 @@ const GraphScreen: React.FC = () => {
       const edges = value
         .split("\n")
         .map((line) => {
-          const [node1, node2] = line.split(",").map((item) => item.trim());
-          return { node1, node2 };
+          const [node1, node2, weight] = line
+            .split(",")
+            .map((item) => item.trim());
+          return {
+            node1,
+            node2,
+            weight: weight ? parseFloat(weight) : 1,
+          };
         })
         .filter((edge) => edge.node1 && edge.node2);
 
-      const adjacencyList: Record<string, string[]> = {};
+      const adjacencyList: Record<string, { node: string; weight: number }[]> =
+        {};
 
       edges.forEach((edge) => {
         if (!adjacencyList[edge.node1]) {
@@ -136,7 +153,19 @@ const GraphScreen: React.FC = () => {
         if (!adjacencyList[edge.node2]) {
           adjacencyList[edge.node2] = [];
         }
-        adjacencyList[edge.node1].push(edge.node2);
+
+        adjacencyList[edge.node1].push({
+          node: edge.node2,
+          weight: edge.weight,
+        });
+        if (!isDirected) {
+          //We can Save them somewhere and if he changes his mind about it being directed we iterate and delete them
+          //and vise versa if he re-enables it we iterate and add them.
+          adjacencyList[edge.node2].push({
+            node: edge.node1,
+            weight: edge.weight,
+          });
+        }
       });
 
       const uniqueStartNodes = Object.keys(adjacencyList);
@@ -148,7 +177,7 @@ const GraphScreen: React.FC = () => {
       setNewNodes(nodes);
       setNewEdges(graphEdges);
     },
-    []
+    [isDirected]
   );
 
   const handleVisualizeClick = useCallback(async () => {
@@ -156,7 +185,7 @@ const GraphScreen: React.FC = () => {
     const storedAdjacencyList = localStorage.getItem("graphInput");
     const adjacencyList = storedAdjacencyList
       ? JSON.parse(storedAdjacencyList)
-      : [];
+      : {};
 
     try {
       const response = await axios.post<GraphResponse>(
@@ -168,18 +197,22 @@ const GraphScreen: React.FC = () => {
             selectedGraphNode === "Choose Node" && startNodes.length > 0
               ? startNodes[0]
               : selectedGraphNode,
-
           endNode:
             selectedEndNode === "Choose Node" && startNodes.length > 0
               ? -1
               : selectedEndNode,
         }
       );
+
       setDisablePhysics(true);
       setIsAnimating(true);
       setIsPaused(false);
       setSnapshots(response.data.snapshots);
       snapshotIndexRef.current = 0;
+
+      if (selectedGraphType === "Dijkstra") {
+        setNodeDistances(response.data.distance || {});
+      }
     } catch (error) {
       console.error("Error during path finding:", error);
       setDisablePhysics(false);
@@ -205,7 +238,6 @@ const GraphScreen: React.FC = () => {
         const currentNode = snapshots[snapshotIndexRef.current];
 
         // Check if the current snapshot is the end node
-
         if (!isPaused) {
           setNodeColors((prevColors) => ({
             ...prevColors,
@@ -298,6 +330,10 @@ const GraphScreen: React.FC = () => {
               endNodes={startNodes}
               onEndChange={handleEndChange}
             />
+            <GraphTypeSwitch
+              onTypeChange={handleGraphTypeChange}
+              isDirected={isDirected}
+            />
           </>
         )}
         selectedSortType={selectedGraphType}
@@ -311,6 +347,7 @@ const GraphScreen: React.FC = () => {
           edges={newEdges}
           nodeColors={nodeColors}
           disablePhysics={disablePhysics}
+          distances={selectedGraphType === "Dijkstra" ? nodeDistances : {}}
         />
       </div>
     </>

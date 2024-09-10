@@ -1,0 +1,41 @@
+/* GraphTypeSwitch.css */
+.graph-type-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .switch-option {
+    padding: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .switch-option.active {
+    color: #ffffff;
+  }
+  
+  .switch-toggle {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .toggle-button {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s;
+  }
+  
+  .toggle-button.undirected {
+    transform: translateX(26px);
+  }

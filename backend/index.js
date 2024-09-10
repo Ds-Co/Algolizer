@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { bubbleSort, quickSort } = require('./sortingAlgorithms');
-const { DepthFirstSearch, BreadthFirstSearch } = require('./graphAlgorithms');
+const { DepthFirstSearch, BreadthFirstSearch , Dijkstra}=require('./graphAlgorithms');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,33 +44,35 @@ app.post('/api/sort', (req, res) => {
 
 // Graph route
 app.post('/api/graph', (req, res) => {
-
-    const { array, GraphAlgo , startNody ,endNode} = req.body;
+    const { array, GraphAlgo, startNody, endNode } = req.body;
     if (typeof array !== 'object' || typeof GraphAlgo !== 'string') {
-        return res.status(400).json({ error: 'Invalid input format' });
+      return res.status(400).json({ error: 'Invalid input format' });
     }
-    let result;
-
+  
     try {
-
-        switch (GraphAlgo) {
-            case "DFS":
-                result = DepthFirstSearch(array, startNody,endNode);
-                break;
-            case "BFS":
-                result = BreadthFirstSearch(array, startNody,endNode);
-                break;
-            default:
-                return res.status(400).json({ error: 'Invalid graph type' });
-        }
-
-        res.json(result);
+      let result;
+  
+      switch (GraphAlgo) {
+        case "DFS":
+          result = DepthFirstSearch(array, startNody, endNode);
+          break;
+        case "BFS":
+          result = BreadthFirstSearch(array, startNody, endNode);
+          break;
+        case "Dijkstra":
+          result = Dijkstra(array, startNody, endNode);
+          break;
+        default:
+          return res.status(400).json({ error: 'Invalid graph type' });
+      }
+  
+      res.json(result);
     } catch (error) {
-        console.error('Error processing graph algorithm:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error processing graph algorithm:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-
-});
+  });
+  
 
 
 app.listen(PORT, () => {

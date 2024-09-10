@@ -6,10 +6,14 @@ export default function GraphVisualization({
   edges,
   nodeColors,
   disablePhysics,
+  distances = {}, // Default to empty object if not provided
 }) {
   const coloredNodes = nodes.map((node) => ({
     ...node,
     color: nodeColors[node.id] || "#000000",
+    label: distances[node.id] !== undefined
+      ? `Node ${node.id}: ${distances[node.id]}`
+      : `Node ${node.id}`,
   }));
 
   const options = {
@@ -42,6 +46,9 @@ export default function GraphVisualization({
           scaleFactor: 0.5,
         },
       },
+      font: {
+        align: "top", // Align the weight label on top of the edge
+      },
     },
     physics: {
       enabled: !disablePhysics, // Toggle physics based on disablePhysics prop
@@ -53,12 +60,12 @@ export default function GraphVisualization({
       zoomView: true,
     },
     layout: {
-      improvedLayout: true, // Enable improved layout for better spacing
-      randomSeed: 15, // Optional: Use a fixed seed for reproducibility
+      improvedLayout: true,
+      randomSeed: 15,
     },
   };
 
-  const data = { nodes: coloredNodes, edges: edges };
+  const data = { nodes: coloredNodes, edges };
 
   return <Graph graph={data} options={options} />;
 }
