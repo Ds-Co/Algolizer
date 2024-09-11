@@ -18,7 +18,8 @@ interface TopBarProps {
   dropdownmenu: string[];
   sortingsProps: SortingsProps;
   onSelectChange: (sortType: string) => void;
-  handleVisualizeClick: () => void; // New prop for the visualization logic
+  handleVisualizeClick: () => void;
+  handleVisualizePause: () => void;// New prop for the visualization logic
 }
 
 const Sortings = ({ text, icon }: SortingsProps) => {
@@ -49,11 +50,17 @@ const IconButton = ({
   </div>
 );
 
-const IconList = ({ onVisualizeClick }: { onVisualizeClick: () => void }) => {
+const IconList = ({
+  onVisualizeClick,
+  onPauseClick,
+}: {
+  onVisualizeClick: () => void;
+  onPauseClick: () => void;
+}) => {
   const icons = [
     { iconimg: info, icontxt: "Info" },
     { iconimg: reset, icontxt: "Reset" },
-    { iconimg: pause, icontxt: "Pause" },
+    { iconimg: pause, icontxt: "Pause", onClick: onPauseClick },
     { iconimg: speedUp, icontxt: "SpeedUp" },
     { iconimg: visualize, icontxt: "Visualize", onClick: onVisualizeClick },
   ];
@@ -76,6 +83,7 @@ const TopBar: React.FC<TopBarProps> = ({
   sortingsProps,
   onSelectChange,
   handleVisualizeClick,
+  handleVisualizePause,
 }) => {
   const [selectedSortType, setSelectedSortType] = useState<string>(
     dropdownmenu[0]
@@ -90,7 +98,7 @@ const TopBar: React.FC<TopBarProps> = ({
     <div className="topbar">
       <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
       <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} />
-      <IconList onVisualizeClick={handleVisualizeClick} /> {/* Pass the prop */}
+      <IconList onVisualizeClick={handleVisualizeClick} onPauseClick={handleVisualizePause} /> {/* Pass the prop */}
     </div>
   );
 };

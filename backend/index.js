@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { bubbleSort, quickSort } = require('./sortingAlgorithms');
+const { bubbleSort, quickSort, insertionSort, selectionSort, bogoSort, sleepSort, heapSort, mergeSort } = require('./sortingAlgorithms');
 const { DepthFirstSearch, BreadthFirstSearch } = require('./graphAlgorithms');
 
 const app = express();
@@ -28,12 +28,31 @@ app.post('/api/sort', (req, res) => {
     let result;
 
     switch (sortType) {
+
         case "Bubble Sort":
             result = bubbleSort([...array]);
             break;
+
         case "Quick Sort":
             result = quickSort([...array]);
             break;
+
+        case "Insertion Sort":
+            result = insertionSort([...array]);
+            break;
+
+        case "Selection Sort":
+            result = selectionSort([...array]);
+            break;
+
+        case "Bogo Sort":
+            result = bogoSort([...array]);
+            break;
+
+        case "Heap Sort":
+            result = heapSort([...array]);
+            break;
+
         default:
             return res.status(400).json({ error: 'Invalid sort type' });
     }

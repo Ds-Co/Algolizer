@@ -8,23 +8,26 @@ import { Link } from "react-router-dom";
 interface LowerSidebarProps {
   ArrayGenerator: React.FC;
   selectedSortType: string;
-  getComplexity: (sortType: string) => string; // New prop for the complexity logic
+  getComplexity: (sortType: string) => string;
 }
 
 interface SideBarProps {
   ArrayGenerator: React.FC;
   selectedSortType: string;
-  getComplexity: (sortType: string) => string; // Pass the prop to SideBar
-  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void; // New prop for handleInputChange
+  getComplexity: (sortType: string) => string;
+  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  inputValue: string;
 }
 
 interface UpperSidebarProps {
+  inputValue: string;
   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const UpperSidebar: React.FC<UpperSidebarProps> = ({ handleInputChange }) => {
-  const [inputValue, setInputValue] = useState("");
-
+const UpperSidebar: React.FC<UpperSidebarProps> = ({
+  inputValue,
+  handleInputChange
+}) => {
   return (
     <div className="sidebar__upper">
       <h4 className="sidebar__array-text">Array Data:</h4>
@@ -32,14 +35,12 @@ const UpperSidebar: React.FC<UpperSidebarProps> = ({ handleInputChange }) => {
         className="sidebar__array-input"
         placeholder="Enter Your Array"
         value={inputValue}
-        onChange={(event) => {
-          setInputValue(event.target.value);
-          handleInputChange(event); // Use the passed prop
-        }}
+        onChange={handleInputChange}
       />
     </div>
   );
 };
+
 
 const MiddleSidebar: React.FC<{
   isCollapsed: boolean;
@@ -60,7 +61,7 @@ const MiddleSidebar: React.FC<{
 const LowerSidebar: React.FC<LowerSidebarProps> = ({
   ArrayGenerator,
   selectedSortType,
-  getComplexity, // Receive the new prop
+  getComplexity,
 }) => {
   return (
     <div className="sidebar__lower">
@@ -89,11 +90,12 @@ const LowerSidebar: React.FC<LowerSidebarProps> = ({
   );
 };
 
-const SideBar: React.FC<SideBarProps> = ({
+export const SideBar: React.FC<SideBarProps> = ({
   ArrayGenerator,
   selectedSortType,
   getComplexity,
-  handleInputChange // Receive the new prop
+  handleInputChange,
+  inputValue
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -103,17 +105,20 @@ const SideBar: React.FC<SideBarProps> = ({
 
   return (
     <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
-      {!isCollapsed && <UpperSidebar handleInputChange={handleInputChange} />} {/* Pass the prop */}
+      {!isCollapsed && (
+        <UpperSidebar
+          inputValue={inputValue}
+          handleInputChange={handleInputChange}
+        />
+      )}
       <MiddleSidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
       {!isCollapsed && (
         <LowerSidebar
           ArrayGenerator={ArrayGenerator}
           selectedSortType={selectedSortType}
-          getComplexity={getComplexity} // Pass the prop to LowerSidebar
+          getComplexity={getComplexity}
         />
       )}
     </div>
   );
 };
-
-export { SideBar };
