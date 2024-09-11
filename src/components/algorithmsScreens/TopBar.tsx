@@ -8,7 +8,6 @@ import pause from "/src/assets/pause.png";
 import "bootstrap/dist/css/bootstrap.css";
 import { DropDown } from "./DropDown";
 
-
 interface SortingsProps {
   text: string;
   icon: string;
@@ -19,7 +18,9 @@ interface TopBarProps {
   sortingsProps: SortingsProps;
   onSelectChange: (sortType: string) => void;
   handleVisualizeClick: () => void;
-  handleVisualizePause: () => void;// New prop for the visualization logic
+  handleResetClick: () => void;
+  handlePauseClick: () => void;
+  handleSpeedUpClick: () => void;
 }
 
 const Sortings = ({ text, icon }: SortingsProps) => {
@@ -52,18 +53,23 @@ const IconButton = ({
 
 const IconList = ({
   onVisualizeClick,
+  onResetClick,
   onPauseClick,
+  onSpeedUpClick
 }: {
   onVisualizeClick: () => void;
+  onResetClick: () => void;
   onPauseClick: () => void;
+  onSpeedUpClick: () => void;
 }) => {
   const icons = [
     { iconimg: info, icontxt: "Info" },
-    { iconimg: reset, icontxt: "Reset" },
+    { iconimg: reset, icontxt: "Reset", onClick: onResetClick },
     { iconimg: pause, icontxt: "Pause", onClick: onPauseClick },
-    { iconimg: speedUp, icontxt: "SpeedUp" },
+    { iconimg: speedUp, icontxt: "SpeedUp", onClick: onSpeedUpClick },
     { iconimg: visualize, icontxt: "Visualize", onClick: onVisualizeClick },
   ];
+
   return (
     <>
       {icons.map(({ iconimg, icontxt, onClick }) => (
@@ -78,29 +84,40 @@ const IconList = ({
   );
 };
 
+
 const TopBar: React.FC<TopBarProps> = ({
   dropdownmenu,
   sortingsProps,
   onSelectChange,
   handleVisualizeClick,
-  handleVisualizePause,
+  handlePauseClick,
+  handleResetClick,
+  handleSpeedUpClick,
 }) => {
   const [selectedSortType, setSelectedSortType] = useState<string>(
     dropdownmenu[0]
   );
 
   const handleSelectChange = (sortType: string) => {
-    setSelectedSortType(selectedSortType);
+    setSelectedSortType(sortType);  // Correct the assignment
     onSelectChange(sortType);
   };
+
+  // Define specific handlers for each button
 
   return (
     <div className="topbar">
       <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
       <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} />
-      <IconList onVisualizeClick={handleVisualizeClick} onPauseClick={handleVisualizePause} /> {/* Pass the prop */}
+      <IconList
+        onVisualizeClick={handleVisualizeClick}
+        onResetClick={handleResetClick}
+        onPauseClick={handlePauseClick}
+        onSpeedUpClick={handleSpeedUpClick}
+      />
     </div>
   );
 };
+
 
 export { TopBar };

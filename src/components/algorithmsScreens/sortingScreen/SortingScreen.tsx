@@ -90,7 +90,6 @@ const SortingScreen = () => {
     isPaused: Boolean;
   }>(null);
 
-
   const sorts: string[] = [
     "Bubble Sort",
     "Bogo Sort",
@@ -196,14 +195,16 @@ const SortingScreen = () => {
         sortingsProps={sortingsProps}
         onSelectChange={handleSelectChange}
         handleVisualizeClick={handleVisualizeClick}
-        handleVisualizePause={handleVisualizePause}
+        handlePauseClick={handleVisualizePause}
+        handleResetClick={handleVisualizePause}  //needs to be adjusted
+        handleSpeedUpClick={handleVisualizePause} //needs to be adjusted 
       />
       <SideBar
         ArrayGenerator={(props) => <ArrayGenerator {...props} clearInput={clearInputValue} />}
         selectedSortType={selectedSortType}
         getComplexity={getComplexity}
         handleInputChange={handleInputChange}
-        inputValue={inputValue}
+      // inputValue={inputValue}
       />
       <SortingVisualization width={400} height={300} ref={sortingRef} />
     </div>

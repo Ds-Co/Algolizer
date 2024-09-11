@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { bubbleSort, quickSort, insertionSort, selectionSort, bogoSort, sleepSort, heapSort, mergeSort } = require('./sortingAlgorithms');
-const { DepthFirstSearch, BreadthFirstSearch } = require('./graphAlgorithms');
+const { bubbleSort, quickSort, insertionSort, selectionSort, bogoSort, heapSort } = require('./sortingAlgorithms');
+const { DepthFirstSearch, BreadthFirstSearch, Dijkstra } = require('./graphAlgorithms');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,85 +14,87 @@ app.use(express.json());
 
 // Sample route
 app.get('/', (req, res) => {
-    res.send('Welcome to the Node.js backend!');
+  res.send('Welcome to the Node.js backend!');
 });
 
 // Sorting route
 app.post('/api/sort', (req, res) => {
 
-    const { array, sortType } = req.body;
+  const { array, sortType } = req.body;
 
-    if (!Array.isArray(array) || typeof sortType !== 'string') {
-        return res.status(400).json({ error: 'Invalid input' });
-    }
+  if (!Array.isArray(array) || typeof sortType !== 'string') {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
 
-    let result;
+  let result;
 
-    switch (sortType) {
+  switch (sortType) {
 
-        case "Bubble Sort":
-            result = bubbleSort([...array]);
-            break;
+    case "Bubble Sort":
+      result = bubbleSort([...array]);
+      break;
 
-        case "Quick Sort":
-            result = quickSort([...array]);
-            break;
+    case "Quick Sort":
+      result = quickSort([...array]);
+      break;
 
-        case "Insertion Sort":
-            result = insertionSort([...array]);
-            break;
+    case "Insertion Sort":
+      result = insertionSort([...array]);
+      break;
 
-        case "Selection Sort":
-            result = selectionSort([...array]);
-            break;
+    case "Selection Sort":
+      result = selectionSort([...array]);
+      break;
 
-        case "Bogo Sort":
-            result = bogoSort([...array]);
-            break;
+    case "Bogo Sort":
+      result = bogoSort([...array]);
+      break;
 
-        case "Heap Sort":
-            result = heapSort([...array]);
-            break;
+    case "Heap Sort":
+      result = heapSort([...array]);
+      break;
 
-        default:
-            return res.status(400).json({ error: 'Invalid sort type' });
-    }
+    default:
+      return res.status(400).json({ error: 'Invalid sort type' });
+  }
 
-    res.json(result);
+  res.json(result);
 });
 
 
 // Graph route
 app.post('/api/graph', (req, res) => {
+  const { array, GraphAlgo, startNody, endNode } = req.body;
+  if (typeof array !== 'object' || typeof GraphAlgo !== 'string') {
+    return res.status(400).json({ error: 'Invalid input format' });
+  }
 
-    const { array, GraphAlgo } = req.body;
-    if (typeof array !== 'object' || typeof GraphAlgo !== 'string') {
-        return res.status(400).json({ error: 'Invalid input format' });
-    }
+  try {
     let result;
 
-    try {
-
-        switch (GraphAlgo) {
-            case "DFS":
-                result = DepthFirstSearch(array, '1');
-                break;
-            case "BFS":
-                result = BreadthFirstSearch(array, '1');
-                break;
-            default:
-                return res.status(400).json({ error: 'Invalid graph type' });
-        }
-
-        res.json(result);
-    } catch (error) {
-        console.error('Error processing graph algorithm:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+    switch (GraphAlgo) {
+      case "DFS":
+        result = DepthFirstSearch(array, startNody, endNode);
+        break;
+      case "BFS":
+        result = BreadthFirstSearch(array, startNody, endNode);
+        break;
+      case "Dijkstra":
+        result = Dijkstra(array, startNody, endNode);
+        break;
+      default:
+        return res.status(400).json({ error: 'Invalid graph type' });
     }
 
+    res.json(result);
+  } catch (error) {
+    console.error('Error processing graph algorithm:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 
+
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

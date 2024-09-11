@@ -1,0 +1,7 @@
+.startEndNodes{
+    display: flex;
+    flex-direction: column;
+}
+.nodes{
+    width: 50%;
+}

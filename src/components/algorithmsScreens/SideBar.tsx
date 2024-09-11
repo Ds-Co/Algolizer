@@ -16,16 +16,16 @@ interface SideBarProps {
   selectedSortType: string;
   getComplexity: (sortType: string) => string;
   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  inputValue: string;
+  // inputValue: string;
 }
 
 interface UpperSidebarProps {
-  inputValue: string;
+  // inputValue: string;
   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const UpperSidebar: React.FC<UpperSidebarProps> = ({
-  inputValue,
+  //  inputValue,
   handleInputChange
 }) => {
   return (
@@ -34,7 +34,7 @@ const UpperSidebar: React.FC<UpperSidebarProps> = ({
       <textarea
         className="sidebar__array-input"
         placeholder="Enter Your Array"
-        value={inputValue}
+        //value={inputValue}
         onChange={handleInputChange}
       />
     </div>
@@ -95,7 +95,7 @@ export const SideBar: React.FC<SideBarProps> = ({
   selectedSortType,
   getComplexity,
   handleInputChange,
-  inputValue
+  // inputValue
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -107,7 +107,7 @@ export const SideBar: React.FC<SideBarProps> = ({
     <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
       {!isCollapsed && (
         <UpperSidebar
-          inputValue={inputValue}
+          //   inputValue={inputValue}
           handleInputChange={handleInputChange}
         />
       )}
