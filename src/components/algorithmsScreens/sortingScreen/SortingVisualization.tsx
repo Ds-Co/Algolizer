@@ -1,6 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import * as d3 from "d3";
-import "../../../css/SortingVisualization.css"; // Importing CSS
+import "../../../css/SortingVisualization.css";
 
 interface SortingVisualizationProps {
   width: number;
@@ -12,145 +18,162 @@ type Snapshot = {
   index2: number;
 };
 
-export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
-  width,
-  height,
-}) => {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [data, setData] = useState<number[]>([]);
-  const [isSorting, setIsSorting] = useState<boolean>(false);
-  const [highlightedIndices, setHighlightedIndices] = useState<number[]>([]);
-  const [sortingCompleted, setSortingCompleted] = useState<boolean>(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+export const SortingVisualization = forwardRef(
+  ({ width, height }: SortingVisualizationProps, ref) => {
+    const svgRef = useRef<SVGSVGElement>(null);
+    const [data, setData] = useState<number[]>([]);
+    const [isSorting, setIsSorting] = useState<boolean>(false);
+    const [highlightedIndices, setHighlightedIndices] = useState<number[]>([]);
+    const [sortingCompleted, setSortingCompleted] = useState<boolean>(false);
+    const [isPaused, setIsPaused] = useState<boolean>(false);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const snapshotsRef = useRef<Snapshot[]>([]); // To hold snapshots
+    const pausedIndexRef = useRef<number>(0); // To track the paused snapshot index
+    const isPausedRef = useRef<boolean>(false); // To track the paused state in async code
 
-  const fetchData = () => {
-    const storedData = localStorage.getItem("arrayInput");
-    if (storedData) {
-      const parsedData: number[] = JSON.parse(storedData);
-      if (parsedData.length !== data.length && isSorting) {
-        setIsSorting(false);
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        intervalRef.current = setInterval(fetchData, 300);
-      } else if (!isSorting) {
-        setData(parsedData);
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-    intervalRef.current = setInterval(fetchData, 300);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isSorting]);
-
-  useEffect(() => {
-    if (!svgRef.current || data.length === 0) return;
-
-    const svg = d3.select(svgRef.current);
-    const margin = { top: 50, right: 20, bottom: 30, left: 40 }; // Increased top margin
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    // Update the scales based on the new data
-    const xScale = d3
-      .scaleBand()
-      .domain(data.map((_, i) => i.toString()))
-      .range([0, innerWidth])
-      .padding(0.1);
-
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, d3.max(data) || 0])
-      .nice()
-      .range([innerHeight, 0]);
-
-    // Handle bars
-    const bars = svg
-      .selectAll<SVGRectElement, number>("rect")
-      .data(data, (_, i) => i.toString());
-
-    // Enter phase
-    bars
-      .enter()
-      .append("rect")
-      .attr("x", (_, i) => xScale(i.toString()) ?? 0)
-      .attr("width", xScale.bandwidth())
-      .attr("y", innerHeight) // Start at the bottom
-      .attr("height", 0) // Start with height 0
-      .attr("fill", "black") // Set bar color to black
-      .attr("rx", 5) // Set rounded corner radius
-      .attr("ry", 5) // Set rounded corner radius
-      .merge(bars) // Merge enter and update selections
-      .transition()
-      .duration(600) // Apply size transition duration
-      .ease(d3.easeCubicInOut)
-      .attr("x", (_, i) => xScale(i.toString()) ?? 0)
-      .attr("width", xScale.bandwidth())
-      .attr("y", (d) => yScale(d) ?? 0)
-      .attr("height", (d) => innerHeight - (yScale(d) ?? 0))
-      .attr("fill", (_, i) =>
-        highlightedIndices.includes(i) ? "#FFD700" : sortingCompleted ? "green" : "black"
-      ) // Update color during transition
-      .on("end", function () {
-        if (sortingCompleted) {
-          d3.select(this).attr("fill", "green");
-        } else if (highlightedIndices.length > 0) {
-          d3.select(this).attr("fill", "#FFD700");
-        } else {
-          d3.select(this).attr("fill", "black");
+    const fetchData = () => {
+      const storedData = localStorage.getItem("arrayInput");
+      if (storedData) {
+        const parsedData: number[] = JSON.parse(storedData);
+        if (parsedData.length !== data.length && isSorting) {
+          setIsSorting(false);
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          intervalRef.current = setInterval(fetchData, 300);
+        } else if (!isSorting) {
+          setData(parsedData);
         }
-      });
+      }
+    };
 
-    // Exit phase
-    bars
-      .exit()
-      .transition()
-      .duration(200)
-      .attr("height", 0)
-      .attr("y", innerHeight)
-      .remove();
+    useEffect(() => {
+      fetchData();
+      intervalRef.current = setInterval(fetchData, 300);
+      return () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+      };
+    }, [isSorting]);
 
-    // Handle texts
-    const texts = svg
-      .selectAll<SVGTextElement, number>("text")
-      .data(data, (_, i) => i.toString());
+    useEffect(() => {
+      if (!svgRef.current || data.length === 0) return;
 
-    // Enter phase for text
-    texts
-      .enter()
-      .append("text")
-      .attr(
-        "x",
-        (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
-      )
-      .attr("y", innerHeight) // Start at the bottom
-      .attr("text-anchor", "middle")
-      .attr("fill", "black") // Set text color to black
-      .style("font-weight", "bold")
-      .style("font-size", "12px")
-      .merge(texts)
-      .text((d) => d.toString())
-      .transition()
-      .duration(600)
-      .attr(
-        "x",
-        (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
-      )
-      .attr("y", (d) => Math.max(yScale(d) - 5, margin.top)); // Ensure text is above bars
+      const svg = d3.select(svgRef.current);
+      const margin = { top: 50, right: 20, bottom: 30, left: 40 }; // Adjusted top margin
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
 
-    // Exit phase for text
-    texts.exit().remove();
-  }, [data, width, height, highlightedIndices, sortingCompleted]);
+      // Update the scales based on the new data
+      const xScale = d3
+        .scaleBand()
+        .domain(data.map((_, i) => i.toString()))
+        .range([0, innerWidth])
+        .padding(0.1);
 
-  const applySnapshots = (snapshots: Snapshot[], delay: number) => {
-    snapshots.forEach((snapshot, index) => {
+      const yScale = d3
+        .scaleLinear()
+        .domain([0, d3.max(data) || 0])
+        .nice()
+        .range([innerHeight, 0]);
+
+      // Handle bars
+      const bars = svg
+        .selectAll<SVGRectElement, number>("rect")
+        .data(data, (_, i) => i.toString());
+
+      // Enter phase
+      bars
+        .enter()
+        .append("rect")
+        .attr("x", (_, i) => xScale(i.toString()) ?? 0)
+        .attr("width", xScale.bandwidth())
+        .attr("y", innerHeight + margin.top) // Adjust y position to account for top margin
+        .attr("height", 0) // Start with height 0
+        .attr("fill", "black") // Set bar color to black
+        .attr("rx", 5) // Set rounded corner radius
+        .attr("ry", 5) // Set rounded corner radius
+        .merge(bars) // Merge enter and update selections
+        .transition()
+        .duration(300) // Reduced duration for faster animation
+        .ease(d3.easeCubicInOut)
+        .attr("x", (_, i) => xScale(i.toString()) ?? 0)
+        .attr("width", xScale.bandwidth())
+        .attr("y", (d) => yScale(d) + margin.top) // Adjust y position to account for top margin
+        .attr("height", (d) => innerHeight - (yScale(d) ?? 0))
+        .attr(
+          "fill",
+          (_, i) =>
+            highlightedIndices.includes(i)
+              ? "#FFD700" // Highlight color (gold)
+              : sortingCompleted
+                ? "green" // Color after sorting completes
+                : "black" // Default color
+        );
+
+      // Exit phase
+      bars
+        .exit()
+        .transition()
+        .duration(200)
+        .attr("height", 0)
+        .attr("y", innerHeight + margin.top)
+        .remove();
+
+      // Handle texts
+      const texts = svg
+        .selectAll<SVGTextElement, number>("text")
+        .data(data, (_, i) => i.toString());
+
+      // Enter phase for text
+      texts
+        .enter()
+        .append("text")
+        .attr(
+          "x",
+          (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
+        )
+        .attr("y", innerHeight + margin.top) // Start at the bottom with the bars, adjusted for top margin
+        .attr("text-anchor", "middle")
+        .attr("fill", "black") // Set text color to black
+        .style("font-weight", "bold")
+        .style("font-size", "12px")
+        .merge(texts)
+        .text((d) => d.toString()) // Update the text content
+        .transition()
+        .duration(300) // Same duration as bars
+        .attr(
+          "x",
+          (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
+        )
+        .attr("y", (d) => Math.max(yScale(d) + margin.top - 20, margin.top)); // Adjust y position for top margin and space above the bar (with padding)
+
+      // Exit phase for text
+      texts.exit().remove();
+    }, [data, width, height, highlightedIndices, sortingCompleted]);
+
+    const executeSnapshotStep = (index: number, delay: number) => {
+      if (index >= snapshotsRef.current.length) {
+        setSortingCompleted(true);
+        setData((prevData) => [...prevData]); // Trigger a re-render
+        setTimeout(() => {
+          setSortingCompleted(false);
+          setData((prevData) => [...prevData]); // Trigger a re-render to revert color
+        }, 1000); // Revert color after 1 second
+        return;
+      }
+
+      if (isPausedRef.current) {
+        // If paused, skip to the next snapshot step when resumed
+        pausedIndexRef.current = index;
+        console.log(
+          "Visualization is paused, current snapshot index:",
+          pausedIndexRef.current
+        );
+        return;
+      }
+
+      const snapshot = snapshotsRef.current[index];
       const preSwapDelay = delay / 2;
 
-      setTimeout(() => {
-        setHighlightedIndices([snapshot.index1, snapshot.index2]);
-      }, index * delay);
+      setHighlightedIndices([snapshot.index1, snapshot.index2]);
 
       setTimeout(() => {
         setData((prevData) => {
@@ -163,37 +186,69 @@ export const SortingVisualization: React.FC<SortingVisualizationProps> = ({
         });
 
         setTimeout(() => setHighlightedIndices([]), delay);
-      }, index * delay + preSwapDelay);
-    });
+      }, preSwapDelay);
 
-    // After all snapshots are applied, mark sorting as completed
-    setTimeout(() => {
-      setSortingCompleted(true);
-      setData((prevData) => [...prevData]); // Trigger a re-render
       setTimeout(() => {
-        setSortingCompleted(false);
-        setData((prevData) => [...prevData]); // Trigger a re-render to revert color
-      }, 1000); // Revert color after 1 second
-    }, snapshots.length * delay + delay / 2);
-  };
+        if (isPausedRef.current) {
+          // If paused, return to this snapshot
+          pausedIndexRef.current = index;
+          console.log(
+            "Visualization is paused, current snapshot index:",
+            pausedIndexRef.current
+          );
+        } else {
+          // Continue to the next snapshot
+          executeSnapshotStep(index + 1, delay);
+        }
+      }, delay);
+    };
 
-  const startSorting = () => {
-    const storedSnapshots = localStorage.getItem("Snapshots");
-    if (storedSnapshots) {
-      const snapshots: Snapshot[] = JSON.parse(storedSnapshots);
-      if (intervalRef.current) clearInterval(intervalRef.current);
+    const applySnapshots = (snapshots: Snapshot[], delay: number) => {
+      snapshotsRef.current = snapshots; // Store snapshots for resuming
+      pausedIndexRef.current = 0; // Reset paused index
       setIsSorting(true);
       setSortingCompleted(false);
-      applySnapshots(snapshots, 1000);
-    }
-  };
+      setIsPaused(false);
+      isPausedRef.current = false; // Ensure the ref is updated
+      executeSnapshotStep(0, delay);
+    };
 
-  return (
-    <div className="TryingMyBest">
-      <button onClick={startSorting} disabled={isSorting}>
-        {isSorting ? "Sorting..." : "Start Sorting"}
-      </button>
-      <svg ref={svgRef} width={width} height={height} />
-    </div>
-  );
-};
+    const pauseVisualization = () => {
+      setIsPaused(true);
+      isPausedRef.current = true; // Update the ref
+      console.log("Visualization paused, isPaused state:", isPaused);
+    };
+
+    const resumeVisualization = () => {
+      setIsPaused(false);
+      isPausedRef.current = false; // Update the ref
+      console.log("Visualization resumed, isPaused state:", isPaused);
+      // Resume from the next snapshot
+      executeSnapshotStep(pausedIndexRef.current + 1, 1000);
+    };
+
+    const startSorting = () => {
+      const storedSnapshots = localStorage.getItem("Snapshots");
+      if (storedSnapshots) {
+        const snapshots: Snapshot[] = JSON.parse(storedSnapshots);
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        applySnapshots(snapshots, 1000);
+      }
+    };
+
+    // Expose functions to parent components
+    useImperativeHandle(ref, () => ({
+      startSorting,
+      isSorting,
+      pauseVisualization,
+      resumeVisualization,
+      isPaused,
+    }));
+
+    return (
+      <div className="TryingMyBest">
+        <svg ref={svgRef} width={width} height={height} />
+      </div>
+    );
+  }
+);

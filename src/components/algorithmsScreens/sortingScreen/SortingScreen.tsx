@@ -81,9 +81,15 @@ export { ArrayGenerator };
 
 const SortingScreen = () => {
   const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
-  const chartRef = useRef<{ renderChart: () => void } | null>(null);
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const sortingRef = useRef<{
+    startSorting: () => void;
+    isSorting: Boolean;
+    pauseVisualization: () => void;
+    resumeVisualization: () => void;
+    isPaused: Boolean;
+  }>(null);
+
 
   const sorts: string[] = [
     "Bubble Sort",
@@ -91,6 +97,7 @@ const SortingScreen = () => {
     "Quick Sort",
     "Insertion Sort",
     "Selection Sort",
+    "Merge Sort",
     "Heap Sort",
   ];
 
@@ -100,6 +107,8 @@ const SortingScreen = () => {
         return "O(n^2)";
       case "Quick Sort":
         return "O(n^2)";
+      case "Merge Sort":
+        return "O(n log n)";
       case "Insertion Sort":
         return "O(n^2)";
       case "Selection Sort":
@@ -125,33 +134,54 @@ const SortingScreen = () => {
     setInputValue(value);
   };
 
+  const sortingsProps = {
+    text: "Sorting",
+    icon: sortIcon,
+  };
+
   const handleSelectChange = (sortType: string) => {
     setSelectedSortType(sortType);
   };
 
   const handleVisualizeClick = async () => {
-    const storedArray = localStorage.getItem("arrayInput");
-    const array = storedArray ? JSON.parse(storedArray) : [];
+    if (!sortingRef.current?.isSorting) {
+      const storedArray = localStorage.getItem("arrayInput");
+      const array = storedArray ? JSON.parse(storedArray) : [];
 
-    console.log("selectedSortType:", selectedSortType);
-    console.log("Array to be Sorted:", array);
+      console.log("selectedSortType:", selectedSortType);
+      console.log("Array to be Sorted:", array);
 
-    try {
-      const response = await axios.post<SortResponse>("http://localhost:5000/api/sort", {
-        array: array,
-        sortType: selectedSortType,
-      });
-      console.log("Sorted Array:", response.data.sortedArray);
-      console.log("Snapshots:", response.data.snapshots);
-      localStorage.setItem("SortedArray", JSON.stringify(response.data.sortedArray));
-      localStorage.setItem("Snapshots", JSON.stringify(response.data.snapshots));
-    } catch (error) {
-      console.error("Error during sorting:", error);
+      try {
+        const response = await axios.post<SortResponse>(
+          "http://localhost:5000/api/sort",
+          {
+            array: array,
+            sortType: selectedSortType,
+          }
+        );
+        console.log("Sorted Array:", response.data.sortedArray);
+        console.log("Snapshots:", response.data.snapshots);
+        localStorage.setItem(
+          "SortedArray",
+          JSON.stringify(response.data.sortedArray)
+        ); // Store the array in localStorage
+        localStorage.setItem(
+          "Snapshots",
+          JSON.stringify(response.data.snapshots)
+        );
+        sortingRef.current?.startSorting();
+      } catch (error) {
+        console.error("Error during sorting:", error);
+      }
     }
+  };
 
-    setIsEnabled(true);
-    if (chartRef.current) {
-      chartRef.current.renderChart();
+  const handleVisualizePause = async () => {
+    console.log(!sortingRef.current?.isPaused);
+    if (!sortingRef.current?.isPaused) {
+      sortingRef.current?.pauseVisualization();
+    } else {
+      sortingRef.current.resumeVisualization();
     }
   };
 
@@ -163,9 +193,10 @@ const SortingScreen = () => {
     <div>
       <TopBar
         dropdownmenu={sorts}
-        sortingsProps={{ text: "Sorting", icon: sortIcon }}
+        sortingsProps={sortingsProps}
         onSelectChange={handleSelectChange}
         handleVisualizeClick={handleVisualizeClick}
+        handleVisualizePause={handleVisualizePause}
       />
       <SideBar
         ArrayGenerator={(props) => <ArrayGenerator {...props} clearInput={clearInputValue} />}
@@ -174,7 +205,7 @@ const SortingScreen = () => {
         handleInputChange={handleInputChange}
         inputValue={inputValue}
       />
-      <SortingVisualization width={400} height={300} />
+      <SortingVisualization width={400} height={300} ref={sortingRef} />
     </div>
   );
 };
