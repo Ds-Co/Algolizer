@@ -309,15 +309,22 @@ const GraphScreen: React.FC = () => {
   }, [isAnimating, animateSnapshots]);
 
   useEffect(() => {
-    // Generate a default graph when the component mounts
-    const nodeCount = 10; // You can adjust the node count here
+    // Generate a random node count between 5 and 20
+    const nodeCount = Math.floor(Math.random() * 15) + 5; 
+  
+    // Generate a tree graph with the random node count
     const { nodes, edges, adjacencyList } = generateTreeGraph(nodeCount, selectedGraphType);
+  
+    // Set the generated random graph and update the state
     setRandomGraph({ nodes, edges, adjacencyList });
     setNewNodes(nodes);
     setNewEdges(edges);
     setStartNodes(Object.keys(adjacencyList));
+  
+    // Store the generated adjacency list in localStorage
     localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
-  }, [selectedGraphType]); // Add selectedGraphType as a dependency
+  }, [selectedGraphType]);
+  
 
   const handleResetClick = useCallback(() => {
     if (isAnimating) {

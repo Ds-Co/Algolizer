@@ -35,7 +35,7 @@ export default function GraphVisualization({
   const options = {
     nodes: {
       shape: "dot",
-      size: 35,
+      size: 25,
       color: {
         border: "#FFFFFF",
         highlight: {
@@ -53,7 +53,7 @@ export default function GraphVisualization({
       },
     },
     edges: {
-      width: 2,
+      width: 1,
       color: {
         inherit: "from",
         highlight: "#FFD700",
