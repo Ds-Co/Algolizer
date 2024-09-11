@@ -40,14 +40,23 @@ const generateTreeGraph = (nodeCount: number, graphType: string): { nodes: any[]
     const weight = graphType === "Dijkstra" ? Math.floor(Math.random() * 10) + 1 : 1; // Edge weight based on algorithm type
 
     edges.push({ from: parent, to: child, weight, label: weight.toString() }); // Add label here
+    edges.push({ 
+      from: parent, 
+      to: child, 
+      weight, 
+      label: graphType === "Dijkstra" ? weight.toString() : ""  // Show label only for Dijkstra
+    });
+
     if (!adjacencyList[parent]) adjacencyList[parent] = [];
     if (!adjacencyList[child]) adjacencyList[child] = [];
+
     adjacencyList[parent].push({ node: child.toString(), weight });
     adjacencyList[child].push({ node: parent.toString(), weight });
   }
 
   return { nodes, edges, adjacencyList };
 };
+
 
 const GraphEndNodeFunctionality: React.FC<GraphEndNodeFunctionalityProps> = ({
   endNodes,
@@ -152,8 +161,8 @@ const GraphScreen: React.FC = () => {
       const value = event.target.value;
 
       if (value.trim() === '') {
-        const nodeCount = Math.floor(Math.random() * 15) + 5; // Random between 5 and 20
-        const { nodes, edges, adjacencyList } = generateTreeGraph(nodeCount, selectedGraphType);
+        const nodeCount = Math.floor(Math.random() * 25) + 5; // Random between 5 and 20
+        const { nodes, edges, adjacencyList } = generateTreeGraph(nodeCount,selectedGraphType);
         setRandomGraph({ nodes, edges, adjacencyList });
         setNewNodes(nodes);
         setNewEdges(edges);
@@ -409,4 +418,3 @@ const GraphScreen: React.FC = () => {
 };
 
 export { GraphScreen };
-

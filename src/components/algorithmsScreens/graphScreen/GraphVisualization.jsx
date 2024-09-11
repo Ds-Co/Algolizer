@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Graph from "react-vis-network-graph";
 
 export default function GraphVisualization({
@@ -7,22 +7,44 @@ export default function GraphVisualization({
   nodeColors,
   disablePhysics,
   distances = {}, // Default to empty object if not provided
-  isDirected, // Added to handle directed vs undirected graph
+  isDirected,
 }) {
   const [layoutDirection, setLayoutDirection] = useState("UD");
   const [dynamicLayout, setDynamicLayout] = useState(false);
+  const networkRef = useRef(null); // To store the graph instance
 
   useEffect(() => {
     if (disablePhysics) {
-      // Set layout direction to 'UD' during animation
-      setLayoutDirection("UD");
+      setLayoutDirection('UD');
       setDynamicLayout(false);
     } else {
-      // Set layout to dynamic and allow free movement when not animating
-      setLayoutDirection("dynamic");
+      setLayoutDirection('dynamic');
       setDynamicLayout(true);
     }
   }, [disablePhysics]);
+
+  // Function to focus the graph on a specific node or area
+  const focusGraph = () => {
+    if (networkRef.current) {
+      const network = networkRef.current;
+      network.fit({ animation: { duration: 500, easingFunction: "easeInOutQuad" } });
+    }
+  };
+
+  // Key binding for focusing the graph (e.g., press 'F' to focus)
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'f' || event.key === 'F') {
+        focusGraph(); // Focus the graph when 'F' is pressed
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const coloredNodes = nodes.map((node) => ({
     ...node,
@@ -87,31 +109,38 @@ export default function GraphVisualization({
       },
     },
     interaction: {
-      navigationButtons: true,
+      //navigationButtons: true,
       dragNodes: true,
       dragView: true,
       zoomView: true,
+      keyboard: {
+        enabled: true,
+        speed: { x: 7, y: 7, zoom: 0.03 },
+      },
     },
     layout: {
       improvedLayout: true,
-      hierarchical:
-        layoutDirection === "UD"
-          ? {
-              direction: "UD", // Top to Bottom
-              sortMethod: "directed",
-              levelSeparation: 150, // Increase vertical space between levels
-              nodeSpacing: 100, // Increase space between nodes at the same level
-            }
-          : false, // Disable hierarchical layout if not animating
+      hierarchical: layoutDirection === 'UD' ? {
+        direction: 'UD', // Top to Bottom
+        sortMethod: 'directed',
+        levelSeparation: 110, // Increase vertical space between levels
+        nodeSpacing: 90, // Increase space between nodes at the same level
+      } : false, // Disable hierarchical layout if not animating
       randomSeed: 50,
     },
     autoResize: true,
   };
 
   const data = { nodes: coloredNodes, edges };
-  const Memo = React.memo(Graph);
 
-  return <Memo graph={data} options={options} />;
+  return (
+    <Graph
+      graph={data}
+      options={options}
+      getNetwork={(network) => {
+        networkRef.current = network; // Store the network instance for future reference
+      }}
+    />
+  );
 }
-
-export { GraphVisualization };
+export {GraphVisualization}
