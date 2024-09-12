@@ -13,15 +13,13 @@ const DropDown: React.FC<DropDownProps> = ({ sorts, onSelectChange }) => {
     event.target.blur();
   };
 
-
   return (
     <>
-      <select
-        className="sort__dropdown"
-        onChange={handleSelectChange}
-      >
+      <select className="sort__dropdown" onChange={handleSelectChange}>
         {sorts.map((sortOption, index) => (
-          <option key={index} value={sortOption}>{sortOption}</option>
+          <option key={index} value={sortOption}>
+            {sortOption}
+          </option>
         ))}
       </select>
     </>
@@ -29,8 +27,3 @@ const DropDown: React.FC<DropDownProps> = ({ sorts, onSelectChange }) => {
 };
 
 export { DropDown };
-
-
-
-
-

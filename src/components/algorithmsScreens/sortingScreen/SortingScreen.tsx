@@ -18,14 +18,18 @@ const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
   const [arraySize, setArraySize] = useState<number>(0);
   const [allowDuplicates, setAllowDuplicates] = useState<boolean>(false);
 
-  const handleArraySizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleArraySizeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const size = parseInt(event.target.value, 10); // decimal system 10
     setArraySize(size);
     generateArray(size, allowDuplicates);
     clearInput();
   };
 
-  const handleDuplicateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDuplicateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const isChecked = event.target.checked;
     setAllowDuplicates(isChecked);
     generateArray(arraySize, isChecked);
@@ -80,15 +84,18 @@ const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
 export { ArrayGenerator };
 
 const SortingScreen = () => {
-  const [selectedSortType, setSelectedSortType] = useState<string>("Bubble Sort");
+  const [selectedSortType, setSelectedSortType] =
+    useState<string>("Bubble Sort");
   const [inputValue, setInputValue] = useState<string>("");
   const sortingRef = useRef<{
     startSorting: () => void;
-    isSorting: Boolean;
+    stopSorting: () => void;
     pauseVisualization: () => void;
     resumeVisualization: () => void;
-    isPaused: Boolean;
-  }>(null);
+    setSpeed: (newSpeed: "default" | "quick") => void;
+    isSorting: boolean;
+    isPaused: boolean;
+  } | null>(null);
 
   const sorts: string[] = [
     "Bubble Sort",
@@ -99,7 +106,9 @@ const SortingScreen = () => {
     "Merge Sort",
     "Heap Sort",
   ];
-
+  const [currentSpeed, setCurrentSpeed] = useState<"default" | "quick">(
+    "default"
+  );
   const getComplexity = (sortType: string): string => {
     switch (sortType) {
       case "Bubble Sort":
@@ -125,9 +134,9 @@ const SortingScreen = () => {
     const value = event.target.value;
     const array = value
       .split("\n")
-      .map(line => line.split(",").map(item => parseInt(item.trim(), 10)))
+      .map((line) => line.split(",").map((item) => parseInt(item.trim(), 10)))
       .flat()
-      .filter(item => !isNaN(item));
+      .filter((item) => !isNaN(item));
 
     localStorage.setItem("arrayInput", JSON.stringify(array));
     setInputValue(value);
@@ -184,6 +193,18 @@ const SortingScreen = () => {
     }
   };
 
+  const handleResetClick = async () => {
+    sortingRef.current?.stopSorting();
+  };
+
+  const handleSpeedUpClick = async () => {
+    const newSpeed = currentSpeed === "default" ? "quick" : "default";
+    setCurrentSpeed(newSpeed);
+    if (sortingRef.current) {
+      sortingRef.current.setSpeed(newSpeed);
+    }
+  };
+
   const clearInputValue = () => {
     setInputValue("");
   };
@@ -196,15 +217,17 @@ const SortingScreen = () => {
         onSelectChange={handleSelectChange}
         handleVisualizeClick={handleVisualizeClick}
         handlePauseClick={handleVisualizePause}
-        handleResetClick={handleVisualizePause}  //needs to be adjusted
-        handleSpeedUpClick={handleVisualizePause} //needs to be adjusted 
+        handleResetClick={handleResetClick}
+        handleSpeedUpClick={handleSpeedUpClick}
       />
       <SideBar
-        ArrayGenerator={(props) => <ArrayGenerator {...props} clearInput={clearInputValue} />}
+        ArrayGenerator={(props) => (
+          <ArrayGenerator {...props} clearInput={clearInputValue} />
+        )}
         selectedSortType={selectedSortType}
         getComplexity={getComplexity}
         handleInputChange={handleInputChange}
-      // inputValue={inputValue}
+        // inputValue={inputValue}
       />
       <SortingVisualization width={400} height={300} ref={sortingRef} />
     </div>

@@ -55,7 +55,7 @@ const IconList = ({
   onVisualizeClick,
   onResetClick,
   onPauseClick,
-  onSpeedUpClick
+  onSpeedUpClick,
 }: {
   onVisualizeClick: () => void;
   onResetClick: () => void;
@@ -84,7 +84,6 @@ const IconList = ({
   );
 };
 
-
 const TopBar: React.FC<TopBarProps> = ({
   dropdownmenu,
   sortingsProps,
@@ -99,7 +98,7 @@ const TopBar: React.FC<TopBarProps> = ({
   );
 
   const handleSelectChange = (sortType: string) => {
-    setSelectedSortType(sortType);  // Correct the assignment
+    setSelectedSortType(sortType); // Correct the assignment
     onSelectChange(sortType);
   };
 
@@ -118,6 +117,5 @@ const TopBar: React.FC<TopBarProps> = ({
     </div>
   );
 };
-
 
 export { TopBar };
