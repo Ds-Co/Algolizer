@@ -236,7 +236,7 @@ const SortingScreen = () => {
         handleInputChange={handleInputChange}
       // inputValue={inputValue}
       />
-      <SortingVisualization width={400} height={300} ref={sortingRef} />
+      <SortingVisualization width={400} height={270} ref={sortingRef} />
     </div>
   );
 };

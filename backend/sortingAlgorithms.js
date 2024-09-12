@@ -1,21 +1,37 @@
 function bubbleSort(arr) {
     let len = arr.length;
     let snapshots = [];
+    let swapped;
+
     for (let i = 0; i < len; i++) {
+        swapped = false;
         for (let j = 0; j < len - 1 - i; j++) {
             if (arr[j] > arr[j + 1]) {
+
                 snapshots.push({ index1: j, index2: j + 1 });
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+                swapped = true;
             }
+        }
+        if (!swapped) {
+            break;
         }
     }
     return { sortedArray: arr, snapshots };
 }
 
+
 function quickSort(arr) {
     let snapshots = [];
 
     function partition(low, high) {
+
+        let randomPivotIndex = Math.floor(Math.random() * (high - low + 1)) + low;
+        if (arr[high] !== arr[randomPivotIndex]) {
+            snapshots.push({ index1: high, index2: randomPivotIndex });
+            [arr[high], arr[randomPivotIndex]] = [arr[randomPivotIndex], arr[high]];
+        }
+
         let pivot = arr[high];
         let i = low - 1;
 
@@ -106,7 +122,6 @@ function bogoSort(arr) {
         }
     }
 
-
     while (!isSorted(arr)) {
         shuffle(arr);
     }
@@ -120,22 +135,25 @@ function heapSort(arr) {
 
     function heapify(n, i) {
         let largest = i;
-        let left = 2 * i + 1;
-        let right = 2 * i + 2;
+        while (true) {
+            let left = 2 * i + 1;
+            let right = 2 * i + 2;
 
+            if (left < n && arr[left] > arr[largest]) {
+                largest = left;
+            }
 
-        if (left < n && arr[left] > arr[largest]) {
-            largest = left;
-        }
+            if (right < n && arr[right] > arr[largest]) {
+                largest = right;
+            }
 
-        if (right < n && arr[right] > arr[largest]) {
-            largest = right;
-        }
-
-        if (largest !== i) {
-            snapshots.push({ index1: i, index2: largest });
-            [arr[i], arr[largest]] = [arr[largest], arr[i]];
-            heapify(n, largest);
+            if (largest !== i) {
+                snapshots.push({ index1: i, index2: largest });
+                [arr[i], arr[largest]] = [arr[largest], arr[i]];
+                i = largest;
+            } else {
+                break;
+            }
         }
     }
 
@@ -146,8 +164,11 @@ function heapSort(arr) {
         }
 
         for (let i = len - 1; i > 0; i--) {
-            snapshots.push({ index1: 0, index2: i });
-            [arr[0], arr[i]] = [arr[i], arr[0]];
+
+            if (arr[0] !== arr[i]) {
+                snapshots.push({ index1: 0, index2: i });
+                [arr[0], arr[i]] = [arr[i], arr[0]];
+            }
             heapify(i, 0);
         }
     }
@@ -155,4 +176,5 @@ function heapSort(arr) {
     sort();
     return { sortedArray: arr, snapshots };
 }
+
 module.exports = { bubbleSort, quickSort, insertionSort, selectionSort, bogoSort, heapSort };
