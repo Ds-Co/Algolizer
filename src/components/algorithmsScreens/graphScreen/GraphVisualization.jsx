@@ -69,11 +69,6 @@ export default function GraphVisualization({
       font: {
         color: "#000000",
       },
-      hover: {
-        borderWidth: 3,
-        size: 30,
-        background: "#F0A500",
-      },
     },
     edges: {
       width: 1,
@@ -97,7 +92,6 @@ export default function GraphVisualization({
       font: {
         align: "top",
       },
-      hoverWidth: 3,
       selectionWidth: 4,
     },
     physics: {
