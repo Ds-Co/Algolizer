@@ -235,7 +235,7 @@ const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm 
 
   return (
     <Modal show={show} onHide={onClose} size="lg">
-      <Modal.Header>
+      <Modal.Header closeButton>
         <Modal.Title>{selectedAlgorithm}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -249,9 +249,6 @@ const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm 
         <div className="links">
           <a href={details.reference} target="_blank" rel="noopener noreferrer">Reference</a>
           <a href={details.moreInfo} target="_blank" rel="noopener noreferrer">For more information click here!</a>
-        </div>
-        <div className="close-button">
-          <Button variant="secondary" onClick={onClose}>Close</Button>
         </div>
       </Modal.Footer>
     </Modal>

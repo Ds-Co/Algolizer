@@ -26,10 +26,6 @@
   width: 100%; /* Full width to utilize available space */
   margin-bottom: 10px; /* Space below the links */
 }
-.close {
-  color: #333333; /* Color of the close button */
-  opacity: 1; /* Make sure it's fully visible */
-}
 
 .modal-body {
   padding: 20px; /* Padding inside the body */
