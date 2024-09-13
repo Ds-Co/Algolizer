@@ -59,19 +59,21 @@ function DepthFirstSearch(adjList, startNody, endNode) {
     if (found) return;
     visited.add(nody);
     snapshots.push(nody);
-    parentArray[nody] = parent;
+    
     longestNode = nody;
-
+    parentArray[nody] = parent;
     if (nody === endNode) {
       found = true;
       return;
     }
+    
 
     for (let child of adjList[nody] || []) {
       if (!visited.has(child.node)) {
         DFS(child.node, nody);
       }
     }
+    
   }
   DFS(startNody);
 
@@ -91,7 +93,6 @@ function DepthFirstSearch(adjList, startNody, endNode) {
       shortestPath: reconstructPath(parentArray, startNody, endNode),
     };
   }
-
   // If endNode was provided but not reachable, return an empty path
   return {
     snapshots,

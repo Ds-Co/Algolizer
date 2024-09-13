@@ -224,7 +224,7 @@ const GraphScreen: React.FC = () => {
 
       // Store shortest path
       const shortestPath = response.data.shortestPath || [];
-      console.log("Shortest Path: ", shortestPath);
+      console.log(shortestPath);
 
       setPath(shortestPath);
 
@@ -294,7 +294,6 @@ const GraphScreen: React.FC = () => {
 
   useEffect(() => {
     if (isAnimating) {
-      console.log(path);
       animateSnapshots();
     } else {
       setSpeed(1);
