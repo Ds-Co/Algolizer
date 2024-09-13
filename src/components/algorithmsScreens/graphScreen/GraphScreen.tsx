@@ -72,6 +72,7 @@ const GraphScreen: React.FC = () => {
   const [selectedStartNode, setSelectedStartNode] =
     useState<string>("Choose Node");
   const [startNodes, setStartNodes] = useState<string[]>([]);
+  const [textArea,setTextArea]=useState("");
   const [isDirected, setIsDirected] = useState(true);
   const [nodeDistances, setNodeDistances] = useState({});
   const [randomGraph, setRandomGraph] = useState<{
@@ -126,6 +127,8 @@ const GraphScreen: React.FC = () => {
   const handleGraphInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const value = event.target.value;
+
+      setTextArea(value);
 
       // Regex to allow only digits, strings, commas, and line breaks
       const validInput = /^[a-zA-Z0-9,\n\s]*$/;
@@ -190,7 +193,7 @@ const GraphScreen: React.FC = () => {
 
         localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
 
-        const { nodes, edges: graphEdges } = GraphData(GraphTypeSwitch);
+        const { nodes, edges: graphEdges } = GraphData(selectedGraphType);
         setNewNodes(nodes);
         setNewEdges(graphEdges);
       }
@@ -308,7 +311,9 @@ const GraphScreen: React.FC = () => {
   }, [isAnimating, animateSnapshots]);
 
   useEffect(() => {
-    // Generate a random node count between 5 and 20
+    if(textArea.trim() === "")
+    {
+       // Generate a random node count between 5 and 20
     const nodeCount = Math.floor(Math.random() * 20) + 5;
 
     const { nodes, edges, adjacencyList } = generateTreeGraph(
@@ -323,20 +328,22 @@ const GraphScreen: React.FC = () => {
     setStartNodes(Object.keys(adjacencyList));
 
     localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
+    }
+   
   }, [selectedGraphType]);
 
   const handleResetClick = useCallback(() => {
     if (isAnimating) {
       setIsAnimating(false);
-      setNodeColors({});
-      setSnapshots([]);
+      setNodeColors({}); 
+      setSnapshots([]); 
       setSpeed(1);
-      snapshotIndexRef.current = 0;
-      setIsPaused(false);
+      snapshotIndexRef.current = 0; 
+      setIsPaused(false); 
       handleVisualizeClick();
     }
   }, [isAnimating, handleVisualizeClick]);
-
+  
   const handlePauseClick = useCallback(() => {
     if (isAnimating) {
       setIsPaused((prev) => !prev);

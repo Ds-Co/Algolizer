@@ -15,7 +15,10 @@ const GraphData = (graphType) => {
     neighbors.map(({ node: node2, weight }) => ({
       from: node1, // Ensure these are strings if node IDs are strings
       to: node2,
-      label: graphType === "Dijkstra" && weight ? weight.toString() : "", // Conditionally add label
+      label:
+        graphType === "Dijkstra"
+          ? (weight ? weight.toString() : "1") // Show label only in Dijkstra with default 1
+          : "", // No label for other algorithms
     }))
   );
 

@@ -41,7 +41,7 @@ function BreadthFirstSearch(adjList, startNody, endNode) {
 function reconstructPath(parentArray, startNody, endNode) {
   let path = [];
   let current = endNode;
-  while (current !== null) {
+  while (current !== startNody) {
     path.push(current);
     current = parentArray[current];
   }
