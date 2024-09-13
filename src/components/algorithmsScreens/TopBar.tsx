@@ -7,7 +7,7 @@ import visualize from "/src/assets/visualize.png";
 import pause from "/src/assets/pause.png";
 import "bootstrap/dist/css/bootstrap.css";
 import { DropDown } from "./DropDown";
-
+import InfoModal from "./InfoModal";
 interface SortingsProps {
   text: string;
   icon: string;
@@ -52,18 +52,20 @@ const IconButton = ({
 );
 
 const IconList = ({
+  onInfoClick,
   onVisualizeClick,
   onResetClick,
   onPauseClick,
   onSpeedUpClick
 }: {
+  onInfoClick: () => void;
   onVisualizeClick: () => void;
   onResetClick: () => void;
   onPauseClick: () => void;
   onSpeedUpClick: () => void;
 }) => {
   const icons = [
-    { iconimg: info, icontxt: "Info" },
+    { iconimg: info, icontxt: "Info" , onClick: onInfoClick},
     { iconimg: reset, icontxt: "Reset", onClick: onResetClick },
     { iconimg: pause, icontxt: "Pause", onClick: onPauseClick },
     { iconimg: speedUp, icontxt: "SpeedUp", onClick: onSpeedUpClick },
@@ -97,23 +99,34 @@ const TopBar: React.FC<TopBarProps> = ({
   const [selectedSortType, setSelectedSortType] = useState<string>(
     dropdownmenu[0]
   );
-
+  const [showInfo, setShowInfo] = useState<boolean>(false);
   const handleSelectChange = (sortType: string) => {
-    setSelectedSortType(sortType);  // Correct the assignment
+    setSelectedSortType(sortType);  
     onSelectChange(sortType);
   };
+  const handleInfoClick = () => {
+    setShowInfo(true); 
+  };
 
-  // Define specific handlers for each button
+  const closeModal = () => {
+    setShowInfo(false);
+  };
 
   return (
     <div className="topbar">
       <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
       <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} />
       <IconList
+        onInfoClick={handleInfoClick}
         onVisualizeClick={handleVisualizeClick}
         onResetClick={handleResetClick}
         onPauseClick={handlePauseClick}
         onSpeedUpClick={handleSpeedUpClick}
+      />
+      <InfoModal
+        show={showInfo}
+        onClose={closeModal}
+        selectedAlgorithm={selectedSortType} 
       />
     </div>
   );
