@@ -1,4 +1,3 @@
-// const { map } = await import("d3");
 function BreadthFirstSearch(adjList, startNody, endNode) {
   let snapshots = [];
   let visited = new Set();
@@ -54,7 +53,7 @@ function DepthFirstSearch(adjList, startNody, endNode) {
   let visited = new Set();
   let parentArray = {};
   let found = false;
-  let longestNode = -1; // To store the last node if endNode is -1
+  let longestNode = -1;
 
   function DFS(nody, parent = null) {
     if (found) return;
@@ -63,7 +62,6 @@ function DepthFirstSearch(adjList, startNody, endNode) {
     parentArray[nody] = parent;
     longestNode = nody;
 
-    // If we reached the endNode, stop the search
     if (nody === endNode) {
       found = true;
       return;
@@ -85,7 +83,6 @@ function DepthFirstSearch(adjList, startNody, endNode) {
       shortestPath: reconstructPath(parentArray, startNody, longestNode),
     };
   }
-
   // If we found the endNode, return the shortest path to it
   if (found) {
     return {
@@ -110,7 +107,7 @@ function Dijkstra(adjList, startNody, endNode) {
   let visited = new Set();
   let priorityQueue = new Map();
   let parentArray = {};
-  let longestNode = -1; // To store the last node if endNode is -1
+  let longestNode = -1;
 
   for (let nody in adjList) {
     distance[nody] = Infinity;
@@ -138,7 +135,6 @@ function Dijkstra(adjList, startNody, endNode) {
       };
     }
 
-    // Update distances for neighbors
     for (let { node: child, weight } of adjList[currentNody] || []) {
       if (!visited.has(child)) {
         if (distance[child] > distance[currentNody] + weight) {
