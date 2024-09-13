@@ -13,6 +13,8 @@ interface GraphResponse {
   VisitedNodes: number[];
   snapshots: number[];
   distance?: { [key: string]: number };
+  parentArray?: { [key: string]: string };
+  shortestPath?: string[];
 }
 
 interface AdjacencyList {
@@ -49,8 +51,8 @@ const generateTreeGraph = (
     if (!adjacencyList[child]) adjacencyList[child] = [];
 
     adjacencyList[parent].push({ node: child.toString(), weight });
-    if(!isDirected)
-    adjacencyList[child].push({ node: parent.toString(), weight });
+    if (!isDirected)
+      adjacencyList[child].push({ node: parent.toString(), weight });
   }
 
   return { nodes, edges, adjacencyList };
@@ -67,7 +69,8 @@ const GraphScreen: React.FC = () => {
   const [selectedGraphType, setSelectedGraphType] = useState<string>("BFS");
   const [snapshots, setSnapshots] = useState<number[]>([]);
   const [selectedEndNode, setSelectedEndNode] = useState<string>("Choose Node");
-  const [selectedStartNode, setSelectedStartNode] = useState<string>("Choose Node");
+  const [selectedStartNode, setSelectedStartNode] =
+    useState<string>("Choose Node");
   const [startNodes, setStartNodes] = useState<string[]>([]);
   const [isDirected, setIsDirected] = useState(true);
   const [nodeDistances, setNodeDistances] = useState({});
@@ -85,6 +88,10 @@ const GraphScreen: React.FC = () => {
     text: "Graph",
     icon: graphicon,
   };
+  //state for the parent array
+  // const [parentArray, setParentArray] = useState<{ [key: string]: string }>({});
+  //state for the shortest path for the start node to end
+  const [path, setPath] = useState<string[]>([]);
 
   const MemoizedGraph = React.memo(GraphVisualization);
 
@@ -116,78 +123,80 @@ const GraphScreen: React.FC = () => {
     }
   }, []);
 
-  const handleGraphInputChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = event.target.value;
-  
-    // Regex to allow only digits, strings, commas, and line breaks
-    const validInput = /^[a-zA-Z0-9,\n\s]*$/;
-  
-    if (!validInput.test(value)) {
-      alert("Invalid input! Please enter only numbers, commas, and spaces.");
-      return;
-    }
-  
-    if (value.trim() === "") {
-      const nodeCount = Math.floor(Math.random() * 20) + 5; // Random between 5 and 20
-      const { nodes, edges, adjacencyList } = generateTreeGraph(
-        nodeCount,
-        selectedGraphType,
-        isDirected
-      );
-      setRandomGraph({ nodes, edges, adjacencyList });
-      setNewNodes(nodes);
-      setNewEdges(edges);
-      setStartNodes(Object.keys(adjacencyList));
-      localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
-    } else {
-      const edges = value
-        .split("\n")
-        .map((line) => {
-          const [node1, node2, weight] = line
-            .split(",")
-            .map((item) => item.trim());
-          return {
-            node1,
-            node2,
-            weight: weight ? parseFloat(weight) : 1,
-          };
-        })
-        .filter((edge) => edge.node1 && edge.node2);
-  
-      const adjacencyList: AdjacencyList = {};
-  
-      edges.forEach((edge) => {
-        if (!adjacencyList[edge.node1]) {
-          adjacencyList[edge.node1] = [];
-        }
-        if (!adjacencyList[edge.node2]) {
-          adjacencyList[edge.node2] = [];
-        }
-  
-        adjacencyList[edge.node1].push({
-          node: edge.node2,
-          weight: edge.weight,
-        });
-  
-        if (!isDirected) {
-          adjacencyList[edge.node2].push({
-            node: edge.node1,
+  const handleGraphInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = event.target.value;
+
+      // Regex to allow only digits, strings, commas, and line breaks
+      const validInput = /^[a-zA-Z0-9,\n\s]*$/;
+
+      if (!validInput.test(value)) {
+        alert("Invalid input! Please enter only numbers, commas, and spaces.");
+        return;
+      }
+
+      if (value.trim() === "") {
+        const nodeCount = Math.floor(Math.random() * 20) + 5; // Random between 5 and 20
+        const { nodes, edges, adjacencyList } = generateTreeGraph(
+          nodeCount,
+          selectedGraphType,
+          isDirected
+        );
+        setRandomGraph({ nodes, edges, adjacencyList });
+        setNewNodes(nodes);
+        setNewEdges(edges);
+        setStartNodes(Object.keys(adjacencyList));
+        localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
+      } else {
+        const edges = value
+          .split("\n")
+          .map((line) => {
+            const [node1, node2, weight] = line
+              .split(",")
+              .map((item) => item.trim());
+            return {
+              node1,
+              node2,
+              weight: weight ? parseFloat(weight) : 1,
+            };
+          })
+          .filter((edge) => edge.node1 && edge.node2);
+
+        const adjacencyList: AdjacencyList = {};
+
+        edges.forEach((edge) => {
+          if (!adjacencyList[edge.node1]) {
+            adjacencyList[edge.node1] = [];
+          }
+          if (!adjacencyList[edge.node2]) {
+            adjacencyList[edge.node2] = [];
+          }
+
+          adjacencyList[edge.node1].push({
+            node: edge.node2,
             weight: edge.weight,
           });
-        }
-      });
-  
-      const uniqueStartNodes = Object.keys(adjacencyList);
-      setStartNodes(uniqueStartNodes);
-  
-      localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
-  
-      const { nodes, edges: graphEdges } = GraphData(GraphTypeSwitch);
-      setNewNodes(nodes);
-      setNewEdges(graphEdges);
-    }
-  }, [isDirected, selectedGraphType]);
-  
+
+          if (!isDirected) {
+            adjacencyList[edge.node2].push({
+              node: edge.node1,
+              weight: edge.weight,
+            });
+          }
+        });
+
+        const uniqueStartNodes = Object.keys(adjacencyList);
+        setStartNodes(uniqueStartNodes);
+
+        localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
+
+        const { nodes, edges: graphEdges } = GraphData(GraphTypeSwitch);
+        setNewNodes(nodes);
+        setNewEdges(graphEdges);
+      }
+    },
+    [isDirected, selectedGraphType]
+  );
 
   const handleVisualizeClick = useCallback(async () => {
     if (isAnimating) return;
@@ -206,20 +215,24 @@ const GraphScreen: React.FC = () => {
           array: adjacencyList,
           GraphAlgo: selectedGraphType,
           startNody:
-            selectedStartNode === "Choose Node" && startNodes.length > 0
+            selectedStartNode === "Choose Node"
               ? startNodes[0]
               : selectedStartNode,
-          endNode:
-            selectedEndNode === "Choose Node" && startNodes.length > 0
-              ? -1
-              : selectedEndNode,
+          endNode: selectedEndNode === "Choose Node" ? -1 : selectedEndNode,
         }
       );
+
+      // Store shortest path
+      const shortestPath = response.data.shortestPath || [];
+      console.log("Shortest Path: ", shortestPath);
+
+      setPath(shortestPath);
 
       setDisablePhysics(true);
       setIsAnimating(true);
       setIsPaused(false);
       setSnapshots(response.data.snapshots);
+
       snapshotIndexRef.current = 0;
 
       if (selectedGraphType === "Dijkstra") {
@@ -239,31 +252,33 @@ const GraphScreen: React.FC = () => {
     startNodes,
   ]);
 
-
   const animateSnapshots = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-  
+
     intervalRef.current = window.setInterval(() => {
       if (snapshotIndexRef.current < snapshots.length) {
         const node = snapshots[snapshotIndexRef.current];
-  
+
         if (!isPaused) {
           setNodeColors((prevColors) => {
             const updatedColors: { [key: number]: string } = { ...prevColors };
-  
+
             const isFirstNode = snapshotIndexRef.current === 1;
-  
+
             updatedColors[Number(node)] = isFirstNode
               ? "#285EA4" // Green for the first node
               : "#D5CAD6"; // Default color for other nodes
-  
-            if (node.toString() === selectedEndNode || snapshotIndexRef.current === snapshots.length) {
+
+            if (
+              node.toString() === selectedEndNode ||
+              snapshotIndexRef.current === snapshots.length
+            ) {
               updatedColors[Number(node)] = "#E02929"; // End node color
             }
-  
+
             return updatedColors;
           });
-  
+
           snapshotIndexRef.current += 1;
         }
       } else {
@@ -276,14 +291,15 @@ const GraphScreen: React.FC = () => {
       }
     }, 2000 / speed);
   }, [snapshots, speed, isPaused, selectedEndNode]);
-  
+
   useEffect(() => {
     if (isAnimating) {
+      console.log(path);
       animateSnapshots();
     } else {
       setSpeed(1);
     }
-  
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -291,7 +307,6 @@ const GraphScreen: React.FC = () => {
       }
     };
   }, [isAnimating, animateSnapshots]);
-  
 
   useEffect(() => {
     // Generate a random node count between 5 and 20
@@ -399,7 +414,7 @@ const GraphScreen: React.FC = () => {
           disablePhysics={disablePhysics}
           distances={selectedGraphType === "Dijkstra" ? nodeDistances : {}}
           isDirected={isDirected}
-                  />
+        />
       </div>
     </div>
   );
