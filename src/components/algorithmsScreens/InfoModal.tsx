@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import '../../Css/InfoModalStyle.css'
 
 interface AlgorithmInfo {
@@ -234,18 +235,24 @@ const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm 
 
   return (
     <Modal show={show} onHide={onClose} size="lg">
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title>{selectedAlgorithm}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p>{details.description}</p>
         <h5>Pseudocode</h5>
-        <pre>{details.pseudocode}</pre>
-        <p><a href={details.reference} target="_blank" rel="noopener noreferrer">Reference</a></p>
-        <p><a href={details.moreInfo} target="_blank" rel="noopener noreferrer">For more information click here!</a></p>
+        <SyntaxHighlighter language="cpp" >
+          {details.pseudocode}
+        </SyntaxHighlighter>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>Close</Button>
+        <div className="links">
+          <a href={details.reference} target="_blank" rel="noopener noreferrer">Reference</a>
+          <a href={details.moreInfo} target="_blank" rel="noopener noreferrer">For more information click here!</a>
+        </div>
+        <div className="close-button">
+          <Button variant="secondary" onClick={onClose}>Close</Button>
+        </div>
       </Modal.Footer>
     </Modal>
   );
