@@ -1,16 +1,25 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import '../../Css/InfoModalStyle.css'
-
+import InfoIcon from '../../Assets/InfoIcon.png'
 interface AlgorithmInfo {
   description: string;
   pseudocode: string;
   reference: string;
   moreInfo: string;
+  colorIndications?: {
+    startNode: string;
+    endNode: string;
+    traversingNode: string;
+    minCost?: string;
+  };
+  complexityNotes?: {
+    nodes: string;
+    edges: string;
+  };
 }
 
-// Dictionary to hold details for each algorithm
 const algorithmDetails: Record<string, AlgorithmInfo> = {
   "Selection Sort": {
     description: "Selection sort is a simple and efficient sorting algorithm that works by repeatedly selecting the smallest (or largest) element from the unsorted portion of the list and moving it to the sorted portion of the list.",
@@ -173,7 +182,16 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
             visited.add(neighbor)
       end bfs`,
     reference: "https://www.programiz.com/dsa/graph-bfs",
-    moreInfo: "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/"
+    moreInfo: "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/",
+    colorIndications: {
+      startNode: "Blue",
+      endNode: "Red",
+      traversingNode: "Grey"
+    },
+    complexityNotes: {
+      nodes: "U",
+      edges: "V"
+    }
   },
 
   "DFS": {
@@ -193,7 +211,16 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
               stack.push(neighbor)
       end dfs`,
     reference: "https://www.programiz.com/dsa/graph-dfs",
-    moreInfo: "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/"
+    moreInfo: "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/",
+    colorIndications: {
+      startNode: "Blue",
+      endNode: "Red",
+      traversingNode: "Grey"
+    },
+    complexityNotes: {
+      nodes: "U",
+      edges: "V"
+    }
   },
 
   "Dijkstra": {
@@ -215,7 +242,17 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
             priorityQueue.enqueue(neighbor, distance)
       end dijkstra`,
     reference: "https://www.programiz.com/dsa/dijkstra-algorithm",
-    moreInfo: "https://www.geeksforgeeks.org/introduction-to-dijkstras-shortest-path-algorithm/"
+    moreInfo: "https://www.geeksforgeeks.org/introduction-to-dijkstras-shortest-path-algorithm/",
+    colorIndications: {
+      startNode: "Blue",
+      endNode: "Red",
+      traversingNode: "Grey",
+      minCost: "(Custom color)" // Adjust color for MinCost if needed
+    },
+    complexityNotes: {
+      nodes: "U",
+      edges: "V"
+    }
   },
 };
 
@@ -240,10 +277,35 @@ const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm 
       </Modal.Header>
       <Modal.Body>
         <p>{details.description}</p>
-        <h5>Pseudocode</h5>
+        <div className="pseudocode-header">
+          <img src={InfoIcon} className="code-icon" />
+          <h5>Pseudocode</h5>
+        </div>
         <SyntaxHighlighter language="cpp" >
           {details.pseudocode}
         </SyntaxHighlighter>
+        {details.colorIndications && (
+          <div className="color-indications">
+            <h6>Color Indications:</h6>
+            <ul>
+              <li>Start Node: {details.colorIndications.startNode}</li>
+              <li>End Node: {details.colorIndications.endNode}</li>
+              <li>Traversing Node: {details.colorIndications.traversingNode}</li>
+              {details.colorIndications.minCost && (
+                <li>Min Cost Node: {details.colorIndications.minCost}</li>
+              )}
+            </ul>
+          </div>
+        )}
+        {details.complexityNotes && (
+          <div className="complexity-notes">
+            <h6>Complexity Notes:</h6>
+            <ul>
+              <li>Nodes (U): {details.complexityNotes.nodes}</li>
+              <li>Edges (V): {details.complexityNotes.edges}</li>
+            </ul>
+          </div>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <div className="links">
