@@ -312,9 +312,9 @@ const GraphScreen: React.FC = () => {
 
   useEffect(() => {
     if (textArea.trim() === "") {
-      // Generate a random node count between 5 and 20
       const nodeCount = Math.floor(Math.random() * 20) + 5;
 
+      // Generate tree graph based on selected algorithm type and whether it's directed
       const { nodes, edges, adjacencyList } = generateTreeGraph(
         nodeCount,
         selectedGraphType,
@@ -322,13 +322,18 @@ const GraphScreen: React.FC = () => {
       );
 
       setRandomGraph({ nodes, edges, adjacencyList });
-      setNewNodes(nodes);
-      setNewEdges(edges);
       setStartNodes(Object.keys(adjacencyList));
 
+      // Store adjacency list in localStorage
       localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
     }
-  }, [selectedGraphType]);
+
+    // Fetch the graph data using GraphData
+    const { nodes: updatedNodes, edges: updatedEdges } =
+      GraphData(selectedGraphType);
+    setNewNodes(updatedNodes);
+    setNewEdges(updatedEdges);
+  }, [selectedGraphType, isDirected, textArea]);
 
   const handleResetClick = useCallback(() => {
     if (isAnimating) {

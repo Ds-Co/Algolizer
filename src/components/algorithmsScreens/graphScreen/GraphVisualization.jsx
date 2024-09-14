@@ -129,6 +129,7 @@ export default function GraphVisualization({
 
   return (
     <Graph
+      key={isDirected ? "directed" : "undirected"}
       graph={data}
       options={options}
       getNetwork={(network) => {
