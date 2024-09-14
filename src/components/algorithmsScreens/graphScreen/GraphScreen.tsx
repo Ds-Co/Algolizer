@@ -72,7 +72,7 @@ const GraphScreen: React.FC = () => {
   const [selectedStartNode, setSelectedStartNode] =
     useState<string>("Choose Node");
   const [startNodes, setStartNodes] = useState<string[]>([]);
-  const [textArea,setTextArea]=useState("");
+  const [textArea, setTextArea] = useState("");
   const [isDirected, setIsDirected] = useState(true);
   const [nodeDistances, setNodeDistances] = useState({});
   const [randomGraph, setRandomGraph] = useState<{
@@ -311,39 +311,37 @@ const GraphScreen: React.FC = () => {
   }, [isAnimating, animateSnapshots]);
 
   useEffect(() => {
-    if(textArea.trim() === "")
-    {
-       // Generate a random node count between 5 and 20
-    const nodeCount = Math.floor(Math.random() * 20) + 5;
+    if (textArea.trim() === "") {
+      // Generate a random node count between 5 and 20
+      const nodeCount = Math.floor(Math.random() * 20) + 5;
 
-    const { nodes, edges, adjacencyList } = generateTreeGraph(
-      nodeCount,
-      selectedGraphType,
-      isDirected
-    );
+      const { nodes, edges, adjacencyList } = generateTreeGraph(
+        nodeCount,
+        selectedGraphType,
+        isDirected
+      );
 
-    setRandomGraph({ nodes, edges, adjacencyList });
-    setNewNodes(nodes);
-    setNewEdges(edges);
-    setStartNodes(Object.keys(adjacencyList));
+      setRandomGraph({ nodes, edges, adjacencyList });
+      setNewNodes(nodes);
+      setNewEdges(edges);
+      setStartNodes(Object.keys(adjacencyList));
 
-    localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
+      localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
     }
-   
   }, [selectedGraphType]);
 
   const handleResetClick = useCallback(() => {
     if (isAnimating) {
       setIsAnimating(false);
-      setNodeColors({}); 
-      setSnapshots([]); 
+      setNodeColors({});
+      setSnapshots([]);
       setSpeed(1);
-      snapshotIndexRef.current = 0; 
-      setIsPaused(false); 
+      snapshotIndexRef.current = 0;
+      setIsPaused(false);
       handleVisualizeClick();
     }
   }, [isAnimating, handleVisualizeClick]);
-  
+
   const handlePauseClick = useCallback(() => {
     if (isAnimating) {
       setIsPaused((prev) => !prev);
