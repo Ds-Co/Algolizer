@@ -3,5 +3,15 @@
   padding: 0px;
   position: absolute;
   width: 100vw;
+  height: 100vh;
   background: radial-gradient(rgb(32, 31, 31), black);
+  overflow: hidden;
+}
+.LandPageContainer {
+  margin: 0px;
+  padding: 0px;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }

@@ -1,0 +1,47 @@
+.ComplexityScreenContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: radial-gradient(circle, rgb(32, 31, 31), black);
+  color: white;
+  position: relative;
+}
+
+.ComplexityScreenPlexusEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: brightness(60%);
+}
+
+.ComplexityScreenTextContainer {
+  padding: 20px;
+  max-width: 800px; /* Limit text width for better readability */
+  text-align: center; /* Center align the text */
+  z-index: 1; /* Ensure text appears above the particle effect */
+}
+
+.ComplexityScreenTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.ComplexityScreenMainBody {
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .ComplexityScreenTitle {
+    font-size: 2.5rem;
+  }
+
+  .ComplexityScreenMainBody {
+    font-size: 1rem;
+  }
+}

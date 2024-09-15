@@ -20,6 +20,8 @@
   padding: 0px;
   font-size: 50px;
   font-family: Lato;
+  position: relative;
+  overflow: hidden;
 }
 
 .MiddleBar {

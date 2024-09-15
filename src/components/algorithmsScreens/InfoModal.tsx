@@ -1,8 +1,8 @@
-import React from 'react';
-import { Modal } from 'react-bootstrap';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import '../../Css/InfoModalStyle.css'
-import InfoIcon from '../../Assets/InfoIcon.png'
+import React from "react";
+import { Modal } from "react-bootstrap";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import "../../Css/InfoModalStyle.css";
+import InfoIcon from "../../Assets/InfoIcon.png";
 interface AlgorithmInfo {
   description: string;
   pseudocode: string;
@@ -22,7 +22,8 @@ interface AlgorithmInfo {
 
 const algorithmDetails: Record<string, AlgorithmInfo> = {
   "Selection Sort": {
-    description: "Selection sort is a simple and efficient sorting algorithm that works by repeatedly selecting the smallest (or largest) element from the unsorted portion of the list and moving it to the sorted portion of the list.",
+    description:
+      "Selection sort is a simple and efficient sorting algorithm that works by repeatedly selecting the smallest (or largest) element from the unsorted portion of the list and moving it to the sorted portion of the list.",
     pseudocode: `selectionSort(array, size)
       for i from 0 to size - 1 do
         set i as the index of the current minimum
@@ -33,10 +34,11 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
           swap array[i] with array[current minimum]
       end selectionSort`,
     reference: "https://www.programiz.com/dsa/selection-sort",
-    moreInfo: "https://www.geeksforgeeks.org/selection-sort-algorithm-2/"
+    moreInfo: "https://www.geeksforgeeks.org/selection-sort-algorithm-2/",
   },
   "Bubble Sort": {
-    description: "Bubble sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. The process is repeated until the list is sorted.",
+    description:
+      "Bubble sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. The process is repeated until the list is sorted.",
     pseudocode: `bubbleSort(array)
       for i <- 1 to sizeOfArray - 1
         for j <- 1 to sizeOfArray - 1 - i
@@ -44,10 +46,11 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
             swap leftElement and rightElement
       end bubbleSort`,
     reference: "https://www.programiz.com/dsa/bubble-sort",
-    moreInfo: "https://www.geeksforgeeks.org/bubble-sort-algorithm/"
+    moreInfo: "https://www.geeksforgeeks.org/bubble-sort-algorithm/",
   },
   "Quick Sort": {
-    description: "Quick sort is a divide-and-conquer algorithm that selects a pivot element, partitions the list into elements less than and greater than the pivot, and recursively sorts the sublists.",
+    description:
+      "Quick sort is a divide-and-conquer algorithm that selects a pivot element, partitions the list into elements less than and greater than the pivot, and recursively sorts the sublists.",
     pseudocode: `quickSort(array, leftmostIndex, rightmostIndex)
       if (leftmostIndex < rightmostIndex)
         pivotIndex <- partition(array, leftmostIndex, rightmostIndex)
@@ -64,10 +67,11 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
         swap pivotElement and element[storeIndex+1]
       return storeIndex + 1`,
     reference: "https://www.programiz.com/dsa/quick-sort",
-    moreInfo: "https://www.geeksforgeeks.org/quick-sort-algorithm/"
+    moreInfo: "https://www.geeksforgeeks.org/quick-sort-algorithm/",
   },
   "Insertion Sort": {
-    description: "Insertion sort is a simple sorting algorithm that builds the final sorted array one item at a time. It picks elements from the unsorted portion and inserts them into their correct position in the sorted portion.",
+    description:
+      "Insertion sort is a simple sorting algorithm that builds the final sorted array one item at a time. It picks elements from the unsorted portion and inserts them into their correct position in the sorted portion.",
     pseudocode: `insertionSort(array, size)
       for i from 1 to size - 1 do
         key = array[i]
@@ -78,10 +82,11 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
         array[j + 1] = key
       end insertionSort`,
     reference: "https://www.programiz.com/dsa/insertion-sort",
-    moreInfo: "https://www.geeksforgeeks.org/insertion-sort-algorithm/"
+    moreInfo: "https://www.geeksforgeeks.org/insertion-sort-algorithm/",
   },
   "Bogo Sort": {
-    description: "Bogo sort is a highly ineffective sorting algorithm that randomly permutes the list until it finds a sorted permutation.",
+    description:
+      "Bogo sort is a highly ineffective sorting algorithm that randomly permutes the list until it finds a sorted permutation.",
     pseudocode: `bogoSort(array, size)
       while not isSorted(array) do
         shuffle(array)
@@ -99,10 +104,11 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
           swap array[i] with array[j]
       end shuffle`,
     reference: "https://www.geeksforgeeks.org/bogosort-permutation-sort/",
-    moreInfo: "https://sortingalgos.miraheze.org/wiki/Bogosort"
+    moreInfo: "https://sortingalgos.miraheze.org/wiki/Bogosort",
   },
   "Heap Sort": {
-    description: "Heap sort is a comparison-based sorting algorithm that uses a binary heap data structure. It first builds a max-heap and then repeatedly extracts the maximum element from the heap and reconstructs the heap.",
+    description:
+      "Heap sort is a comparison-based sorting algorithm that uses a binary heap data structure. It first builds a max-heap and then repeatedly extracts the maximum element from the heap and reconstructs the heap.",
     pseudocode: `heapSort(array, size)
       buildMaxHeap(array, size)
       for i from size - 1 down to 1 do
@@ -128,10 +134,11 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
           heapify(array, largest, size)
       end heapify`,
     reference: "https://www.programiz.com/dsa/heap-sort",
-    moreInfo: "https://www.geeksforgeeks.org/c-program-for-heap-sort/"
+    moreInfo: "https://www.geeksforgeeks.org/c-program-for-heap-sort/",
   },
   "Merge Sort": {
-    description: "Merge sort is a divide-and-conquer sorting algorithm that divides the list into smaller sublists, recursively sorts each sublist, and then merges the sorted sublists to produce the sorted list.",
+    description:
+      "Merge sort is a divide-and-conquer sorting algorithm that divides the list into smaller sublists, recursively sorts each sublist, and then merges the sorted sublists to produce the sorted list.",
     pseudocode: `mergeSort(array, left, right)
       if left < right
         mid = floor((left + right) / 2)
@@ -163,10 +170,11 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
           k = k + 1
       end merge`,
     reference: "https://www.programiz.com/dsa/merge-sort",
-    moreInfo: "https://www.geeksforgeeks.org/merge-sort/"
+    moreInfo: "https://www.geeksforgeeks.org/merge-sort/",
   },
-  "BFS": {
-    description: "BFS is a graph traversal algorithm that explores vertices in the order of their distance from the starting vertex. It uses a queue to keep track of vertices to be explored.",
+  BFS: {
+    description:
+      "BFS is a graph traversal algorithm that explores vertices in the order of their distance from the starting vertex. It uses a queue to keep track of vertices to be explored.",
     pseudocode: `bfs(graph, startVertex)
       let queue = new Queue()
       let visited = new Set()
@@ -182,20 +190,22 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
             visited.add(neighbor)
       end bfs`,
     reference: "https://www.programiz.com/dsa/graph-bfs",
-    moreInfo: "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/",
+    moreInfo:
+      "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/",
     colorIndications: {
       startNode: "Blue",
       endNode: "Red",
-      traversingNode: "Grey"
+      traversingNode: "Grey",
     },
     complexityNotes: {
       nodes: "U",
-      edges: "V"
-    }
+      edges: "V",
+    },
   },
 
-  "DFS": {
-    description: "DFS is a graph traversal algorithm that explores as far as possible along each branch before backtracking. It uses a stack (or recursion) to keep track of vertices to be explored.",
+  DFS: {
+    description:
+      "DFS is a graph traversal algorithm that explores as far as possible along each branch before backtracking. It uses a stack (or recursion) to keep track of vertices to be explored.",
     pseudocode: `dfs(graph, startVertex)
       let stack = new Stack()
       let visited = new Set()
@@ -211,20 +221,22 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
               stack.push(neighbor)
       end dfs`,
     reference: "https://www.programiz.com/dsa/graph-dfs",
-    moreInfo: "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/",
+    moreInfo:
+      "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/",
     colorIndications: {
       startNode: "Blue",
       endNode: "Red",
-      traversingNode: "Grey"
+      traversingNode: "Grey",
     },
     complexityNotes: {
       nodes: "U",
-      edges: "V"
-    }
+      edges: "V",
+    },
   },
 
-  "Dijkstra": {
-    description: "Dijkstra's algorithm finds the shortest path from a starting vertex to all other vertices in a weighted graph with non-negative weights. It uses a priority queue to explore the closest vertex.",
+  Dijkstra: {
+    description:
+      "Dijkstra's algorithm finds the shortest path from a starting vertex to all other vertices in a weighted graph with non-negative weights. It uses a priority queue to explore the closest vertex.",
     pseudocode: `dijkstra(graph, startVertex)
       let distances = map with default value Infinity
       let previous = map with default value undefined
@@ -242,17 +254,18 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
             priorityQueue.enqueue(neighbor, distance)
       end dijkstra`,
     reference: "https://www.programiz.com/dsa/dijkstra-algorithm",
-    moreInfo: "https://www.geeksforgeeks.org/introduction-to-dijkstras-shortest-path-algorithm/",
+    moreInfo:
+      "https://www.geeksforgeeks.org/introduction-to-dijkstras-shortest-path-algorithm/",
     colorIndications: {
       startNode: "Blue",
       endNode: "Red",
       traversingNode: "Grey",
-      minCost: "(Custom color)" // Adjust color for MinCost if needed
+      minCost: "(Custom color)", // Adjust color for MinCost if needed
     },
     complexityNotes: {
       nodes: "U",
-      edges: "V"
-    }
+      edges: "V",
+    },
   },
 };
 
@@ -262,12 +275,16 @@ interface Props {
   selectedAlgorithm: string;
 }
 
-const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm }) => {
+const AlgorithmInfoModal: React.FC<Props> = ({
+  show,
+  onClose,
+  selectedAlgorithm,
+}) => {
   const details = algorithmDetails[selectedAlgorithm] || {
     description: "No information available",
     pseudocode: "N/A",
     reference: "#",
-    moreInfo: "#"
+    moreInfo: "#",
   };
 
   return (
@@ -281,7 +298,7 @@ const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm 
           <img src={InfoIcon} className="code-icon" />
           <h5>Pseudocode</h5>
         </div>
-        <SyntaxHighlighter language="cpp" >
+        <SyntaxHighlighter language="cpp">
           {details.pseudocode}
         </SyntaxHighlighter>
         {details.colorIndications && (
@@ -290,7 +307,9 @@ const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm 
             <ul>
               <li>Start Node: {details.colorIndications.startNode}</li>
               <li>End Node: {details.colorIndications.endNode}</li>
-              <li>Traversing Node: {details.colorIndications.traversingNode}</li>
+              <li>
+                Traversing Node: {details.colorIndications.traversingNode}
+              </li>
               {details.colorIndications.minCost && (
                 <li>Min Cost Node: {details.colorIndications.minCost}</li>
               )}
@@ -309,8 +328,12 @@ const AlgorithmInfoModal: React.FC<Props> = ({ show, onClose, selectedAlgorithm 
       </Modal.Body>
       <Modal.Footer>
         <div className="links">
-          <a href={details.reference} target="_blank" rel="noopener noreferrer">Reference</a>
-          <a href={details.moreInfo} target="_blank" rel="noopener noreferrer">For more information click here!</a>
+          <a href={details.reference} target="_blank" rel="noopener noreferrer">
+            Reference
+          </a>
+          <a href={details.moreInfo} target="_blank" rel="noopener noreferrer">
+            For more information click here!
+          </a>
         </div>
       </Modal.Footer>
     </Modal>

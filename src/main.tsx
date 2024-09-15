@@ -5,8 +5,7 @@ import { LandPage } from "./components/landPage/LandPage.tsx";
 import { GraphScreen } from "./components/algorithmsScreens/graphScreen/GraphScreen.tsx";
 import { SortingScreen } from "./components/algorithmsScreens/sortingScreen/SortingScreen.tsx";
 import { SplitScreen } from "./components/splitScreen/SplitScreen.tsx";
-
-
+import { ComplexityScreen } from "./components/algorithmsScreens/ComplexityScreen.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     {
@@ -18,6 +17,10 @@ createRoot(document.getElementById("root")!).render(
           <Route
             path="/GraphScreen"
             element={<GraphScreen></GraphScreen>}
+          ></Route>
+          <Route
+            path="/ComplexityScreen"
+            element={<ComplexityScreen></ComplexityScreen>}
           ></Route>
         </Routes>
       </Router>

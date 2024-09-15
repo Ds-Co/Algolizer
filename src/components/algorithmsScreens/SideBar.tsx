@@ -26,7 +26,7 @@ interface UpperSidebarProps {
 
 const UpperSidebar: React.FC<UpperSidebarProps> = ({
   //  inputValue,
-  handleInputChange
+  handleInputChange,
 }) => {
   return (
     <div className="sidebar__upper">
@@ -41,7 +41,6 @@ const UpperSidebar: React.FC<UpperSidebarProps> = ({
   );
 };
 
-
 const MiddleSidebar: React.FC<{
   isCollapsed: boolean;
   toggleSidebar: () => void;
@@ -49,8 +48,9 @@ const MiddleSidebar: React.FC<{
   <div className="sidebar__middle">
     <button className="sidebar__toggle-button" onClick={toggleSidebar}>
       <img
-        className={`sidebar__arrow ${isCollapsed ? "sidebar__arrow--rotated" : ""
-          }`}
+        className={`sidebar__arrow ${
+          isCollapsed ? "sidebar__arrow--rotated" : ""
+        }`}
         src={arrow}
         alt="Toggle Sidebar"
       />
@@ -78,13 +78,15 @@ const LowerSidebar: React.FC<LowerSidebarProps> = ({
             <img className="sidebar__back-icon" src={backbutton} alt="Back" />
           </button>
         </Link>
-        <button className="sidebar__complexity-button">
-          <img
-            className="sidebar__complexity-icon"
-            src={complexitybutton}
-            alt="Complexity"
-          />
-        </button>
+        <Link to="/ComplexityScreen">
+          <button className="sidebar__complexity-button">
+            <img
+              className="sidebar__complexity-icon"
+              src={complexitybutton}
+              alt="Complexity"
+            />
+          </button>
+        </Link>
       </div>
     </div>
   );

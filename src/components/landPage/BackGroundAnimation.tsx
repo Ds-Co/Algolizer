@@ -13,6 +13,7 @@ const ParticleSystem: React.FC<CanvasProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [canvasDimensions, setCanvasDimensions] = useState({ width, height });
+  const animationIdRef = useRef<number | null>(null); // Store animation ID
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -20,8 +21,7 @@ const ParticleSystem: React.FC<CanvasProps> = ({
       const ctx = canvas.getContext("2d");
 
       const initParticles = () => {
-        setParticles([]);
-
+        setParticles([]); // Clear particles
         const particlesArray: Particle[] = [];
         const numberOfParticles = (canvas.height * canvas.width) / 9000;
 
@@ -44,18 +44,22 @@ const ParticleSystem: React.FC<CanvasProps> = ({
       };
 
       const animate = () => {
-        requestAnimationFrame(animate);
-        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        if (!ctx) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < particles.length; i++) {
           particles[i].update();
-          if (ctx) {
-            particles[i].draw(ctx);
-          }
+          particles[i].draw(ctx);
         }
         connect();
+
+        // Save animation ID and request next frame
+        animationIdRef.current = requestAnimationFrame(animate);
       };
 
       const connect = () => {
+        if (!ctx) return;
+
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const particle1 = particles[i];
@@ -63,7 +67,7 @@ const ParticleSystem: React.FC<CanvasProps> = ({
             const distance =
               Math.pow(particle2.x - particle1.x, 2) +
               Math.pow(particle2.y - particle1.y, 2);
-            if (distance < 4000 && ctx) {
+            if (distance < 4000) {
               const opacityValue = 0.8 - distance / 20000;
               ctx.lineWidth = 0.2;
               ctx.beginPath();
@@ -76,9 +80,6 @@ const ParticleSystem: React.FC<CanvasProps> = ({
         }
       };
 
-      initParticles();
-      animate();
-
       const handleResize = () => {
         setCanvasDimensions({
           width: window.innerWidth,
@@ -87,9 +88,17 @@ const ParticleSystem: React.FC<CanvasProps> = ({
         initParticles();
       };
 
+      // Initialize particles and start animation
+      initParticles();
+      animate();
+
       window.addEventListener("resize", handleResize);
 
       return () => {
+        // Clean up previous animation frame when the component unmounts or resizes
+        if (animationIdRef.current) {
+          cancelAnimationFrame(animationIdRef.current);
+        }
         window.removeEventListener("resize", handleResize);
       };
     }

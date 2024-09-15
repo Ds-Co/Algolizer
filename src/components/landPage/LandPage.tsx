@@ -6,7 +6,7 @@ import TextLandPage from "./TextLandPage";
 
 function LandPage() {
   return (
-    <div>
+    <div className="LandPageContainer">
       <div className="PlexusEffect">
         <ParticleSystem />
       </div>

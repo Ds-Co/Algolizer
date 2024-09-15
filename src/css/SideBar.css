@@ -130,7 +130,6 @@
   top: 10%;
 }
 
-
 .sidebar__complexity-text {
   position: relative;
   bottom: 10%;
@@ -155,7 +154,6 @@
 .sidebar__buttons {
   display: flex;
   justify-content: space-between;
-
 }
 
 .sidebar__complexity-button,
@@ -164,6 +162,7 @@
   border: none;
   cursor: pointer;
   padding: 0%;
+  transition: all ease 0.3s;
 }
 
 .sidebar__back-button:hover {
@@ -179,7 +178,6 @@
   width: 5vh;
   height: 5vh;
 }
-
 
 .sidebar--collapsed .sidebar__complexity-button,
 .sidebar--collapsed .sidebar__back-button {

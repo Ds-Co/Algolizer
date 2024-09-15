@@ -65,7 +65,7 @@ const IconList = ({
   onSpeedUpClick: () => void;
 }) => {
   const icons = [
-    { iconimg: info, icontxt: "Info" , onClick: onInfoClick},
+    { iconimg: info, icontxt: "Info", onClick: onInfoClick },
     { iconimg: reset, icontxt: "Reset", onClick: onResetClick },
     { iconimg: pause, icontxt: "Pause", onClick: onPauseClick },
     { iconimg: speedUp, icontxt: "SpeedUp", onClick: onSpeedUpClick },
@@ -100,11 +100,11 @@ const TopBar: React.FC<TopBarProps> = ({
   );
   const [showInfo, setShowInfo] = useState<boolean>(false);
   const handleSelectChange = (sortType: string) => {
-    setSelectedSortType(sortType);  
+    setSelectedSortType(sortType);
     onSelectChange(sortType);
   };
   const handleInfoClick = () => {
-    setShowInfo(true); 
+    setShowInfo(true);
   };
 
   const closeModal = () => {
@@ -125,7 +125,7 @@ const TopBar: React.FC<TopBarProps> = ({
       <InfoModal
         show={showInfo}
         onClose={closeModal}
-        selectedAlgorithm={selectedSortType} 
+        selectedAlgorithm={selectedSortType}
       />
     </div>
   );
