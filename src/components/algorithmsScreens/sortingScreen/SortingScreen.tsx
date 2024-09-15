@@ -134,10 +134,17 @@ const SortingScreen = () => {
     const value = event.target.value;
     const array = value
       .split("\n")
-      .map((line) => line.split(",").map((item) => parseInt(item.trim(), 10)))
+      .map((line) =>
+        line.split(",").map((item) => {
+          const trimmedItem = item.trim();
+          // Regular expression to check for valid positive integers
+          return /^[1-9]\d*$/.test(trimmedItem) ? parseInt(trimmedItem, 10) : null;
+        })
+      )
       .flat()
-      .filter((item) => !isNaN(item));
+      .filter((item) => item !== null);
 
+    console.log("i am here", array);
     localStorage.setItem("arrayInput", JSON.stringify(array));
     setInputValue(value);
   };
@@ -227,9 +234,9 @@ const SortingScreen = () => {
         selectedSortType={selectedSortType}
         getComplexity={getComplexity}
         handleInputChange={handleInputChange}
-        // inputValue={inputValue}
+      // inputValue={inputValue}
       />
-      <SortingVisualization width={400} height={300} ref={sortingRef} />
+      <SortingVisualization width={400} height={270} ref={sortingRef} />
     </div>
   );
 };

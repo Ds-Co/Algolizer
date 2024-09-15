@@ -18,9 +18,6 @@ type Snapshot = {
   index2: number;
 };
 
-const DEFAULT_DELAY = 1000;
-const QUICK_DELAY = 500;
-
 export const SortingVisualization = forwardRef(
   ({ width, height }: SortingVisualizationProps, ref) => {
     const svgRef = useRef<SVGSVGElement>(null);
@@ -29,7 +26,6 @@ export const SortingVisualization = forwardRef(
     const [highlightedIndices, setHighlightedIndices] = useState<number[]>([]);
     const [sortingCompleted, setSortingCompleted] = useState<boolean>(false);
     const [isPaused, setIsPaused] = useState<boolean>(false);
-    const [speed, setSpeed] = useState<"default" | "quick">("default");
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const snapshotsRef = useRef<Snapshot[]>([]); // To hold snapshots
     const pausedIndexRef = useRef<number>(0); // To track the paused snapshot index
@@ -96,7 +92,7 @@ export const SortingVisualization = forwardRef(
         .attr("ry", 5) // Set rounded corner radius
         .merge(bars) // Merge enter and update selections
         .transition()
-        .duration(speed === "default" ? 300 : 150) // Adjust duration for speed
+        .duration(300) // Reduced duration for faster animation
         .ease(d3.easeCubicInOut)
         .attr("x", (_, i) => xScale(i.toString()) ?? 0)
         .attr("width", xScale.bandwidth())
@@ -107,16 +103,16 @@ export const SortingVisualization = forwardRef(
           (_, i) =>
             highlightedIndices.includes(i)
               ? "#FFD700" // Highlight color (gold)
-              : sortingCompleted && !isSorting // Bars only turn green if sorting completed normally
-              ? "green" // Color after sorting completes
-              : "black" // Default color
+              : sortingCompleted
+                ? "green" // Color after sorting completes
+                : "black" // Default color
         );
 
       // Exit phase
       bars
         .exit()
         .transition()
-        .duration(speed === "default" ? 200 : 100) // Adjust duration for speed
+        .duration(200)
         .attr("height", 0)
         .attr("y", innerHeight + margin.top)
         .remove();
@@ -142,7 +138,7 @@ export const SortingVisualization = forwardRef(
         .merge(texts)
         .text((d) => d.toString()) // Update the text content
         .transition()
-        .duration(speed === "default" ? 300 : 150) // Adjust duration for speed
+        .duration(300) // Same duration as bars
         .attr(
           "x",
           (_, i) => (xScale(i.toString()) ?? 0) + (xScale.bandwidth() ?? 0) / 2
@@ -151,19 +147,10 @@ export const SortingVisualization = forwardRef(
 
       // Exit phase for text
       texts.exit().remove();
-    }, [
-      data,
-      width,
-      height,
-      highlightedIndices,
-      sortingCompleted,
-      isSorting,
-      speed,
-    ]);
+    }, [data, width, height, highlightedIndices, sortingCompleted]);
 
     const executeSnapshotStep = (index: number, delay: number) => {
       if (index >= snapshotsRef.current.length) {
-        if (!isSorting) return; // Skip setting completed state if sorting was stopped
         setSortingCompleted(true);
         setData((prevData) => [...prevData]); // Trigger a re-render
         setTimeout(() => {
@@ -174,7 +161,12 @@ export const SortingVisualization = forwardRef(
       }
 
       if (isPausedRef.current) {
+        // If paused, skip to the next snapshot step when resumed
         pausedIndexRef.current = index;
+        console.log(
+          "Visualization is paused, current snapshot index:",
+          pausedIndexRef.current
+        );
         return;
       }
 
@@ -198,35 +190,41 @@ export const SortingVisualization = forwardRef(
 
       setTimeout(() => {
         if (isPausedRef.current) {
+          // If paused, return to this snapshot
           pausedIndexRef.current = index;
+          console.log(
+            "Visualization is paused, current snapshot index:",
+            pausedIndexRef.current
+          );
         } else {
+          // Continue to the next snapshot
           executeSnapshotStep(index + 1, delay);
         }
       }, delay);
     };
 
     const applySnapshots = (snapshots: Snapshot[], delay: number) => {
-      snapshotsRef.current = snapshots;
-      pausedIndexRef.current = 0;
+      snapshotsRef.current = snapshots; // Store snapshots for resuming
+      pausedIndexRef.current = 0; // Reset paused index
       setIsSorting(true);
       setSortingCompleted(false);
       setIsPaused(false);
-      isPausedRef.current = false;
+      isPausedRef.current = false; // Ensure the ref is updated
       executeSnapshotStep(0, delay);
     };
 
     const pauseVisualization = () => {
       setIsPaused(true);
-      isPausedRef.current = true;
+      isPausedRef.current = true; // Update the ref
+      console.log("Visualization paused, isPaused state:", isPaused);
     };
 
     const resumeVisualization = () => {
       setIsPaused(false);
-      isPausedRef.current = false;
-      executeSnapshotStep(
-        pausedIndexRef.current + 1,
-        speed === "default" ? DEFAULT_DELAY : QUICK_DELAY
-      );
+      isPausedRef.current = false; // Update the ref
+      console.log("Visualization resumed, isPaused state:", isPaused);
+      // Resume from the next snapshot
+      executeSnapshotStep(pausedIndexRef.current + 1, 1000);
     };
 
     const startSorting = () => {
@@ -234,37 +232,22 @@ export const SortingVisualization = forwardRef(
       if (storedSnapshots) {
         const snapshots: Snapshot[] = JSON.parse(storedSnapshots);
         if (intervalRef.current) clearInterval(intervalRef.current);
-        applySnapshots(
-          snapshots,
-          speed === "default" ? DEFAULT_DELAY : QUICK_DELAY
-        );
+        applySnapshots(snapshots, 1000);
       }
     };
 
-    const stopSorting = () => {
-      setIsSorting(false);
-      setIsPaused(false);
-      setHighlightedIndices([]);
-      isPausedRef.current = false;
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      pausedIndexRef.current = 0;
-      snapshotsRef.current = [];
-      console.log("Sorting stopped");
-    };
-
+    // Expose functions to parent components
     useImperativeHandle(ref, () => ({
       startSorting,
-      stopSorting,
+      isSorting,
       pauseVisualization,
       resumeVisualization,
-      setSpeed: (newSpeed: "default" | "quick") => setSpeed(newSpeed),
-      isSorting,
       isPaused,
     }));
 
     return (
       <div className="TryingMyBest">
-        <svg ref={svgRef} width={width} height={height}></svg>
+        <svg ref={svgRef} width={width} height={height} />
       </div>
     );
   }
