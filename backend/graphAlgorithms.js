@@ -130,36 +130,37 @@ function Dijkstra(adjList, startNody, endNode) {
   distance[startNody] = 0;
   parentArray[startNody] = null;
   priorityQueue.set(startNody, 0);
+    while (priorityQueue.size > 0) {
+      let currentNody = [...priorityQueue.entries()].reduce((a, b) =>
+        a[1] < b[1] ? a : b
+      )[0];
 
-  while (priorityQueue.size > 0) {
-    let currentNody = [...priorityQueue.entries()].reduce((a, b) =>
-      a[1] < b[1] ? a : b
-    )[0];
-    longestNode = currentNody;
-    priorityQueue.delete(currentNody);
-    visited.add(currentNody);
-    snapshots.push(currentNody);
+      // If we reached the endNode, return the path
+      if (currentNody === endNode) {
+        return {
+          snapshots,
+          distance,
+          parentArray,
+          shortestPath: reconstructPath(parentArray, startNody, endNode),
+        };
+      }
 
-    // If we reached the endNode, return the path
-    if (currentNody === endNode) {
-      return {
-        snapshots,
-        distance,
-        parentArray,
-        shortestPath: reconstructPath(parentArray, startNody, endNode),
-      };
-    }
-
-    for (let { node: child, weight } of adjList[currentNody] || []) {
-      if (!visited.has(child)) {
-        if (distance[child] > distance[currentNody] + weight) {
-          distance[child] = distance[currentNody] + weight;
-          priorityQueue.set(child, distance[child]);
-          parentArray[child] = currentNody;
+      longestNode = currentNody;
+      priorityQueue.delete(currentNody);
+      visited.add(currentNody);
+      snapshots.push(currentNody);
+  
+      for (let { node: child, weight } of adjList[currentNody] || []) {
+        if (!visited.has(child)) {
+          if (distance[child] > distance[currentNody] + weight) {
+            distance[child] = distance[currentNody] + weight;
+            priorityQueue.set(child, distance[child]);
+            parentArray[child] = currentNody;
+          }
         }
       }
     }
-  }
+  
 
   // If endNode is -1, return the path to the last node visited
   if (endNode === -1) {

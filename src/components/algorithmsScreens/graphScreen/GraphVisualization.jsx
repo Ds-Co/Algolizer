@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Graph from "react-vis-network-graph";
+import "vis-network/styles/vis-network.css";
 
 export default function GraphVisualization({
   nodes,
@@ -8,6 +9,7 @@ export default function GraphVisualization({
   disablePhysics,
   distances = {}, // Default to empty object if not provided
   isDirected,
+  selectedGraphType,
 }) {
   const [layoutDirection, setLayoutDirection] = useState("UD");
   const [dynamicLayout, setDynamicLayout] = useState(false);
@@ -49,15 +51,27 @@ export default function GraphVisualization({
     };
   }, []);
 
-  const coloredNodes = nodes.map((node) => ({
-    ...node,
-    color: nodeColors[node.id] || "#000000",
-    label:
-      showDistances && distances[node.id] !== undefined
-        ? `Node ${node.id}: ${distances[node.id]}`
-        : `Node ${node.id}`, // Show distance only if animation is ongoing
-  }));
-
+  const coloredNodes = nodes.map((node) => {
+    const distance = distances[node.id];
+  
+    // Only show the tooltip if the selected algorithm is Dijkstra
+    const showTooltip = selectedGraphType === "Dijkstra" && distance !== undefined;
+  
+    return {
+      ...node,
+      color: nodeColors[node.id] || "#000000",
+  
+      // Only color the value of the distance in red
+      title: showTooltip ? `Distance: <span style="color:red;">${distance}</span>` : undefined,
+  
+      label: `Node ${node.id}`,
+      font: {
+        color: "#000000",
+        size: 14,
+      },
+    };
+  });
+  
   const options = {
     nodes: {
       shape: "dot",
@@ -70,6 +84,7 @@ export default function GraphVisualization({
         },
       },
       font: {
+        
         color: "#000000",
       },
     },
@@ -114,6 +129,7 @@ export default function GraphVisualization({
         enabled: true,
         speed: { x: 7, y: 7, zoom: 0.03 },
       },
+      //tooltip: false,
     },
     layout: {
       improvedLayout: true,
