@@ -9,6 +9,7 @@ interface GraphTypeSwitchProps {
 const GraphTypeSwitch: React.FC<GraphTypeSwitchProps> = ({
   isDirected,
   onTypeChange,
+  
 }) => {
   const handleToggle = () => {
     onTypeChange(!isDirected);

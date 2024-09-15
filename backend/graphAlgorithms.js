@@ -7,7 +7,9 @@ function BreadthFirstSearch(adjList, startNody, endNode) {
   snapshots.push(startNody);
   parentArray[startNody] = null;
   let longestNode=-1;
-  while (queueLike.length > 0) {
+  if(startNody!=endNode)
+  {
+    while (queueLike.length > 0) {
     let nody = queueLike.shift();
     for (let child of adjList[nody] || []) {
       if (!visited.has(child.node)) {
@@ -26,6 +28,8 @@ function BreadthFirstSearch(adjList, startNody, endNode) {
       }
     }
   }
+  }
+  
   if(endNode==-1)
   {
     return {

@@ -4,9 +4,10 @@ import "/src/css/Dropdown.css";
 interface DropDownProps {
   sorts: string[];
   onSelectChange: (selectedSortType: string) => void;
+  isAnimating: boolean;
 }
 
-const DropDown: React.FC<DropDownProps> = ({ sorts, onSelectChange }) => {
+const DropDown: React.FC<DropDownProps> = ({ sorts, onSelectChange,isAnimating }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     onSelectChange(selectedValue);
@@ -15,7 +16,7 @@ const DropDown: React.FC<DropDownProps> = ({ sorts, onSelectChange }) => {
 
   return (
     <>
-      <select className="sort__dropdown" onChange={handleSelectChange}>
+      <select className="sort__dropdown" onChange={handleSelectChange} disabled={isAnimating}>
         {sorts.map((sortOption, index) => (
           <option key={index} value={sortOption}>
             {sortOption}

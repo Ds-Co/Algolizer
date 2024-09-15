@@ -7,7 +7,7 @@ import { TopBar } from "../TopBar";
 import { GraphData } from "./GraphData";
 import { GraphTypeSwitch } from "./GraphTypeSwitch";
 import { GraphVisualization } from "./GraphVisualization";
-import { NewDropDown } from "./NewDropDown";
+import { SideBarDropDown } from "./SideBarDropDown";
 
 interface GraphResponse {
   VisitedNodes: number[];
@@ -75,6 +75,8 @@ const GraphScreen: React.FC = () => {
   const [textArea, setTextArea] = useState("");
   const [isDirected, setIsDirected] = useState(true);
   const [nodeDistances, setNodeDistances] = useState({});
+  const [isResetting, setIsResetting] = useState<boolean>(false);
+  
   const [randomGraph, setRandomGraph] = useState<{
     nodes: any[];
     edges: any[];
@@ -97,7 +99,8 @@ const GraphScreen: React.FC = () => {
   const MemoizedGraph = React.memo(GraphVisualization);
 
   const handleGraphTypeChange = (isDirected: boolean) => {
-    setIsDirected(isDirected);
+    if(!isAnimating)
+    setIsDirected(isDirected);    
   };
 
   const handleSelectChange = useCallback((sortType: string) => {
@@ -127,9 +130,8 @@ const GraphScreen: React.FC = () => {
   const handleGraphInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const value = event.target.value;
-
+     
       setTextArea(value);
-
       // Regex to allow only digits, strings, commas, and line breaks
       const validInput = /^[a-zA-Z0-9,\n\s]*$/;
 
@@ -137,6 +139,9 @@ const GraphScreen: React.FC = () => {
         alert("Invalid input! Please enter only numbers, commas, and spaces.");
         return;
       }
+
+      setSelectedStartNode("Choose Node");
+      setSelectedEndNode("Choose Node");
 
       if (value.trim() === "") {
         const nodeCount = Math.floor(Math.random() * 20) + 5; // Random between 5 and 20
@@ -196,21 +201,25 @@ const GraphScreen: React.FC = () => {
         const { nodes, edges: graphEdges } = GraphData(selectedGraphType);
         setNewNodes(nodes);
         setNewEdges(graphEdges);
+        console.log(adjacencyList);
       }
     },
     [isDirected, selectedGraphType]
   );
 
   const handleVisualizeClick = useCallback(async () => {
-    if (isAnimating) return;
 
+
+   
+    if (isAnimating) return;
+  
     const storedAdjacencyList = localStorage.getItem("graphInput");
     const adjacencyList: AdjacencyList = storedAdjacencyList
       ? JSON.parse(storedAdjacencyList)
       : randomGraph
       ? randomGraph.adjacencyList
       : {};
-
+  
     try {
       const response = await axios.post<GraphResponse>(
         "http://localhost:5000/api/graph",
@@ -224,20 +233,17 @@ const GraphScreen: React.FC = () => {
           endNode: selectedEndNode === "Choose Node" ? -1 : selectedEndNode,
         }
       );
-
-      // Store shortest path
+  
       const shortestPath = response.data.shortestPath || [];
-      console.log(shortestPath);
-
       setPath(shortestPath);
-
+  
       setDisablePhysics(true);
-      setIsAnimating(true);
+      setIsAnimating(true);  // Start animation
       setIsPaused(false);
-      setSnapshots(response.data.snapshots);
-
+      setSnapshots(response.data.snapshots);  // Set new snapshots
+      console.log(snapshots);
       snapshotIndexRef.current = 0;
-
+  
       if (selectedGraphType === "Dijkstra") {
         setNodeDistances(response.data.distance || {});
       }
@@ -254,34 +260,30 @@ const GraphScreen: React.FC = () => {
     selectedEndNode,
     startNodes,
   ]);
+  
 
   const animateSnapshots = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-
+  
     intervalRef.current = window.setInterval(() => {
       if (snapshotIndexRef.current < snapshots.length) {
         const node = snapshots[snapshotIndexRef.current];
-
+  
         if (!isPaused) {
           setNodeColors((prevColors) => {
             const updatedColors: { [key: number]: string } = { ...prevColors };
-
-            const isFirstNode = snapshotIndexRef.current === 1;
-
-            updatedColors[Number(node)] = isFirstNode
+  
+            updatedColors[Number(node)] = snapshotIndexRef.current === 1
               ? "#285EA4" // Green for the first node
               : "#D5CAD6"; // Default color for other nodes
-
-            if (
-              node.toString() === selectedEndNode ||
-              snapshotIndexRef.current === snapshots.length
-            ) {
+  
+            if (node.toString() === selectedEndNode || snapshotIndexRef.current === snapshots.length) {
               updatedColors[Number(node)] = "#E02929"; // End node color
             }
-
+  
             return updatedColors;
           });
-
+  
           snapshotIndexRef.current += 1;
         }
       } else {
@@ -294,6 +296,7 @@ const GraphScreen: React.FC = () => {
       }
     }, 2000 / speed);
   }, [snapshots, speed, isPaused, selectedEndNode]);
+  
 
   useEffect(() => {
     if (isAnimating) {
@@ -308,7 +311,16 @@ const GraphScreen: React.FC = () => {
         intervalRef.current = null;
       }
     };
-  }, [isAnimating, animateSnapshots]);
+  }, [isAnimating, animateSnapshots,snapshots]);
+
+  useEffect(() => {
+    if (isResetting) {
+      // Reset is complete, now visualize
+      handleVisualizeClick();
+      setIsResetting(false); // Reset the flag
+    }
+  }, [isResetting, handleVisualizeClick]);
+  
 
   useEffect(() => {
     if (textArea.trim() === "") {
@@ -339,14 +351,14 @@ const GraphScreen: React.FC = () => {
     if (isAnimating) {
       setIsAnimating(false);
       setNodeColors({});
-      setSnapshots([]);
       setSpeed(1);
       snapshotIndexRef.current = 0;
+      setSnapshots([]);
       setIsPaused(false);
-      handleVisualizeClick();
+      setIsResetting(true); // Set the reset flag
     }
-  }, [isAnimating, handleVisualizeClick]);
-
+  }, [isAnimating]);
+  
   const handlePauseClick = useCallback(() => {
     if (isAnimating) {
       setIsPaused((prev) => !prev);
@@ -377,6 +389,7 @@ const GraphScreen: React.FC = () => {
         handlePauseClick={handlePauseClick}
         handleResetClick={handleResetClick}
         handleSpeedUpClick={handleSpeedUpClick}
+        isAnimating={isAnimating}
       />
       <SideBar
         ArrayGenerator={() => (
@@ -386,22 +399,24 @@ const GraphScreen: React.FC = () => {
                 <label htmlFor="start-node" className="dropdown-label">
                   Start Node
                 </label>
-                <NewDropDown
+                <SideBarDropDown
                   id="start-node"
                   options={["Choose Node", ...startNodes]}
                   selectedValue={selectedStartNode}
                   onSelectChange={handleStartChange}
+                  isAnimating={isAnimating}
                 />
               </div>
               <div className="dropdown-container">
                 <label htmlFor="end-node" className="dropdown-label">
                   End Node
                 </label>
-                <NewDropDown
+                <SideBarDropDown
                   id="end-node"
                   options={["Choose Node", ...startNodes]}
                   selectedValue={selectedEndNode}
                   onSelectChange={handleEndChange}
+                  isAnimating={isAnimating}
                 />
               </div>
             </div>
@@ -414,6 +429,7 @@ const GraphScreen: React.FC = () => {
         selectedSortType={selectedGraphType}
         getComplexity={getComplexity}
         handleInputChange={handleGraphInputChange}
+        isAnimating={isAnimating}
       />
       <div className="visualization">
         <MemoizedGraph

@@ -11,15 +11,18 @@ export default function GraphVisualization({
 }) {
   const [layoutDirection, setLayoutDirection] = useState("UD");
   const [dynamicLayout, setDynamicLayout] = useState(false);
+  const [showDistances, setShowDistances] = useState(true); // State to control distance labels
   const networkRef = useRef(null); // To store the graph instance
 
   useEffect(() => {
     if (disablePhysics) {
       setLayoutDirection('UD');
       setDynamicLayout(false);
+      setShowDistances(true); // Show distances while physics is enabled (during animation)
     } else {
       setLayoutDirection('dynamic');
       setDynamicLayout(true);
+      setShowDistances(false); // Remove distances when animation ends (disablePhysics = false)
     }
   }, [disablePhysics]);
 
@@ -50,9 +53,9 @@ export default function GraphVisualization({
     ...node,
     color: nodeColors[node.id] || "#000000",
     label:
-      distances[node.id] !== undefined
+      showDistances && distances[node.id] !== undefined
         ? `Node ${node.id}: ${distances[node.id]}`
-        : `Node ${node.id}`,
+        : `Node ${node.id}`, // Show distance only if animation is ongoing
   }));
 
   const options = {

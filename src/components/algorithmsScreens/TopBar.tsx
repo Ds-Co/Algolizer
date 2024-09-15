@@ -21,6 +21,7 @@ interface TopBarProps {
   handleResetClick: () => void;
   handlePauseClick: () => void;
   handleSpeedUpClick: () => void;
+  isAnimating: boolean;
 }
 
 const Sortings = ({ text, icon }: SortingsProps) => {
@@ -92,6 +93,7 @@ const TopBar: React.FC<TopBarProps> = ({
   handlePauseClick,
   handleResetClick,
   handleSpeedUpClick,
+  isAnimating,
 }) => {
   const [selectedSortType, setSelectedSortType] = useState<string>(
     dropdownmenu[0]
@@ -107,7 +109,7 @@ const TopBar: React.FC<TopBarProps> = ({
   return (
     <div className="topbar">
       <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
-      <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} />
+      <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} isAnimating={isAnimating} />
       <IconList
         onVisualizeClick={handleVisualizeClick}
         onResetClick={handleResetClick}

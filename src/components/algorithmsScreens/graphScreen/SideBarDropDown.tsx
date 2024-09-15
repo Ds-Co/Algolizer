@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import "/src/css/Dropdown.css";
 
-interface NewDropDownProps {
+interface SideBarDropDownProps {
   id?: string;
   options: string[];
   selectedValue: string;
   onSelectChange: (selectedOption: string) => void;
+  isAnimating: boolean;
 }
 
-const NewDropDown: React.FC<NewDropDownProps> = ({
+const SideBarDropDown: React.FC<SideBarDropDownProps> = ({
   id,
   options,
   selectedValue,
   onSelectChange,
+  isAnimating,
 }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = event.target.value;
@@ -26,6 +28,7 @@ const NewDropDown: React.FC<NewDropDownProps> = ({
       className="sort__dropdown"
       value={selectedValue}
       onChange={handleSelectChange}
+      disabled={isAnimating}
     >
       {options.map((option, index) => (
         <option key={index} value={option}>
@@ -36,4 +39,4 @@ const NewDropDown: React.FC<NewDropDownProps> = ({
   );
 };
 
-export { NewDropDown };
+export { SideBarDropDown };
