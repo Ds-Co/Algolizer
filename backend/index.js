@@ -73,7 +73,7 @@ app.post('/api/graph', (req, res) => {
         parentArray = result.parentArray;
         break;
       case "Dijkstra":
-        result = Dijkstra(array, startNody);
+        result = Dijkstra(array, startNody,endNode);
         parentArray = result.parentArray;
         break;
       default:

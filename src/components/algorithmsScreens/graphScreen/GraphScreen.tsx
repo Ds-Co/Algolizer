@@ -91,19 +91,21 @@ const GraphScreen: React.FC = () => {
     text: "Graph",
     icon: graphicon,
   };
-  //state for the parent array
-  // const [parentArray, setParentArray] = useState<{ [key: string]: string }>({});
-  //state for the shortest path for the start node to end
+
   const [path, setPath] = useState<string[]>([]);
 
   const MemoizedGraph = React.memo(GraphVisualization);
 
   const handleGraphTypeChange = (isDirected: boolean) => {
-    if (!isAnimating) setIsDirected(isDirected);
+    if (!isAnimating) {
+      setIsDirected(isDirected);
+      setNodeDistances({});
+    }
   };
 
   const handleSelectChange = useCallback((sortType: string) => {
     setSelectedGraphType(sortType);
+    setNodeDistances({});
   }, []);
 
   const handleStartChange = useCallback((startNode: string) => {
@@ -129,9 +131,9 @@ const GraphScreen: React.FC = () => {
   const handleGraphInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const value = event.target.value;
-
+      setNodeDistances("")
       setTextArea(value);
-      // Regex to allow only digits, strings, commas, and line breaks
+
       const validInput = /^[a-zA-Z0-9,\n\s]*$/;
 
       if (!validInput.test(value)) {
@@ -143,7 +145,7 @@ const GraphScreen: React.FC = () => {
       setSelectedEndNode("Choose Node");
 
       if (value.trim() === "") {
-        const nodeCount = Math.floor(Math.random() * 20) + 5; // Random between 5 and 20
+        const nodeCount = Math.floor(Math.random() * 20) + 5; 
         const { nodes, edges, adjacencyList } = generateTreeGraph(
           nodeCount,
           selectedGraphType,
@@ -234,9 +236,9 @@ const GraphScreen: React.FC = () => {
       setPath(shortestPath);
 
       setDisablePhysics(true);
-      setIsAnimating(true); // Start animation
+      setIsAnimating(true); 
       setIsPaused(false);
-      setSnapshots(response.data.snapshots); // Set new snapshots
+      setSnapshots(response.data.snapshots); 
       console.log(snapshots);
       snapshotIndexRef.current = 0;
 
@@ -270,14 +272,14 @@ const GraphScreen: React.FC = () => {
 
             updatedColors[Number(node)] =
               snapshotIndexRef.current === 1
-                ? "#285EA4" // Green for the first node
-                : "#D5CAD6"; // Default color for other nodes
+                ? "#285EA4" 
+                : "#D5CAD6"; 
 
             if (
               node.toString() === selectedEndNode ||
               snapshotIndexRef.current === snapshots.length
             ) {
-              updatedColors[Number(node)] = "#E02929"; // End node color
+              updatedColors[Number(node)] = "#E02929";
             }
 
             return updatedColors;
@@ -288,19 +290,51 @@ const GraphScreen: React.FC = () => {
       } else {
         clearInterval(intervalRef.current as number);
         intervalRef.current = null;
-        setDisablePhysics(false);
-        setIsAnimating(false);
-        setNodeColors({});
-        setSnapshots([]);
+        animatePath(); 
       }
     }, 2000 / speed);
   }, [snapshots, speed, isPaused, selectedEndNode]);
+
+  const animatePath = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  
+    let pathIndex = 0; 
+  
+    intervalRef.current = window.setInterval(() => {
+      if (pathIndex < path.length) {
+        const node = path[pathIndex];
+  
+        if (!isPaused) {
+          setNodeColors((prevColors) => {
+            const updatedColors: { [key: number]: string } = { ...prevColors };
+            updatedColors[Number(node)] = "#2DC8B0"; 
+            return updatedColors;
+          });
+  
+          pathIndex += 1;
+        }
+      } else {
+        clearInterval(intervalRef.current as number);
+        intervalRef.current = null;
+
+        setTimeout(() => {
+          setDisablePhysics(false);
+          setIsAnimating(false);
+          setNodeColors({});
+          setSnapshots([]);   
+        }, 3000);
+      }
+    }, 500 / speed);
+  }, [path, speed, isPaused]);
+  
+  
 
   useEffect(() => {
     if (isAnimating) {
       animateSnapshots();
     } else {
       setSpeed(1);
+      setIsPaused(false);
     }
 
     return () => {
@@ -313,9 +347,9 @@ const GraphScreen: React.FC = () => {
 
   useEffect(() => {
     if (isResetting) {
-      // Reset is complete, now visualize
+      
       handleVisualizeClick();
-      setIsResetting(false); // Reset the flag
+      setIsResetting(false);
     }
   }, [isResetting, handleVisualizeClick]);
 
@@ -323,7 +357,6 @@ const GraphScreen: React.FC = () => {
     if (textArea.trim() === "") {
       const nodeCount = Math.floor(Math.random() * 20) + 5;
 
-      // Generate tree graph based on selected algorithm type and whether it's directed
       const { nodes, edges, adjacencyList } = generateTreeGraph(
         nodeCount,
         selectedGraphType,
@@ -333,11 +366,9 @@ const GraphScreen: React.FC = () => {
       setRandomGraph({ nodes, edges, adjacencyList });
       setStartNodes(Object.keys(adjacencyList));
 
-      // Store adjacency list in localStorage
       localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
     }
 
-    // Fetch the graph data using GraphData
     const { nodes: updatedNodes, edges: updatedEdges } =
       GraphData(selectedGraphType);
     setNewNodes(updatedNodes);
@@ -352,7 +383,7 @@ const GraphScreen: React.FC = () => {
       snapshotIndexRef.current = 0;
       setSnapshots([]);
       setIsPaused(false);
-      setIsResetting(true); // Set the reset flag
+      setIsResetting(true);
     }
   }, [isAnimating]);
 
@@ -387,6 +418,7 @@ const GraphScreen: React.FC = () => {
         handleResetClick={handleResetClick}
         handleSpeedUpClick={handleSpeedUpClick}
         isAnimating={isAnimating}
+        isPaused={isPaused}
       />
       <SideBar
         ArrayGenerator={() => (
@@ -434,9 +466,9 @@ const GraphScreen: React.FC = () => {
           edges={newEdges}
           nodeColors={nodeColors}
           disablePhysics={disablePhysics}
-          distances={selectedGraphType === "Dijkstra" ? nodeDistances : {}} // Pass distances only for Dijkstra
+          distances={selectedGraphType === "Dijkstra" ? nodeDistances : {}} 
           isDirected={isDirected}
-          selectedGraphType={selectedGraphType} // Pass selectedGraphType to control distance pop-ups
+          selectedGraphType={selectedGraphType} 
         />
       </div>
     </div>

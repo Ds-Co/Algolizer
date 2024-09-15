@@ -133,12 +133,12 @@ export default function GraphVisualization({
     },
     layout: {
       improvedLayout: true,
-      hierarchical: layoutDirection === 'UD' ? {
-        direction: 'UD', // Top to Bottom
-        sortMethod: 'directed',
-        levelSeparation: 110, // Increase vertical space between levels
-        nodeSpacing: 90, // Increase space between nodes at the same level
-      } : false, // Disable hierarchical layout if not animating
+      // hierarchical: layoutDirection === 'UD' ? {
+      //   direction: 'UD', // Top to Bottom
+      //   sortMethod: 'directed',
+      //   levelSeparation: 110, // Increase vertical space between levels
+      //   nodeSpacing: 90, // Increase space between nodes at the same level
+      // } : false, // Disable hierarchical layout if not animating
       randomSeed: 50,
     },
     autoResize: true,

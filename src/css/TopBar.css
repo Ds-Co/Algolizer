@@ -39,6 +39,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 3.5%;
 }
 
 .topbar__iconbutton {
@@ -60,12 +61,16 @@
   font-weight: 600;
   font-style: normal;
   transition: color 0.3s ease, transform 0.3s ease;
+  
 }
 
 .topbar__png {
   width: 50%;
   transition: transform 0.3s ease, filter 0.3s ease;
+  color: white;
+   filter: grayscale(0) brightness(100);
 }
+
 
 .topbar__icons:hover .topbar__png {
   transform: scale(1.3);

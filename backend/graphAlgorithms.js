@@ -42,26 +42,6 @@ function BreadthFirstSearch(adjList, startNody, endNode) {
     return { snapshots, parentArray, shortestPath: [] };
 }
 
-function reconstructPath(parentArray, startNody, endNode) {
-  let path = [];
-  let current = endNode;
-
-  while (current !== null && current !== startNody) {
-    path.push(current);
-    current = parentArray[current];
-
-    if (current === undefined) {
-      break;
-    }
-  }
-
-  if (current === startNody) {
-    path.push(startNody);
-  }
-
-  return path.reverse();
-}
-
 function DepthFirstSearch(adjList, startNody, endNode) {
   let snapshots = [];
   let visited = new Set();
@@ -124,61 +104,85 @@ function Dijkstra(adjList, startNody, endNode) {
   let parentArray = {};
   let longestNode = -1;
 
+  // Initialize distances and parent array
   for (let nody in adjList) {
     distance[nody] = Infinity;
   }
   distance[startNody] = 0;
   parentArray[startNody] = null;
   priorityQueue.set(startNody, 0);
-    while (priorityQueue.size > 0) {
-      let currentNody = [...priorityQueue.entries()].reduce((a, b) =>
-        a[1] < b[1] ? a : b
-      )[0];
 
-      // If we reached the endNode, return the path
-      if (currentNody === endNode) {
-        return {
-          snapshots,
-          distance,
-          parentArray,
-          shortestPath: reconstructPath(parentArray, startNody, endNode),
-        };
-      }
+  while (priorityQueue.size > 0) {
+    // Find the node with the smallest distance
+    let currentNody = [...priorityQueue.entries()].reduce((a, b) =>
+      a[1] < b[1] ? a : b
+    )[0];
 
-      longestNode = currentNody;
-      priorityQueue.delete(currentNody);
-      visited.add(currentNody);
-      snapshots.push(currentNody);
-  
-      for (let { node: child, weight } of adjList[currentNody] || []) {
-        if (!visited.has(child)) {
-          if (distance[child] > distance[currentNody] + weight) {
-            distance[child] = distance[currentNody] + weight;
-            priorityQueue.set(child, distance[child]);
-            parentArray[child] = currentNody;
-          }
+    priorityQueue.delete(currentNody);
+    visited.add(currentNody);
+    snapshots.push(currentNody);
+    longestNode = currentNody; // Update the last visited node
+    if(currentNody===endNode)
+    {
+      break;
+    }
+    // Traverse all adjacent nodes
+    for (let { node: child, weight } of adjList[currentNody] || []) {
+      if (!visited.has(child)) {
+        if (distance[child] > distance[currentNody] + weight) {
+          distance[child] = distance[currentNody] + weight;
+          priorityQueue.set(child, distance[child]);
+          parentArray[child] = currentNody;
         }
       }
     }
-  
-
-  // If endNode is -1, return the path to the last node visited
+  }
+  // Handle the three cases
   if (endNode === -1) {
+    // Case 2: No endNode selected, return path to the last visited node
     return {
       snapshots,
       distance,
       parentArray,
-      shortestPath: reconstructPath(parentArray, startNody, longestNode),
+      shortestPath: reconstructPath(parentArray, startNody, longestNode)
+    };
+  } else if (distance[endNode] !== Infinity) {
+    // Case 1: endNode is reachable, return path to it
+    return {
+      snapshots,
+      distance,
+      parentArray,
+      shortestPath: reconstructPath(parentArray, startNody, endNode)
+    };
+  } else {
+    // Case 3: endNode is not reachable
+    return {
+      snapshots,
+      distance,
+      parentArray,
+      shortestPath: []
     };
   }
+}
 
-  // If endNode was provided but not reachable, return an empty path
-  return {
-    snapshots,
-    distance,
-    parentArray,
-    shortestPath: [],
-  };
+function reconstructPath(parentArray, startNody, endNode) {
+  let path = [];
+  let current = endNode;
+
+  while (current !== null && current !== startNody) {
+    path.push(current);
+    current = parentArray[current];
+
+    if (current === undefined) {
+      break;
+    }
+  }
+
+  if (current === startNody) {
+    path.push(startNody);
+  }
+
+  return path.reverse();
 }
 
 module.exports = { DepthFirstSearch, BreadthFirstSearch, Dijkstra };
