@@ -138,7 +138,9 @@ const SortingScreen = () => {
         line.split(",").map((item) => {
           const trimmedItem = item.trim();
           // Regular expression to check for valid positive integers
-          return /^[1-9]\d*$/.test(trimmedItem) ? parseInt(trimmedItem, 10) : null;
+          return /^[1-9]\d*$/.test(trimmedItem)
+            ? parseInt(trimmedItem, 10)
+            : null;
         })
       )
       .flat()
@@ -234,7 +236,7 @@ const SortingScreen = () => {
         selectedSortType={selectedSortType}
         getComplexity={getComplexity}
         handleInputChange={handleInputChange}
-      // inputValue={inputValue}
+        // inputValue={inputValue}
       />
       <SortingVisualization width={400} height={270} ref={sortingRef} />
     </div>

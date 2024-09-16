@@ -8,7 +8,7 @@ interface CanvasProps {
 
 const ParticleSystem: React.FC<CanvasProps> = ({
   width = window.innerWidth,
-  height = window.innerHeight,
+  height = document.documentElement.scrollHeight, // Adjust to full document height
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -81,9 +81,13 @@ const ParticleSystem: React.FC<CanvasProps> = ({
       };
 
       const handleResize = () => {
+        // Recalculate the height dynamically to include scrollable content
+        const newWidth = window.innerWidth;
+        const newHeight = document.documentElement.scrollHeight;
+
         setCanvasDimensions({
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: newWidth,
+          height: newHeight,
         });
         initParticles();
       };
