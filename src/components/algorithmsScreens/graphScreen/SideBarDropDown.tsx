@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "/src/css/Dropdown.css";
 
 interface SideBarDropDownProps {
