@@ -7,7 +7,7 @@ const GraphData = (graphType) => {
     : {};
 
   const nodes = Object.keys(adjacencyList).map((id) => ({
-    id: id, // Keep ID as a string if needed
+    id: id,
     label: `Node ${id}`,
   }));
 
@@ -16,12 +16,9 @@ const GraphData = (graphType) => {
 
   Object.entries(adjacencyList).forEach(([node1, neighbors]) => {
     neighbors.forEach(({ node: node2, weight }) => {
-      // Generate a unique edge identifier
       const edgeId = node1 < node2 ? `${node1}-${node2}` : `${node2}-${node1}`;
 
-      // Check if the reverse edge is already added
       if (!addedEdges.has(edgeId)) {
-        // Add this edge to the list and mark it as added
         edges.push({
           from: node1,
           to: node2,

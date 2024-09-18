@@ -25,7 +25,6 @@ interface UpperSidebarProps {
 }
 
 const UpperSidebar: React.FC<UpperSidebarProps> = ({
-  //  inputValue,
   handleInputChange,
   isAnimating
 }) => {
@@ -35,7 +34,6 @@ const UpperSidebar: React.FC<UpperSidebarProps> = ({
       <textarea
         className="sidebar__array-input"
         placeholder="Enter Your Array"
-        //value={inputValue}
         onChange={handleInputChange}
         disabled={isAnimating}
       />
@@ -100,7 +98,6 @@ export const SideBar: React.FC<SideBarProps> = ({
   getComplexity,
   handleInputChange,
   isAnimating,
-  // inputValue
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -112,7 +109,6 @@ export const SideBar: React.FC<SideBarProps> = ({
     <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
       {!isCollapsed && (
         <UpperSidebar
-          //   inputValue={inputValue}
           handleInputChange={handleInputChange}
           isAnimating={isAnimating}
         />

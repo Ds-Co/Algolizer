@@ -1,34 +1,33 @@
 import React, { useEffect, useState, useRef } from "react";
 import Graph from "react-vis-network-graph";
-import "vis-network/styles/vis-network.css";
+// import "vis-network/styles/vis-network.css";
 
 export default function GraphVisualization({
   nodes,
   edges,
   nodeColors,
   disablePhysics,
-  distances = {}, // Default to empty object if not provided
+  distances = {}, 
   isDirected,
   selectedGraphType,
 }) {
   const [layoutDirection, setLayoutDirection] = useState("UD");
   const [dynamicLayout, setDynamicLayout] = useState(false);
-  const [showDistances, setShowDistances] = useState(true); // State to control distance labels
-  const networkRef = useRef(null); // To store the graph instance
+  const [showDistances, setShowDistances] = useState(true); 
+  const networkRef = useRef(null); 
 
   useEffect(() => {
     if (disablePhysics) {
       setLayoutDirection('UD');
       setDynamicLayout(false);
-      setShowDistances(true); // Show distances while physics is enabled (during animation)
+      setShowDistances(true);
     } else {
       setLayoutDirection('dynamic');
       setDynamicLayout(true);
-      setShowDistances(false); // Remove distances when animation ends (disablePhysics = false)
+      setShowDistances(false); 
     }
   }, [disablePhysics]);
 
-  // Function to focus the graph on a specific node or area
   const focusGraph = () => {
     if (networkRef.current) {
       const network = networkRef.current;
@@ -36,11 +35,10 @@ export default function GraphVisualization({
     }
   };
 
-  // Key binding for focusing the graph (e.g., press 'F' to focus)
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'f' || event.key === 'F') {
-        focusGraph(); // Focus the graph when 'F' is pressed
+        focusGraph();
       }
     };
 
@@ -54,14 +52,12 @@ export default function GraphVisualization({
   const coloredNodes = nodes.map((node) => {
     const distance = distances[node.id];
   
-    // Only show the tooltip if the selected algorithm is Dijkstra
     const showTooltip = selectedGraphType === "Dijkstra" && distance !== undefined;
   
     return {
       ...node,
       color: nodeColors[node.id] || "#000000",
   
-      // Only color the value of the distance in red
       title: showTooltip ? `Distance: <span style="color:red;">${distance}</span>` : undefined,
   
       label: `Node ${node.id}`,
@@ -99,11 +95,11 @@ export default function GraphVisualization({
       },
       arrows: {
         to: {
-          enabled: true, // Only enable arrows if directed
+          enabled: true,
           scaleFactor: 0.5,
         },
         from: {
-          enabled: !isDirected, // Only enable arrows if directed
+          enabled: !isDirected,
           scaleFactor: 0.5,
         },
       },
@@ -121,7 +117,6 @@ export default function GraphVisualization({
       },
     },
     interaction: {
-      //navigationButtons: true,
       dragNodes: true,
       dragView: true,
       zoomView: true,
@@ -129,16 +124,15 @@ export default function GraphVisualization({
         enabled: true,
         speed: { x: 7, y: 7, zoom: 0.03 },
       },
-      //tooltip: false,
     },
     layout: {
       improvedLayout: true,
       // hierarchical: layoutDirection === 'UD' ? {
-      //   direction: 'UD', // Top to Bottom
+      //   direction: 'UD',
       //   sortMethod: 'directed',
-      //   levelSeparation: 110, // Increase vertical space between levels
-      //   nodeSpacing: 90, // Increase space between nodes at the same level
-      // } : false, // Disable hierarchical layout if not animating
+      //   levelSeparation: 110,
+      //   nodeSpacing: 90,
+      // } : false,
       randomSeed: 50,
     },
     autoResize: true,
@@ -152,7 +146,7 @@ export default function GraphVisualization({
       graph={data}
       options={options}
       getNetwork={(network) => {
-        networkRef.current = network; // Store the network instance for future reference
+        networkRef.current = network;
       }}
     />
   );

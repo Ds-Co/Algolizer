@@ -260,7 +260,7 @@ const algorithmDetails: Record<string, AlgorithmInfo> = {
       startNode: "Blue",
       endNode: "Red",
       traversingNode: "Grey",
-      minCost: "(Custom color)", // Adjust color for MinCost if needed
+      minCost: "Red", 
     },
     complexityNotes: {
       nodes: "U",

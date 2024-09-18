@@ -12,9 +12,9 @@ interface SortResponse {
 }
 interface ArrayGeneratorProps {
   clearInput: () => void;
+  isAnimating: boolean;
 }
-
-const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
+const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput , isAnimating }) => {
   const [arraySize, setArraySize] = useState<number>(0);
   const [allowDuplicates, setAllowDuplicates] = useState<boolean>(false);
 
@@ -65,6 +65,7 @@ const ArrayGenerator: React.FC<ArrayGeneratorProps> = ({ clearInput }) => {
           placeholder="Enter Size"
           value={arraySize}
           onChange={handleArraySizeChange}
+          disabled = {false}
           min="1"
         />
       </div>
@@ -167,6 +168,9 @@ const SortingScreen = () => {
 
       console.log("selectedSortType:", selectedSortType);
       console.log("Array to be Sorted:", array);
+      console.log("bool of isSorting:",sortingRef.current?.isSorting );
+      console.log("bool of ispaused:",sortingRef.current?.isPaused );
+
 
       try {
         const response = await axios.post<SortResponse>(
@@ -189,6 +193,7 @@ const SortingScreen = () => {
         sortingRef.current?.startSorting();
       } catch (error) {
         console.error("Error during sorting:", error);
+
       }
     }
   };
@@ -228,15 +233,17 @@ const SortingScreen = () => {
         handlePauseClick={handleVisualizePause}
         handleResetClick={handleResetClick}
         handleSpeedUpClick={handleSpeedUpClick}
+        isAnimating = {false}
+        isPaused = {false}
       />
       <SideBar
         ArrayGenerator={(props) => (
-          <ArrayGenerator {...props} clearInput={clearInputValue} />
+          <ArrayGenerator {...props} clearInput={clearInputValue} isAnimating= {false} />
         )}
         selectedSortType={selectedSortType}
         getComplexity={getComplexity}
         handleInputChange={handleInputChange}
-        // inputValue={inputValue}
+        isAnimating = {false}
       />
       <SortingVisualization width={400} height={270} ref={sortingRef} />
     </div>
