@@ -5,6 +5,7 @@ import reset from "/src/assets/reset.png";
 import speedUp from "/src/assets/speed_up.png";
 import visualize from "/src/assets/visualize.png";
 import pause from "/src/assets/pause.png";
+import resume from "/src/assets/resume.png";
 import "bootstrap/dist/css/bootstrap.css";
 import { DropDown } from "./DropDown";
 import InfoModal from "./InfoModal";
@@ -21,6 +22,8 @@ interface TopBarProps {
   handleResetClick: () => void;
   handlePauseClick: () => void;
   handleSpeedUpClick: () => void;
+  isAnimating: boolean;
+  isPaused: boolean;
 }
 
 const Sortings = ({ text, icon }: SortingsProps) => {
@@ -45,7 +48,7 @@ const IconButton = ({
 }) => (
   <div className="topbar__icons">
     <button className="topbar__iconbutton" onClick={onClick}>
-      <img className="topbar__png" src={iconimg} />
+      <img className="topbar__png" id= {iconimg === "pause" || iconimg === "Resume" ? "topbar__png__pause-resume":""}src={iconimg} />
     </button>
     <a className="topbar__icontext">{icontxt}</a>
   </div>
@@ -57,17 +60,19 @@ const IconList = ({
   onResetClick,
   onPauseClick,
   onSpeedUpClick,
+  isPaused,
 }: {
   onInfoClick: () => void;
   onVisualizeClick: () => void;
   onResetClick: () => void;
   onPauseClick: () => void;
   onSpeedUpClick: () => void;
+  isPaused: boolean;
 }) => {
   const icons = [
     { iconimg: info, icontxt: "Info", onClick: onInfoClick },
     { iconimg: reset, icontxt: "Reset", onClick: onResetClick },
-    { iconimg: pause, icontxt: "Pause", onClick: onPauseClick },
+    { iconimg: isPaused? resume : pause, icontxt: isPaused? "Resume":"Pause", onClick: onPauseClick },
     { iconimg: speedUp, icontxt: "SpeedUp", onClick: onSpeedUpClick },
     { iconimg: visualize, icontxt: "Visualize", onClick: onVisualizeClick },
   ];
@@ -94,6 +99,8 @@ const TopBar: React.FC<TopBarProps> = ({
   handlePauseClick,
   handleResetClick,
   handleSpeedUpClick,
+  isAnimating,
+  isPaused,
 }) => {
   const [selectedSortType, setSelectedSortType] = useState<string>(
     dropdownmenu[0]
@@ -114,13 +121,14 @@ const TopBar: React.FC<TopBarProps> = ({
   return (
     <div className="topbar">
       <Sortings text={sortingsProps.text} icon={sortingsProps.icon} />
-      <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} />
+      <DropDown sorts={dropdownmenu} onSelectChange={handleSelectChange} isAnimating={isAnimating} />
       <IconList
         onInfoClick={handleInfoClick}
         onVisualizeClick={handleVisualizeClick}
         onResetClick={handleResetClick}
         onPauseClick={handlePauseClick}
         onSpeedUpClick={handleSpeedUpClick}
+        isPaused={isPaused}
       />
       <InfoModal
         show={showInfo}

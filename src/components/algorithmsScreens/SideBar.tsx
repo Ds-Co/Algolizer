@@ -16,17 +16,18 @@ interface SideBarProps {
   selectedSortType: string;
   getComplexity: (sortType: string) => string;
   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  // inputValue: string;
+  isAnimating: boolean;
 }
 
 interface UpperSidebarProps {
-  // inputValue: string;
   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  isAnimating: boolean;
 }
 
 const UpperSidebar: React.FC<UpperSidebarProps> = ({
   //  inputValue,
   handleInputChange,
+  isAnimating
 }) => {
   return (
     <div className="sidebar__upper">
@@ -36,6 +37,7 @@ const UpperSidebar: React.FC<UpperSidebarProps> = ({
         placeholder="Enter Your Array"
         //value={inputValue}
         onChange={handleInputChange}
+        disabled={isAnimating}
       />
     </div>
   );
@@ -97,6 +99,7 @@ export const SideBar: React.FC<SideBarProps> = ({
   selectedSortType,
   getComplexity,
   handleInputChange,
+  isAnimating,
   // inputValue
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -111,6 +114,7 @@ export const SideBar: React.FC<SideBarProps> = ({
         <UpperSidebar
           //   inputValue={inputValue}
           handleInputChange={handleInputChange}
+          isAnimating={isAnimating}
         />
       )}
       <MiddleSidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />

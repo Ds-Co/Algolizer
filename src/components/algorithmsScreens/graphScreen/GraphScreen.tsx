@@ -7,12 +7,14 @@ import { TopBar } from "../TopBar";
 import { GraphData } from "./GraphData";
 import { GraphTypeSwitch } from "./GraphTypeSwitch";
 import { GraphVisualization } from "./GraphVisualization";
-import { NewDropDown } from "./NewDropDown";
+import { SideBarDropDown } from "./SideBarDropDown";
 
 interface GraphResponse {
   VisitedNodes: number[];
   snapshots: number[];
   distance?: { [key: string]: number };
+  parentArray?: { [key: string]: string };
+  shortestPath?: string[];
 }
 
 interface AdjacencyList {
@@ -49,8 +51,8 @@ const generateTreeGraph = (
     if (!adjacencyList[child]) adjacencyList[child] = [];
 
     adjacencyList[parent].push({ node: child.toString(), weight });
-    if(!isDirected)
-    adjacencyList[child].push({ node: parent.toString(), weight });
+    if (!isDirected)
+      adjacencyList[child].push({ node: parent.toString(), weight });
   }
 
   return { nodes, edges, adjacencyList };
@@ -67,10 +69,14 @@ const GraphScreen: React.FC = () => {
   const [selectedGraphType, setSelectedGraphType] = useState<string>("BFS");
   const [snapshots, setSnapshots] = useState<number[]>([]);
   const [selectedEndNode, setSelectedEndNode] = useState<string>("Choose Node");
-  const [selectedStartNode, setSelectedStartNode] = useState<string>("Choose Node");
+  const [selectedStartNode, setSelectedStartNode] =
+    useState<string>("Choose Node");
   const [startNodes, setStartNodes] = useState<string[]>([]);
+  const [textArea, setTextArea] = useState("");
   const [isDirected, setIsDirected] = useState(true);
   const [nodeDistances, setNodeDistances] = useState({});
+  const [isResetting, setIsResetting] = useState<boolean>(false);
+
   const [randomGraph, setRandomGraph] = useState<{
     nodes: any[];
     edges: any[];
@@ -86,14 +92,20 @@ const GraphScreen: React.FC = () => {
     icon: graphicon,
   };
 
+  const [path, setPath] = useState<string[]>([]);
+
   const MemoizedGraph = React.memo(GraphVisualization);
 
   const handleGraphTypeChange = (isDirected: boolean) => {
-    setIsDirected(isDirected);
+    if (!isAnimating) {
+      setIsDirected(isDirected);
+      setNodeDistances({});
+    }
   };
 
   const handleSelectChange = useCallback((sortType: string) => {
     setSelectedGraphType(sortType);
+    setNodeDistances({});
   }, []);
 
   const handleStartChange = useCallback((startNode: string) => {
@@ -116,78 +128,85 @@ const GraphScreen: React.FC = () => {
     }
   }, []);
 
-  const handleGraphInputChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = event.target.value;
-  
-    // Regex to allow only digits, strings, commas, and line breaks
-    const validInput = /^[a-zA-Z0-9,\n\s]*$/;
-  
-    if (!validInput.test(value)) {
-      alert("Invalid input! Please enter only numbers, commas, and spaces.");
-      return;
-    }
-  
-    if (value.trim() === "") {
-      const nodeCount = Math.floor(Math.random() * 20) + 5; // Random between 5 and 20
-      const { nodes, edges, adjacencyList } = generateTreeGraph(
-        nodeCount,
-        selectedGraphType,
-        isDirected
-      );
-      setRandomGraph({ nodes, edges, adjacencyList });
-      setNewNodes(nodes);
-      setNewEdges(edges);
-      setStartNodes(Object.keys(adjacencyList));
-      localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
-    } else {
-      const edges = value
-        .split("\n")
-        .map((line) => {
-          const [node1, node2, weight] = line
-            .split(",")
-            .map((item) => item.trim());
-          return {
-            node1,
-            node2,
-            weight: weight ? parseFloat(weight) : 1,
-          };
-        })
-        .filter((edge) => edge.node1 && edge.node2);
-  
-      const adjacencyList: AdjacencyList = {};
-  
-      edges.forEach((edge) => {
-        if (!adjacencyList[edge.node1]) {
-          adjacencyList[edge.node1] = [];
-        }
-        if (!adjacencyList[edge.node2]) {
-          adjacencyList[edge.node2] = [];
-        }
-  
-        adjacencyList[edge.node1].push({
-          node: edge.node2,
-          weight: edge.weight,
-        });
-  
-        if (!isDirected) {
-          adjacencyList[edge.node2].push({
-            node: edge.node1,
+  const handleGraphInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = event.target.value;
+      setNodeDistances("")
+      setTextArea(value);
+
+      const validInput = /^[a-zA-Z0-9,\n\s]*$/;
+
+      if (!validInput.test(value)) {
+        alert("Invalid input! Please enter only numbers, commas, and spaces.");
+        return;
+      }
+
+      setSelectedStartNode("Choose Node");
+      setSelectedEndNode("Choose Node");
+
+      if (value.trim() === "") {
+        const nodeCount = Math.floor(Math.random() * 20) + 5; 
+        const { nodes, edges, adjacencyList } = generateTreeGraph(
+          nodeCount,
+          selectedGraphType,
+          isDirected
+        );
+        setRandomGraph({ nodes, edges, adjacencyList });
+        setNewNodes(nodes);
+        setNewEdges(edges);
+        setStartNodes(Object.keys(adjacencyList));
+        localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
+      } else {
+        const edges = value
+          .split("\n")
+          .map((line) => {
+            const [node1, node2, weight] = line
+              .split(",")
+              .map((item) => item.trim());
+            return {
+              node1,
+              node2,
+              weight: weight ? parseFloat(weight) : 1,
+            };
+          })
+          .filter((edge) => edge.node1 && edge.node2);
+
+        const adjacencyList: AdjacencyList = {};
+
+        edges.forEach((edge) => {
+          if (!adjacencyList[edge.node1]) {
+            adjacencyList[edge.node1] = [];
+          }
+          if (!adjacencyList[edge.node2]) {
+            adjacencyList[edge.node2] = [];
+          }
+
+          adjacencyList[edge.node1].push({
+            node: edge.node2,
             weight: edge.weight,
           });
-        }
-      });
-  
-      const uniqueStartNodes = Object.keys(adjacencyList);
-      setStartNodes(uniqueStartNodes);
-  
-      localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
-  
-      const { nodes, edges: graphEdges } = GraphData(GraphTypeSwitch);
-      setNewNodes(nodes);
-      setNewEdges(graphEdges);
-    }
-  }, [isDirected, selectedGraphType]);
-  
+
+          if (!isDirected) {
+            adjacencyList[edge.node2].push({
+              node: edge.node1,
+              weight: edge.weight,
+            });
+          }
+        });
+
+        const uniqueStartNodes = Object.keys(adjacencyList);
+        setStartNodes(uniqueStartNodes);
+
+        localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
+
+        const { nodes, edges: graphEdges } = GraphData(selectedGraphType);
+        setNewNodes(nodes);
+        setNewEdges(graphEdges);
+        console.log(adjacencyList);
+      }
+    },
+    [isDirected, selectedGraphType]
+  );
 
   const handleVisualizeClick = useCallback(async () => {
     if (isAnimating) return;
@@ -206,20 +225,21 @@ const GraphScreen: React.FC = () => {
           array: adjacencyList,
           GraphAlgo: selectedGraphType,
           startNody:
-            selectedStartNode === "Choose Node" && startNodes.length > 0
+            selectedStartNode === "Choose Node"
               ? startNodes[0]
               : selectedStartNode,
-          endNode:
-            selectedEndNode === "Choose Node" && startNodes.length > 0
-              ? -1
-              : selectedEndNode,
+          endNode: selectedEndNode === "Choose Node" ? -1 : selectedEndNode,
         }
       );
 
+      const shortestPath = response.data.shortestPath || [];
+      setPath(shortestPath);
+
       setDisablePhysics(true);
-      setIsAnimating(true);
+      setIsAnimating(true); 
       setIsPaused(false);
-      setSnapshots(response.data.snapshots);
+      setSnapshots(response.data.snapshots); 
+      console.log(snapshots);
       snapshotIndexRef.current = 0;
 
       if (selectedGraphType === "Dijkstra") {
@@ -239,89 +259,133 @@ const GraphScreen: React.FC = () => {
     startNodes,
   ]);
 
-
   const animateSnapshots = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-  
+
     intervalRef.current = window.setInterval(() => {
       if (snapshotIndexRef.current < snapshots.length) {
         const node = snapshots[snapshotIndexRef.current];
-  
+
         if (!isPaused) {
           setNodeColors((prevColors) => {
             const updatedColors: { [key: number]: string } = { ...prevColors };
-  
-            const isFirstNode = snapshotIndexRef.current === 1;
-  
-            updatedColors[Number(node)] = isFirstNode
-              ? "#285EA4" // Green for the first node
-              : "#D5CAD6"; // Default color for other nodes
-  
-            if (node.toString() === selectedEndNode || snapshotIndexRef.current === snapshots.length) {
-              updatedColors[Number(node)] = "#E02929"; // End node color
+
+            updatedColors[Number(node)] =
+              snapshotIndexRef.current === 1
+                ? "#285EA4" 
+                : "#D5CAD6"; 
+
+            if (
+              node.toString() === selectedEndNode ||
+              snapshotIndexRef.current === snapshots.length
+            ) {
+              updatedColors[Number(node)] = "#E02929";
             }
-  
+
             return updatedColors;
           });
-  
+
           snapshotIndexRef.current += 1;
         }
       } else {
         clearInterval(intervalRef.current as number);
         intervalRef.current = null;
-        setDisablePhysics(false);
-        setIsAnimating(false);
-        setNodeColors({});
-        setSnapshots([]);
+        animatePath(); 
       }
     }, 2000 / speed);
   }, [snapshots, speed, isPaused, selectedEndNode]);
+
+  const animatePath = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
   
+    let pathIndex = 0; 
+  
+    intervalRef.current = window.setInterval(() => {
+      if (pathIndex < path.length) {
+        const node = path[pathIndex];
+  
+        if (!isPaused) {
+          setNodeColors((prevColors) => {
+            const updatedColors: { [key: number]: string } = { ...prevColors };
+            updatedColors[Number(node)] = "#2DC8B0"; 
+            return updatedColors;
+          });
+  
+          pathIndex += 1;
+        }
+      } else {
+        clearInterval(intervalRef.current as number);
+        intervalRef.current = null;
+
+        setTimeout(() => {
+          setDisablePhysics(false);
+          setIsAnimating(false);
+          setNodeColors({});
+          setSnapshots([]);   
+        }, 3000);
+      }
+    }, 500 / speed);
+  }, [path, speed, isPaused]);
+  
+  
+
   useEffect(() => {
     if (isAnimating) {
       animateSnapshots();
     } else {
       setSpeed(1);
+      setIsPaused(false);
     }
-  
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
-  }, [isAnimating, animateSnapshots]);
-  
+  }, [isAnimating, animateSnapshots, snapshots]);
 
   useEffect(() => {
-    // Generate a random node count between 5 and 20
-    const nodeCount = Math.floor(Math.random() * 20) + 5;
+    if (isResetting) {
+      
+      handleVisualizeClick();
+      setIsResetting(false);
+    }
+  }, [isResetting, handleVisualizeClick]);
 
-    const { nodes, edges, adjacencyList } = generateTreeGraph(
-      nodeCount,
-      selectedGraphType,
-      isDirected
-    );
+  useEffect(() => {
+    if (textArea.trim() === "") {
+      const nodeCount = Math.floor(Math.random() * 20) + 5;
 
-    setRandomGraph({ nodes, edges, adjacencyList });
-    setNewNodes(nodes);
-    setNewEdges(edges);
-    setStartNodes(Object.keys(adjacencyList));
+      const { nodes, edges, adjacencyList } = generateTreeGraph(
+        nodeCount,
+        selectedGraphType,
+        isDirected
+      );
 
-    localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
-  }, [selectedGraphType]);
+      setRandomGraph({ nodes, edges, adjacencyList });
+      setStartNodes(Object.keys(adjacencyList));
+
+      localStorage.setItem("graphInput", JSON.stringify(adjacencyList));
+    }
+
+    const { nodes: updatedNodes, edges: updatedEdges } =
+      GraphData(selectedGraphType);
+    setNewNodes(updatedNodes);
+    setNewEdges(updatedEdges);
+  }, [selectedGraphType, isDirected, textArea]);
 
   const handleResetClick = useCallback(() => {
     if (isAnimating) {
       setIsAnimating(false);
       setNodeColors({});
-      setSnapshots([]);
       setSpeed(1);
       snapshotIndexRef.current = 0;
+      setSnapshots([]);
       setIsPaused(false);
-      handleVisualizeClick();
+      setIsResetting(true);
     }
-  }, [isAnimating, handleVisualizeClick]);
+  }, [isAnimating]);
 
   const handlePauseClick = useCallback(() => {
     if (isAnimating) {
@@ -353,6 +417,8 @@ const GraphScreen: React.FC = () => {
         handlePauseClick={handlePauseClick}
         handleResetClick={handleResetClick}
         handleSpeedUpClick={handleSpeedUpClick}
+        isAnimating={isAnimating}
+        isPaused={isPaused}
       />
       <SideBar
         ArrayGenerator={() => (
@@ -362,22 +428,24 @@ const GraphScreen: React.FC = () => {
                 <label htmlFor="start-node" className="dropdown-label">
                   Start Node
                 </label>
-                <NewDropDown
+                <SideBarDropDown
                   id="start-node"
                   options={["Choose Node", ...startNodes]}
                   selectedValue={selectedStartNode}
                   onSelectChange={handleStartChange}
+                  isAnimating={isAnimating}
                 />
               </div>
               <div className="dropdown-container">
                 <label htmlFor="end-node" className="dropdown-label">
                   End Node
                 </label>
-                <NewDropDown
+                <SideBarDropDown
                   id="end-node"
                   options={["Choose Node", ...startNodes]}
                   selectedValue={selectedEndNode}
                   onSelectChange={handleEndChange}
+                  isAnimating={isAnimating}
                 />
               </div>
             </div>
@@ -390,6 +458,7 @@ const GraphScreen: React.FC = () => {
         selectedSortType={selectedGraphType}
         getComplexity={getComplexity}
         handleInputChange={handleGraphInputChange}
+        isAnimating={isAnimating}
       />
       <div className="visualization">
         <MemoizedGraph
@@ -397,9 +466,10 @@ const GraphScreen: React.FC = () => {
           edges={newEdges}
           nodeColors={nodeColors}
           disablePhysics={disablePhysics}
-          distances={selectedGraphType === "Dijkstra" ? nodeDistances : {}}
+          distances={selectedGraphType === "Dijkstra" ? nodeDistances : {}} 
           isDirected={isDirected}
-                  />
+          selectedGraphType={selectedGraphType} 
+        />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Graph from "react-vis-network-graph";
+import "vis-network/styles/vis-network.css";
 
 export default function GraphVisualization({
   nodes,
@@ -8,18 +9,22 @@ export default function GraphVisualization({
   disablePhysics,
   distances = {}, // Default to empty object if not provided
   isDirected,
+  selectedGraphType,
 }) {
   const [layoutDirection, setLayoutDirection] = useState("UD");
   const [dynamicLayout, setDynamicLayout] = useState(false);
+  const [showDistances, setShowDistances] = useState(true); // State to control distance labels
   const networkRef = useRef(null); // To store the graph instance
 
   useEffect(() => {
     if (disablePhysics) {
       setLayoutDirection('UD');
       setDynamicLayout(false);
+      setShowDistances(true); // Show distances while physics is enabled (during animation)
     } else {
       setLayoutDirection('dynamic');
       setDynamicLayout(true);
+      setShowDistances(false); // Remove distances when animation ends (disablePhysics = false)
     }
   }, [disablePhysics]);
 
@@ -46,15 +51,27 @@ export default function GraphVisualization({
     };
   }, []);
 
-  const coloredNodes = nodes.map((node) => ({
-    ...node,
-    color: nodeColors[node.id] || "#000000",
-    label:
-      distances[node.id] !== undefined
-        ? `Node ${node.id}: ${distances[node.id]}`
-        : `Node ${node.id}`,
-  }));
-
+  const coloredNodes = nodes.map((node) => {
+    const distance = distances[node.id];
+  
+    // Only show the tooltip if the selected algorithm is Dijkstra
+    const showTooltip = selectedGraphType === "Dijkstra" && distance !== undefined;
+  
+    return {
+      ...node,
+      color: nodeColors[node.id] || "#000000",
+  
+      // Only color the value of the distance in red
+      title: showTooltip ? `Distance: <span style="color:red;">${distance}</span>` : undefined,
+  
+      label: `Node ${node.id}`,
+      font: {
+        color: "#000000",
+        size: 14,
+      },
+    };
+  });
+  
   const options = {
     nodes: {
       shape: "dot",
@@ -67,6 +84,7 @@ export default function GraphVisualization({
         },
       },
       font: {
+        
         color: "#000000",
       },
     },
@@ -111,15 +129,16 @@ export default function GraphVisualization({
         enabled: true,
         speed: { x: 7, y: 7, zoom: 0.03 },
       },
+      //tooltip: false,
     },
     layout: {
       improvedLayout: true,
-      hierarchical: layoutDirection === 'UD' ? {
-        direction: 'UD', // Top to Bottom
-        sortMethod: 'directed',
-        levelSeparation: 110, // Increase vertical space between levels
-        nodeSpacing: 90, // Increase space between nodes at the same level
-      } : false, // Disable hierarchical layout if not animating
+      // hierarchical: layoutDirection === 'UD' ? {
+      //   direction: 'UD', // Top to Bottom
+      //   sortMethod: 'directed',
+      //   levelSeparation: 110, // Increase vertical space between levels
+      //   nodeSpacing: 90, // Increase space between nodes at the same level
+      // } : false, // Disable hierarchical layout if not animating
       randomSeed: 50,
     },
     autoResize: true,
@@ -129,6 +148,7 @@ export default function GraphVisualization({
 
   return (
     <Graph
+      key={isDirected ? "directed" : "undirected"}
       graph={data}
       options={options}
       getNetwork={(network) => {
