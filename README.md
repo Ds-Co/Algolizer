@@ -1,10 +1,11 @@
-# 🌟 Algolizer
+# Algolizer
 
 **Algolizer** is a full-stack web application designed to visualize and explore various algorithms. With an interactive platform, users can dive into sorting and graph algorithms, view detailed visualizations, and control the algorithm execution to gain a deeper understanding.
 
 <div align="center">
-  <img src="https://imgur.com/k2b6pc2.png" width="600">
+  <img src="https://i.imgur.com/k2b6pc2.png" width="600">
 </div>
+
 
 <div align="center">
   <a href="https://www.w3.org/html/">
