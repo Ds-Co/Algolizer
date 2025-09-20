@@ -3,9 +3,8 @@
 **Algolizer** is a full-stack web application designed to visualize and explore various algorithms. With an interactive platform, users can dive into sorting and graph algorithms, view detailed visualizations, and control the algorithm execution to gain a deeper understanding.
 
 <div align="center">
-  <img src="https://i.imgur.com/k2b6pc2.png" width="600">
+  <img src="https://github.com/user-attachments/assets/6ceaba1a-61d1-412b-be76-7e224c9e3fe8" width="600" alt="Banner">
 </div>
-
 
 <div align="center">
   <a href="https://www.w3.org/html/">
